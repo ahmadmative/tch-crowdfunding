@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { useLocation } from 'react-router-dom';
 
 // Mock data for the charts
 const donationTrendsData = [
@@ -83,6 +84,17 @@ const DonationsManagement: React.FC = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+  const location = useLocation();
+  const pathname = location.pathname;
+  const roles=  ["transactions", "payments", "logs", "settings"]
+
+  useEffect(() => {
+    console.log(pathname)
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
 
   return (
     <div className="space-y-6">
@@ -183,7 +195,7 @@ const DonationsManagement: React.FC = () => {
           <button
             onClick={() => setSelectedTab('transactions')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'transactions'
+              (selectedTab === 'transactions' || selectedTab === 'settings')
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
@@ -191,9 +203,9 @@ const DonationsManagement: React.FC = () => {
             Transaction List
           </button>
           <button
-            onClick={() => setSelectedTab('settings')}
+            onClick={() => setSelectedTab('payments')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'settings'
+              selectedTab === 'payments'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
@@ -201,9 +213,9 @@ const DonationsManagement: React.FC = () => {
             Payment Settings
           </button>
           <button
-            onClick={() => setSelectedTab('receipts')}
+            onClick={() => setSelectedTab('logs')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'receipts'
+              selectedTab === 'logs'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
@@ -214,7 +226,7 @@ const DonationsManagement: React.FC = () => {
       </div>
 
       {/* Transactions Table */}
-      {selectedTab === 'transactions' && (
+      {(selectedTab === 'transactions' || selectedTab === 'settings') && (
         <div className="bg-white rounded-lg shadow">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
@@ -300,7 +312,7 @@ const DonationsManagement: React.FC = () => {
       )}
 
       {/* Payment Settings */}
-      {selectedTab === 'settings' && (
+      {selectedTab === 'payments' && (
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold mb-6">Payment Processing Settings</h2>
           <div className="space-y-6">
@@ -363,7 +375,7 @@ const DonationsManagement: React.FC = () => {
       )}
 
       {/* Receipt Logs */}
-      {selectedTab === 'receipts' && (
+      {selectedTab === 'logs' && (
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold mb-6">Receipt Logs</h2>
           <div className="space-y-4">

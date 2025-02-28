@@ -5,6 +5,7 @@ import {
   CreditCardIcon, ChartPieIcon, BellIcon, CogIcon 
 } from '@heroicons/react/24/outline';
 
+
 interface MenuItem {
   name: string;
   icon: React.ElementType;
@@ -19,7 +20,7 @@ const menuItems: MenuItem[] = [
     path: '/',
     subItems: [
       { name: 'Overview of Campaigns & Donations', path: '/dashboard/overview' },
-      { name: 'Key Performance Metrics', path: '/dashboard/metrics' }
+      // { name: 'Key Performance Metrics', path: '/dashboard/metrics' }
     ]
   },
   {
@@ -27,7 +28,8 @@ const menuItems: MenuItem[] = [
     icon: UsersIcon,
     path: '/users',
     subItems: [
-      { name: 'Manage Users & Admins', path: '/users/manage' },
+      { name: 'Manage Users', path: '/users/manage/users' },
+      { name: 'Manage Admins', path: '/users/manage/admins' },
       { name: 'Access Control & Permissions', path: '/users/permissions' }
     ]
   },
@@ -36,8 +38,10 @@ const menuItems: MenuItem[] = [
     icon: FolderIcon,
     path: '/campaigns',
     subItems: [
-      { name: 'View & Approve Campaigns', path: '/campaigns/manage' },
-      { name: 'Monitor Campaign Performance', path: '/campaigns/performance' }
+      { name: 'View Campaigns', path: '/campaigns/manage/all' },
+      { name: 'Pending Campaigns', path: '/campaigns/manage/pending' },
+      { name: 'Active Campaigns', path: '/campaigns/manage/active' },
+      // { name: 'Monitor Campaign Performance', path: '/campaigns/performance' }
     ]
   },
   {
@@ -45,8 +49,11 @@ const menuItems: MenuItem[] = [
     icon: CreditCardIcon,
     path: '/donations',
     subItems: [
-      { name: 'Payment Processing Settings', path: '/donations/settings' },
-      { name: 'Transaction & Receipt Logs', path: '/donations/logs' }
+      // { name: 'View Donations', path: '/donations/settings' },
+      { name: 'Transaction List', path: '/donations/settings/transactions' },
+      { name: 'Payments', path: '/donations/settings/payments' },
+      // { name: 'Payment Processing Settings', path: '/donations/settings' },
+      { name: 'Receipt Logs', path: '/donations/settings/logs' }
     ]
   },
   {
@@ -54,7 +61,8 @@ const menuItems: MenuItem[] = [
     icon: ChartPieIcon,
     path: '/reports',
     subItems: [
-      { name: 'Campaign & Donor Insights', path: '/reports/insights' },
+      { name: 'Campaign Performance', path: '/reports/campaign' },
+      { name: 'Donor Insights', path: '/reports/donor' },
       { name: 'Custom Reports', path: '/reports/custom' }
     ]
   },
@@ -74,7 +82,8 @@ const menuItems: MenuItem[] = [
     path: '/settings',
     subItems: [
       { name: 'General Platform Settings', path: '/settings/general' },
-      { name: 'Security & Integrations', path: '/settings/security' }
+      { name: 'Security Settings', path: '/settings/security' },
+      { name: 'Integrations Settings', path: '/settings/integrations' }
     ]
   }
 ];
@@ -142,6 +151,7 @@ const Sidebar: React.FC = () => {
           <div>
             <p className="text-sm font-medium">Admin User</p>
             <p className="text-xs text-gray-400">admin@example.com</p>
+            <a href="/signin" className="text-xs text-gray-400 hover:text-white">Logout</a>
           </div>
         </div>
       </div>

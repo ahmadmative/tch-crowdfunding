@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { BellIcon, EnvelopeIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, ClockIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { useLocation } from 'react-router-dom';
 
 // Mock data for the charts
 const emailEngagementData = [
@@ -93,6 +94,17 @@ const NotificationsEmails: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('notifications');
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
 
+  const location = useLocation();
+  const pathname = location.pathname;
+  const roles=  ["center", "emails", "templates"]
+
+  useEffect(() => {
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -131,9 +143,9 @@ const NotificationsEmails: React.FC = () => {
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setSelectedTab('notifications')}
+            onClick={() => setSelectedTab('center')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'notifications'
+              selectedTab === 'center'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
@@ -164,7 +176,7 @@ const NotificationsEmails: React.FC = () => {
       </div>
 
       {/* Notification Center Tab */}
-      {selectedTab === 'notifications' && (
+      {selectedTab === 'center' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow p-6">

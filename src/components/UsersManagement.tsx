@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Mock data for the charts
@@ -48,6 +49,20 @@ const usersData = [
 
 const UsersManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('users');
+  const location = useLocation();
+
+  const roles=  ["users", "admins", "permissions"]
+
+  const pathname = location.pathname;
+  useEffect(() => {
+    console.log(pathname)
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
+
+  
 
   return (
     <div className="space-y-6">
@@ -143,9 +158,9 @@ const UsersManagement: React.FC = () => {
             Admin Management
           </button>
           <button
-            onClick={() => setSelectedTab('roles')}
+            onClick={() => setSelectedTab('permissions')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'roles'
+              selectedTab === 'permissions'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
@@ -282,7 +297,7 @@ const UsersManagement: React.FC = () => {
       )}
 
       {/* Role-Based Access Control Section */}
-      {selectedTab === 'roles' && (
+      {selectedTab === 'permissions' && (
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold mb-4">Role-Based Access Control</h2>
           <div className="space-y-6">

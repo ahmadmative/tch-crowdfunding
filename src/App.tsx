@@ -8,31 +8,45 @@ import DonationsManagement from './components/DonationsManagement';
 import ReportsAnalytics from './components/ReportsAnalytics';
 import NotificationsEmails from './components/NotificationsEmails';
 import Settings from './components/Settings';
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<Home />} />
+        
+
         <Route path="/" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
+          {/* <Route index element={<Dashboard />} /> */}
           <Route path="dashboard">
+            <Route index element={<Dashboard />} />
             <Route path="overview" element={<Dashboard />} />
             <Route path="metrics" element={<Dashboard />} />
           </Route>
           <Route path="users">
             <Route index element={<UsersManagement />} />
-            <Route path="manage" element={<UsersManagement />} />
+            <Route path="manage/users" element={<UsersManagement />} />
+            <Route path="manage/admins" element={<UsersManagement />} />
             <Route path="permissions" element={<UsersManagement />} />
           </Route>
           <Route path="campaigns">
             <Route index element={<CampaignsManagement />} />
-            <Route path="manage" element={<CampaignsManagement />} />
+            <Route path="manage/all" element={<CampaignsManagement />} />
+            <Route path="manage/pending" element={<CampaignsManagement />} />
+            <Route path="manage/active" element={<CampaignsManagement />} />
             <Route path="performance" element={<CampaignsManagement />} />
           </Route>
           <Route path="donations">
             <Route index element={<DonationsManagement />} />
             <Route path="settings" element={<DonationsManagement />} />
-            <Route path="logs" element={<DonationsManagement />} />
+            <Route path="settings/transactions" element={<DonationsManagement />} />
+            <Route path="settings/payments" element={<DonationsManagement />} />
+            <Route path="settings/logs" element={<DonationsManagement />} />
           </Route>
           <Route path="reports">
             <Route index element={<ReportsAnalytics />} />
@@ -53,6 +67,7 @@ function App() {
             <Route path="integrations" element={<Settings />} />
           </Route>
           
+
           {/* Catch all unmatched routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

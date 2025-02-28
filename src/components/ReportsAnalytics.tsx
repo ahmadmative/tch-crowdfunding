@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CalendarIcon, DocumentArrowDownIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { useLocation } from 'react-router-dom';
 
 // Mock data for the charts
 const fundraisingTrendsData = [
@@ -54,6 +55,16 @@ const ReportsAnalytics: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('campaign');
   const [dateRange, setDateRange] = useState('last30');
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
+  const location = useLocation();
+  const pathname = location.pathname;
+  const roles=  ["campaign", "donor", "custom"]
+
+  useEffect(() => {
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
 
   return (
     <div className="space-y-6">

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EyeIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useLocation } from 'react-router-dom';
 
 // Mock data for the charts
 const campaignStatusData = [
@@ -32,7 +33,7 @@ const campaignsData = [
     id: 1,
     title: 'Save the Forests',
     creator: 'John Smith',
-    status: 'Active',
+    status: 'active',
     fundsRaised: 85000,
     goal: 100000,
     startDate: '2024-01-15',
@@ -43,7 +44,7 @@ const campaignsData = [
     id: 2,
     title: 'Clean Water Initiative',
     creator: 'Sarah Johnson',
-    status: 'Pending',
+    status: 'pending',
     fundsRaised: 0,
     goal: 50000,
     startDate: '2024-03-01',
@@ -54,7 +55,7 @@ const campaignsData = [
     id: 3,
     title: 'Education for All',
     creator: 'Michael Brown',
-    status: 'Active',
+    status: 'active',
     fundsRaised: 65000,
     goal: 80000,
     startDate: '2024-02-01',
@@ -79,6 +80,19 @@ const CampaignsManagement: React.FC = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const location = useLocation();
+  const pathname = location.pathname;
+  const roles=  ["all", "pending", "active"]
+
+  useEffect(() => {
+    console.log(pathname)
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
+
 
   return (
     <div className="space-y-6">
@@ -334,7 +348,7 @@ const CampaignsManagement: React.FC = () => {
                   >
                     Close
                   </button>
-                  {campaignsData.find(c => c.id === selectedCampaign)?.status === 'Pending' && (
+                  {campaignsData.find(c => c.id === selectedCampaign)?.status === 'pending' && (
                     <>
                       <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                         Approve

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Cog6ToothIcon,
   ShieldCheckIcon,
@@ -9,6 +9,7 @@ import {
   BanknotesIcon,
   EnvelopeIcon,
 } from '@heroicons/react/24/outline';
+import { useLocation } from 'react-router-dom';
 
 // Mock data for access logs
 const accessLogsData = [
@@ -66,6 +67,16 @@ const integrationsData = [
 const Settings: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('general');
   const [isBackupInProgress, setIsBackupInProgress] = useState(false);
+  const location = useLocation();
+  const pathname = location.pathname;
+  const roles=  ["general", "security", "integrations"]
+
+  useEffect(() => {
+    const urlRole = pathname.split('/').pop();
+    if (urlRole && roles.includes(urlRole)) {
+      setSelectedTab(urlRole);
+    }
+  }, [pathname]);
 
   const handleBackup = () => {
     setIsBackupInProgress(true);
