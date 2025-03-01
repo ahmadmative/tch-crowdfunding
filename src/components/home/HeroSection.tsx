@@ -1,7 +1,7 @@
 import React from 'react';
 
 const HeroSection: React.FC = () => {
-  return <div className='flex justify-between items-center w-full h-[510px] mt-10'>
+  return <div className='max-w-[1200px] mx-auto p-4 h-[510px] flex justify-between items-center mt-10'>
     <div className='w-full h-full rounded-lg relative'>
         <img src={"/hero-image.png"} alt="hero-image" className='w-[100%] h-[100%]'/>
         <div className='absolute top-0 left-0 w-full h-full rounded-lg'>

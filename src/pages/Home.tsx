@@ -1,11 +1,26 @@
 import React from 'react';
 import Navbar from '../components/home/Navbar';
 import HeroSection from '../components/home/HeroSection';
+import CollaborationSection from '../components/home/CollaborationSection';
+import AboutUsSection from '../components/home/AboutUsSection';
+import CampaignsSection from '../components/home/CompaignsSection';
+import OurFeatureSection from '../components/home/OurFeatureSection';
+import ChooseUsSection from '../components/home/ChooseUsSection';
+import Testimonials from '../components/home/Testimonials';
+import Footer from '../components/home/Footer';
+
 
 const Home: React.FC = () => {
-  return <div className='max-w-[1200px] mx-auto p-4'>
+  return <div className=''>
     <Navbar />
     <HeroSection />
+    <CollaborationSection />
+    <AboutUsSection />
+    <CampaignsSection />
+    <ChooseUsSection />
+    <OurFeatureSection />
+    <Testimonials />
+    <Footer />
   </div>;
 };
 

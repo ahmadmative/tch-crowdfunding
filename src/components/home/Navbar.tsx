@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Navbar: React.FC = () => {
-  return <div className="flex justify-between items-center mx-auto m-2 font-size-14 h-[57px]">
+  return <div className="max-w-[1200px] flex justify-between items-center mx-auto m-2 font-size-14 h-[57px]">
     <div className='flex items-center gap-4'>
         <img src={"/logo.png"} alt="logo" width={100} height={100}/>
         <img src={"/line.png"} alt="logo" className='w-[1px] h-[30px]'/>
