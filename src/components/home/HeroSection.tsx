@@ -21,8 +21,8 @@ const HeroSection: React.FC = () => {
                             </div>
                         </div>
                         <div className='mt-auto'>
-                            <button className='bg-[#BEE36E] text-black px-6 py-3 rounded-full text-lg font-bold w-[210px] h-[50px] shadow-md'>
-                            Donate Now!
+                            <button className='bg-[#BEE36E] text-black px-6 py-3 rounded-full text-lg font-bold w-[210px] h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300'>
+                                Donate Now!
                             </button>
                         </div>
                         

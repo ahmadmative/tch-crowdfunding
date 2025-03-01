@@ -149,9 +149,9 @@ const Sidebar: React.FC = () => {
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-gray-700 mr-3"></div>
           <div>
-            <p className="text-sm font-medium">Admin User</p>
-            <p className="text-xs text-gray-400">admin@example.com</p>
-            <a href="/signin" className="text-xs text-gray-400 hover:text-white">Logout</a>
+            {/* <p className="text-sm font-medium">Admin User</p> */}
+            {/* <p className="text-xs text-gray-400">admin@example.com</p> */}
+            <a href="/signin" className="text-sm font-medium text-red-400 hover:text-red-500">Logout</a>
           </div>
         </div>
       </div>
