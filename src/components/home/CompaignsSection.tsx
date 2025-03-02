@@ -3,7 +3,7 @@ import CampaignCard from '../Compaigns/CompaignCard';
 
 const CampaignsSection: React.FC = () => {
   return (
-    <section className="max-w-[1200px] mx-auto py-16 text-black flex flex-col items-center gap-4">
+    <section className="max-w-[1200px] mx-auto py-16 px-4 text-black flex flex-col items-center gap-4">
       {/* Header */}
         <div className='flex flex-col items-center justify-center gap-4'>
           <div className='flex items-center justify-center gap-2'>

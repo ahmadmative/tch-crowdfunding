@@ -30,7 +30,7 @@ const OurFeatureSection: React.FC = () => {
         }
 
     ]
-  return <div className="max-w-[1200px] mx-auto py-16 flex flex-col items-center justify-center gap-14 p-10">
+  return <div className="max-w-[1200px] mx-auto py-16 px-4 flex flex-col items-center justify-center gap-14 p-10">
 
     {/* Text Section */}
     <div className="flex flex-col gap-4 ">
