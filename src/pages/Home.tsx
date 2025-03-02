@@ -3,7 +3,7 @@ import Navbar from '../components/home/Navbar';
 import HeroSection from '../components/home/HeroSection';
 import CollaborationSection from '../components/home/CollaborationSection';
 import AboutUsSection from '../components/home/AboutUsSection';
-import CampaignsSection from '../components/home/CompaignsSection';
+import CampaignsSection from '../components/home/CampaignsSection';
 import OurFeatureSection from '../components/home/OurFeatureSection';
 import ChooseUsSection from '../components/home/ChooseUsSection';
 import Testimonials from '../components/home/Testimonials';

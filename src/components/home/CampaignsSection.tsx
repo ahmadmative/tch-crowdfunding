@@ -1,5 +1,5 @@
 import React from 'react';
-import CampaignCard from '../Compaigns/CompaignCard';
+import CampaignCard from '../Campaigns/CampaignCard';
 
 const CampaignsSection: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const CampaignsSection: React.FC = () => {
             <img src="/home-header.png" alt="aboutus" className="w-[20px] h-[14px]"/>
             <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[1.5px]">Campaigns</p>
           </div>
-          <h1 className='text-4xl font-bold'>Featured Compaigns</h1>
+          <h1 className='text-4xl font-bold'>Featured Campaigns</h1>
           <p className='text-sm text-gray-500'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. </p>
 
         </div>
