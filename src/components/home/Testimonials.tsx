@@ -4,7 +4,7 @@ import TestimonialCarousel from "./testimonial/TestimonialCarousel";
 const Testimonials: React.FC = () => {
     return (
         <div className="bg-[#F8F8F8] w-full py-8 md:py-16">
-            <div className="max-w-[1200px] mx-auto p-4 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div className="max-w-[1200px] mx-auto p-4 flex flex-col lg:flex-row gap-8 lg:gap-12">
                 {/* image section */}
                 <div className="w-full lg:w-1/2 flex items-center justify-center">
                     <img 
@@ -22,7 +22,7 @@ const Testimonials: React.FC = () => {
                             alt="home-header" 
                             className="w-[20px] h-[15px]" 
                         />
-                        <p className="text-sm font-bold tracking-[1.5px]">TESTIMONIALS</p>   
+                        <p className="text-sm font-bold tracking-[3.5px]">TESTIMONIALS</p>   
                     </div>
                     
                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">

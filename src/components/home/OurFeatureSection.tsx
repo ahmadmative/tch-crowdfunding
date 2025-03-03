@@ -36,7 +36,7 @@ const OurFeatureSection: React.FC = () => {
     <div className="flex flex-col gap-4 ">
         <div className="w-full flex items-center justify-center gap-2">
             <img src="/home-header.png" alt="home-header" className="w-[20px] h-[15px]" />
-            <p className="text-xs font-normal leading-[15px] text-[#000000] tracking-[1.5px]">OUR FEATURES</p>
+            <p className="text-xs font-normal leading-[15px] text-[#000000] tracking-[3.5px]">OUR FEATURES</p>
         </div>
 
         <h1 className="text-4xl text-center font-bold">Highlights our impactful work</h1>
@@ -48,7 +48,7 @@ const OurFeatureSection: React.FC = () => {
 
     {/* cards section */}
 
-    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="w-full flex flex-col items-center md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         {/* card 1 */}
         {featureCards.map((card, index) => (

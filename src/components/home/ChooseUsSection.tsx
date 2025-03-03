@@ -3,7 +3,7 @@ import React from "react";
 const ChooseUsSection: React.FC = () => {
   return (
     <div className="bg-[#F5F5F5] py-8 md:py-16 px-4 md:p-10">
-      <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-14">
+      <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-14">
         {/* Image Section */}
         <div className="flex flex-col gap-4 w-full lg:w-1/2">
           <div className="flex items-center justify-center lg:justify-end">
@@ -29,7 +29,7 @@ const ChooseUsSection: React.FC = () => {
               alt="home-header" 
               className="w-[20px] h-[15px]" 
             />
-            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[1.5px]">
+            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">
               WHY CHOOSE US
             </p>
           </div>

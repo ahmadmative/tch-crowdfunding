@@ -15,10 +15,16 @@ const AboutUsSection: React.FC = () => {
       {/* Text Section */}
       <div className="flex-1 flex flex-col gap-10">
         {/* Header Section */}
-        <div className="flex items-center gap-2 ">
-            <img src="/home-header.png" alt="aboutus" className="w-[20px] h-[14px]"/>
-            <p className="text-sm font-bold">About Us</p>
-        </div>
+        <div className="w-full flex items-center gap-2">
+            <img 
+              src="/home-header.png" 
+              alt="home-header" 
+              className="w-[20px] h-[15px]" 
+            />
+            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">
+              ABOUT US
+            </p>
+          </div>
 
         {/* Title Section */}
         <h1 className="text-4xl font-bold">United in compassion, changing lives</h1>

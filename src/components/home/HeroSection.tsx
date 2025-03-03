@@ -32,8 +32,8 @@ const HeroSection: React.FC = () => {
                   </div>
                 </div>
                 <div className="mt-4 md:mt-auto">
-                  <button className="bg-[#BEE36E] text-black px-4 py-2 md:px-6 md:py-3 rounded-full text-lg font-bold w-full sm:w-[210px] h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300">
-                    Donate Now!
+                  <button className="bg-[#BEE36E] flex items-center justify-center text-black px-4 py-2 md:px-6 md:py-3 rounded-full text-lg font-bold w-full sm:w-[210px] h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300">
+                    Donate Now <img src="/arrow-black.png" alt="arrow-right" className="w-4 h-4 ml-2" />
                   </button>
                 </div>
               </div>

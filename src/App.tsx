@@ -11,15 +11,31 @@ import Settings from './components/Settings';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import NavLayout from './layouts/NavLayout';
+import Verification from './pages/Verification';
+import ForgetPassword from './pages/ForgetPassword';
+import NewPassword from './pages/NewPassword';
+import Campaigns from './pages/Campaigns';
+import CampaignDetails from './pages/CampaignDetails';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home />} />
-        
+        <Route path="/" element={<NavLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgetpassword" element={<ForgetPassword />} />
+          <Route path="/verification" element={<Verification />} />
+          <Route path="/newpassword" element={<NewPassword />} />
+          <Route path="/home/campaigns" element={<Campaigns />} />
+          <Route path="/home/campaigns/:id" element={<CampaignDetails />} />
+
+        </Route>
+
+
+
 
         <Route path="/" element={<DashboardLayout />}>
           {/* <Route index element={<Dashboard />} /> */}

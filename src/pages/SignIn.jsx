@@ -5,81 +5,74 @@ const SignIn = () => {
     const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
-        <div>
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-            Welcome back
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            New to our platform?{' '}
-            <Link to="/signup" className="font-medium text-gray-600 hover:text-gray-900">
-              Create an account
-            </Link>
-          </p>
+      <div className="w-full max-w-md space-y-8 bg-white px-8 py-12 rounded-xl shadow-lg">
+        <div className='flex items-center justify-center'>
+          <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
         </div>
+
+        
 
         <form className="mt-8 space-y-6">
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                Email
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                placeholder="john@example.com"
+                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                placeholder="Enter your email"
               />
             </div>
 
             <div>
+              <div className='flex items-center justify-between'>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
+              <div className="text-sm">
+                <Link to="/forgetpassword" className="font-medium text-[#BEE36E] hover:text-gray-900">
+                  Forgot password?
+                </Link>
+              </div>
+
+              </div>
+              
+
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
                 placeholder="••••••••"
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <Link to="/" className="font-medium text-gray-600 hover:text-gray-900">
-                  Forgot your password?
-                </Link>
-              </div>
-            </div>
+            
           </div>
 
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]"
               onClick={() => {
                 navigate('/dashboard');
               }}
             >
-              Sign in
+              Login
             </button>
           </div>
+
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link to="/signup" className="font-medium text-[#BEE36E] hover:text-gray-900">
+              Register
+            </Link>
+          </p>
 
           <div className="flex items-center justify-center space-x-4">
             <button

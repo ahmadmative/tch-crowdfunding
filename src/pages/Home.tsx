@@ -8,6 +8,7 @@ import OurFeatureSection from '../components/home/OurFeatureSection';
 import ChooseUsSection from '../components/home/ChooseUsSection';
 import Testimonials from '../components/home/Testimonials';
 import Footer from '../components/home/Footer';
+import FAQsSection from '../components/home/FAQsSection';
 
 
 const Home: React.FC = () => {
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
     <ChooseUsSection />
     <OurFeatureSection />
     <Testimonials />
+    <FAQsSection />
     <Footer />
   </div>;
 };
