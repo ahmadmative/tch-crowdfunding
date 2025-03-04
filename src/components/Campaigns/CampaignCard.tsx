@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const CampaignCard: React.FC = () => {
     const raised = 8500;
@@ -52,7 +53,7 @@ const CampaignCard: React.FC = () => {
         </div>
 
         <div className='flex items-center justify-center'>
-            <button className='bg-[#BEE36E] hover:bg-[#a8cc5c] transition-colors duration-200 text-black font-semibold px-4 py-2 rounded-full w-full'>Donate Now</button>
+            <Link to="/home/campaigns/1" className='bg-[#BEE36E] text-center hover:bg-[#a8cc5c] transition-colors duration-200 text-black font-semibold px-4 py-2 rounded-full w-full'>Donate Now</Link>
             {/* <button className='bg-[#BEE36E] text-black font-semibold px-4 py-2 rounded-full w-full'>Donate Now</button> */}
         </div>
     </div>

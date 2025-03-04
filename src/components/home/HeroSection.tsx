@@ -4,11 +4,11 @@ const HeroSection: React.FC = () => {
   return (
     <div className="max-w-[1200px] w-full mx-auto p-4 max-h-[800px] flex flex-col md:flex-row justify-between items-center mt-[77px]">
       {/* Rest of the hero section content stays the same */}
-      <div className="w-full h-full rounded-lg relative">
+      <div className="w-full max-h-[560px] rounded-lg relative rounded-[60px] overflow-hidden">
         <img
-          src={"/hero-image.png"}
+          src={"/hero-img.png"}
           alt="hero-image"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover "
         />
         <div className="absolute top-0 left-0 w-full h-full rounded-lg">
           <img

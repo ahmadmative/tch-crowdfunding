@@ -1,5 +1,6 @@
 import React from 'react';
 import CampaignCard from '../Campaigns/CampaignCard';
+import { Link } from 'react-router-dom';
 
 const CampaignsSection: React.FC = () => {
   return (
@@ -23,10 +24,10 @@ const CampaignsSection: React.FC = () => {
         </div>
 
         {/* Button */}
-        <button className='w-[150px] h-[55px] flex items-center justify-center gap-2 border border-[#BEE36E] text-[#BEE36E] px-4 py-2 rounded-full'>View All
+        <Link to="/home/campaigns" className='w-[150px] h-[55px] flex items-center justify-center gap-2 border border-[#BEE36E] text-[#BEE36E] px-4 py-2 rounded-full'>View All
 
           <img src="/arrow.png" alt="arrow-right" className='w-[20px] h-[20px]' />
-        </button>
+        </Link>
     </section>
   );
 };
