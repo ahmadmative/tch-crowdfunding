@@ -33,9 +33,9 @@ const FAQsSection: React.FC = () => {
                 alt="home-header" 
                 className="w-[15px] h-[10px]" 
             />
-            <p className="text-xs font-bold tracking-[3.5px]">FAQ's</p>   
+            <p className="text-xs font-bold tracking-[3.5px] font-onest">FAQ's</p>   
         </div>
-        <h1 className='text-4xl font-bold text-center mb-4'>Have Any Questions For Us?</h1>
+        <h1 className='text-4xl font-bold text-center mb-4 font-onest'>Have Any Questions For Us?</h1>
 
         <div className='flex justify-center flex-col md:flex-row gap-4'>
             {/* image section  */}

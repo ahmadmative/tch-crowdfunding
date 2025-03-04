@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const SignUp = () => {
+  const [hide, setHide] = useState(true);
+  const [hideConfirm, setHideConfirm] = useState(true);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-15 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-15 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
           <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
           
         </div>
         
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6 font-sans">
           <div className="space-y-4">
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -40,31 +43,44 @@ const SignUp = () => {
               />
             </div>
 
-            <div>
+
+            <div className='relative'>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
-                placeholder="••••••••"
-              />
-            </div>
+                  <input
+                      id="password"
+                      name="password"
+                      type={hide ? "password" : "text"}
+                      required
+                      className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent pr-10"
+                      placeholder="••••••••"
+                      />
+                      <img 
+                        src={hide ? "/hide.png" : "/view.png"} 
+                        onClick={() => setHide(!hide)} 
+                        alt="eye-icon" 
+                        className='absolute right-3 top-8 w-6 h-6 cursor-pointer' 
+                      />
+                </div>
 
-            <div>
+            <div className='relative'>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
               <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={hideConfirm ? "password" : "text"}
                 required
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
                 placeholder="••••••••"
+              />
+              <img 
+                src={hideConfirm ? "/hide.png" : "/view.png"} 
+                onClick={() => setHideConfirm(!hideConfirm)} 
+                alt="eye-icon" 
+                className='absolute right-3 top-8 w-6 h-6 cursor-pointer' 
               />
             </div>
           </div>

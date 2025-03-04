@@ -8,7 +8,7 @@ const Campaigns = () => {
   const categories = ['Education', 'Health', 'Environment', 'Animal Welfare', 'Social Causes'];
 
   return (
-    <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 items-center pt-[100px] overflow-x-hidden'>
+    <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 items-center pt-[100px] overflow-x-hidden font-sans'>
       {/* Header Section */}
       <div className="w-full flex items-center justify-center gap-2">
         <img src="/home-header.png" alt="home-header" className="w-[20px] h-[15px]" />
@@ -17,8 +17,8 @@ const Campaigns = () => {
         </p>
       </div>
 
-      <h1 className='text-4xl font-bold'>All Campaigns</h1>
-      <p className='text-gray-700 text-sm'>Explore our campaigns and support the causes you care about.</p>
+      <h1 className='text-4xl font-bold font-onest'>All Campaigns</h1>
+      <p className='text-gray-700 text-sm font-sans'>Explore our campaigns and support the causes you care about.</p>
 
       {/* Search & Filters Section */}
       <div className='flex flex-col md:flex-row items-center justify-center gap-4 relative'>

@@ -13,7 +13,7 @@ const OtpCard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 font-onest">
       <div className="w-full max-w-md bg-white p-6 rounded-xxxl shadow-lg">
         {/* Logo */}
         <div className="flex items-center justify-center mb-4">

@@ -32,7 +32,7 @@ import React from 'react';
 
 const CollaborationSection: React.FC = () => {
   return (
-    <section className="max-w-[1200px] mx-auto py-6 text-black">
+    <section className="max-w-[1200px] mx-auto py-6 font-onest text-black">
       <div className="flex flex-col items-center justify-center gap-10">
         <p className="text-xs md:text-base lg:text-lg text-gray-500 text-center">
           We Collaborate with the top <span className='text-black font-bold'>200+</span> companies worldwide

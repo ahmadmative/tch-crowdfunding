@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection: React.FC = () => {
   return (
-    <div className="max-w-[1200px] w-full mx-auto p-4 max-h-[800px] flex flex-col md:flex-row justify-between items-center mt-[77px]">
+    <div className="max-w-[1200px] w-full mx-auto p-4 max-h-[800px] flex flex-col md:flex-row justify-between items-center mt-[77px] font-onest">
       {/* Rest of the hero section content stays the same */}
       <div className="w-full max-h-[560px] relative rounded-[60px] overflow-hidden">
         <img
@@ -32,9 +33,9 @@ const HeroSection: React.FC = () => {
                   </div>
                 </div>
                 <div className="mt-4 md:mt-auto">
-                  <button className="bg-[#BEE36E] flex items-center justify-center text-black px-4 py-2 md:px-6 md:py-3 rounded-full text-lg font-bold w-full sm:w-[210px] h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300">
+                  <Link to={"/home/campaigns"} className="bg-[#BEE36E] flex items-center justify-center text-black px-4 py-2 md:px-6 md:py-3 rounded-full text-lg font-bold w-full sm:w-[210px] h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300">
                     Donate Now <img src="/arrow-black.png" alt="arrow-right" className="w-4 h-4 ml-2" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

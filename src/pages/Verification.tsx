@@ -3,7 +3,7 @@ import OttpCard from '../components/home/ottp/OttpCard';
 
 const Verification: React.FC = () => {
   return (
-    <div className='flex flex-col items-center justify-center h-screen'>
+    <div className='flex flex-col items-center justify-center h-screen font-onest'>
         <OttpCard />
     </div>
   );

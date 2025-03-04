@@ -5,12 +5,12 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 px-4 right-0 bg-white z-50 pt-2">
+    <nav className="fixed top-0 left-0 px-4 right-0 bg-white z-50 pt-2 font-sans">
       <div className="max-w-[1200px] mx-auto py-2 font-size-14 h-[57px] relative">
         <div className="flex justify-between items-center h-full">
           {/* Rest of the navbar content stays the same */}
           <div className='flex items-center gap-4'>
-            <img src={"/logo.png"} alt="logo" width={100} height={100} className=""/>
+            <img src={"/nav-logo.png"} alt="logo" width={100} height={100} className=""/>
             <img src={"/line.png"} alt="logo" className='w-[1px] h-[30px] hidden md:block'/>
             
             <div className="hidden md:flex items-center gap-4">
@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
           >
             <div className={`w-6 h-0.5 bg-black mb-1.5 transition-all duration-300 ${isMenuOpen ? 'transform rotate-45 translate-y-2' : ''}`}></div>
             <div className={`w-6 h-0.5 bg-black mb-1.5 ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-            <div className={`w-6 h-0.5 bg-black ${isMenuOpen ? 'transform -rotate-45 -translate-y-2' : ''}`}></div>
+            <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMenuOpen ? 'transform -rotate-45 -translate-y-2' : ''}`}></div>
           </button>
         </div>
 

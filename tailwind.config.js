@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        onest: ['Onest', 'sans-serif'],
+      },
       colors: {
         primary: {
           50: '#f0f9ff',

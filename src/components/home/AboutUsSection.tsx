@@ -13,7 +13,7 @@ const AboutUsSection: React.FC = () => {
       </div>
 
       {/* Text Section */}
-      <div className="flex-1 flex flex-col gap-10">
+      <div className="flex-1 font-sans flex flex-col gap-10">
         {/* Header Section */}
         <div className="w-full flex items-center gap-2">
             <img 
@@ -21,13 +21,13 @@ const AboutUsSection: React.FC = () => {
               alt="home-header" 
               className="w-[20px] h-[15px]" 
             />
-            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">
+            <p className="text-sm font-normal font-onest leading-[15px] text-[#000000] tracking-[3.5px]">
               ABOUT US
             </p>
           </div>
 
         {/* Title Section */}
-        <h1 className="text-4xl font-bold">United in compassion, changing lives</h1>
+        <h1 className="text-4xl font-bold font-onest">United in compassion, changing lives</h1>
 
         <p className="text-sm text-gray-500">Our dedication, transparency, and community-driven approach set us apart.
         partnering with us,programs that create meaningful change.</p>

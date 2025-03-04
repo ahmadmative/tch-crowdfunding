@@ -14,7 +14,7 @@ const DonorCard: React.FC<DonorCardProps> = ({ name, amount, date, avatar }) => 
                             <div className='flex items-center gap-2'>
                                 <img src="/campaign-details.png" alt="avatar" className='w-[50px] h-[50px] rounded-md' />
                                 <div className='flex flex-col justify-between h-full'>
-                                    <p className='text-sm font-bold text-black'>Camerom williams</p>
+                                    <p className='text-sm font-bold text-black font-onest'>Camerom williams</p>
                                     <div className='flex items-center gap-2'>
                                         <img src="/clock.png" alt="clock" className='w-[20px] h-[20px] rounded-lg' />
                                         <p className='text-xs text-gray-600'>November 2024</p>

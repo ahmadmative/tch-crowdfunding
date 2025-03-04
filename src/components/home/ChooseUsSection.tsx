@@ -22,19 +22,19 @@ const ChooseUsSection: React.FC = () => {
         </div>
 
         {/* Text Section */}
-        <div className="flex flex-col gap-4 w-full lg:w-1/2 px-4 md:px-0">
+        <div className="flex flex-col font-sans gap-4 w-full lg:w-1/2 px-4 md:px-0">
           <div className="w-full flex items-center gap-2">
             <img 
               src="/home-header.png" 
               alt="home-header" 
               className="w-[20px] h-[15px]" 
             />
-            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">
+            <p className="text-sm font-normal font-onest leading-[15px] text-[#000000] tracking-[3.5px]">
               WHY CHOOSE US
             </p>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold">
+          <h1 className="text-3xl md:text-4xl font-bold font-onest">
             Why we stand out together
           </h1>
           

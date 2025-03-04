@@ -9,10 +9,10 @@ const CampaignsSection: React.FC = () => {
         <div className='flex flex-col items-center justify-center gap-4'>
           <div className='flex items-center justify-center gap-2'>
             <img src="/home-header.png" alt="aboutus" className="w-[20px] h-[14px]"/>
-            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">CAMPAIGNS</p>
+            <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px] font-onest">CAMPAIGNS</p>
           </div>
-          <h1 className='text-4xl font-bold'>Featured Campaigns</h1>
-          <p className='text-sm text-gray-500'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. </p>
+          <h1 className='text-4xl font-bold font-onest'>Featured Campaigns</h1>
+          <p className='text-sm text-gray-500 font-sans'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. </p>
 
         </div>
 

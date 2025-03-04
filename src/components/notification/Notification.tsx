@@ -18,7 +18,7 @@ const Notification: React.FC<NotificationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center font-onest z-50">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
       
@@ -45,12 +45,12 @@ const Notification: React.FC<NotificationModalProps> = ({
           )}
 
           {/* Title */}
-          <h2 className="text-2xl font-bold mb-2">
+          <h2 className="text-2xl font-bold mb-2 font-onest">
             {title}
           </h2>
 
           {/* Message */}
-          <p className=" mb-8">
+          <p className=" mb-8 font-sans">
             {message}
           </p>
 

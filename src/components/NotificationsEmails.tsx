@@ -91,7 +91,7 @@ const scheduledEmailsData = [
 ];
 
 const NotificationsEmails: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('notifications');
+  const [selectedTab, setSelectedTab] = useState('center');
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
 
   const location = useLocation();

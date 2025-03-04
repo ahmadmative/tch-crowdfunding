@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ForgetPassword = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-15 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-15 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
           <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>

@@ -11,7 +11,7 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ image, stats, title, description, image2, reverse }) => {
     return (
-        <div className="max-w-[350px] flex flex-col bg-white rounded-lg p-4 gap-6 hover:shadow-lg transition-shadow duration-300">
+        <div className="font-sans max-w-[350px] flex flex-col bg-white rounded-lg p-4 gap-6 hover:shadow-lg transition-shadow duration-300">
             
             {
                 !reverse && <img src={image} alt="our-feature-1" className="max-h-[380px] max-w-[350px] rounded-lg" />
@@ -22,7 +22,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ image, stats, title, descript
                 {/* Text Section */}
                 <div className="flex-1 flex flex-col space-y-1">
                     <h1 className="text-3xl font-bold text-[#BEE36E] mb-4">{stats}</h1>
-                    <p className="text-sm font-bold">{title}</p>
+                    <p className="font-onest text-sm font-bold">{title}</p>
                     <p className="text-xs text-gray-500 leading-relaxed">
                         {description}
                     </p>

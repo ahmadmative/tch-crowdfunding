@@ -34,7 +34,7 @@ const DonationForm: React.FC<{ id: string }> = ({ id } ) => {
     <div className="w-full mx-auto p-1">
         {isDonate && <Notification isOpen={isDonate} onClose={() => setIsDonate(false)} title="Donation successful" message="Donation successful" />}
       {/* Payment Method Selection */}
-      <div className="bg-white w-full rounded-lg border border-gray-300 p-4 shadow-sm mb-8 flex md:flex-row flex-col items-center justify-between">
+      <div className="font-onest bg-white w-full rounded-lg border border-gray-300 p-4 shadow-sm mb-8 flex md:flex-row flex-col items-center justify-between">
 
         <div className='flex flex-col  items-center gap-2'>
             <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
@@ -161,7 +161,7 @@ const DonationForm: React.FC<{ id: string }> = ({ id } ) => {
 
       <div className='flex items-center gap-4'>
       <button onClick={handleDonate}
-          className="bg-[#BEE36E] text-black py-3 px-6 mt-4 rounded-full font-sm hover:bg-[#a8cc5c] transition-colors duration-200"
+          className="bg-[#BEE36E] text-black py-3 px-6 mt-4 rounded-full font-xs hover:bg-[#a8cc5c] transition-colors duration-200"
         >
           DONATE NOW
         </button>

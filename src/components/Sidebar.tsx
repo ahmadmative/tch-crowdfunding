@@ -17,7 +17,7 @@ const menuItems: MenuItem[] = [
   {
     name: 'Dashboard',
     icon: HomeIcon,
-    path: '/',
+    path: '/dashboard',
     subItems: [
       { name: 'Overview of Campaigns & Donations', path: '/dashboard/overview' },
       // { name: 'Key Performance Metrics', path: '/dashboard/metrics' }
@@ -85,6 +85,12 @@ const menuItems: MenuItem[] = [
       { name: 'Security Settings', path: '/settings/security' },
       { name: 'Integrations Settings', path: '/settings/integrations' }
     ]
+  },
+  {
+    name: 'Create Campaigns',
+    icon: CogIcon,
+    path: '/home/campaigns/create',
+    
   }
 ];
 
@@ -113,7 +119,7 @@ const Sidebar: React.FC = () => {
               <Link
                 to={item.path}
                 onClick={(e) => {
-                  e.preventDefault();
+                  // e.preventDefault();
                   toggleExpand(item.name);
                 }}
                 className={`w-full px-4 py-2 flex items-center hover:bg-gray-800 transition-colors duration-200 ${

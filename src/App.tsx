@@ -17,6 +17,7 @@ import ForgetPassword from './pages/ForgetPassword';
 import NewPassword from './pages/NewPassword';
 import Campaigns from './pages/Campaigns';
 import CampaignDetails from './pages/CampaignDetails';
+import CreateCampaignForm from './pages/CampaignCreate';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/newpassword" element={<NewPassword />} />
           <Route path="/home/campaigns" element={<Campaigns />} />
           <Route path="/home/campaigns/:id" element={<CampaignDetails />} />
+          <Route path="/home/campaigns/create" element={<CreateCampaignForm />} />
 
         </Route>
 

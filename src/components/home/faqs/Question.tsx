@@ -14,7 +14,7 @@ const Question: React.FC<QuestionProps> = ({ question, answer }) => {
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h3 className="text-lg font-medium text-gray-900">{question}</h3>
+        <h3 className="text-lg font-medium text-gray-900 font-onest">{question}</h3>
         <span className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
           <svg 
             width="24" 
@@ -40,7 +40,7 @@ const Question: React.FC<QuestionProps> = ({ question, answer }) => {
           ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
         `}
       >
-        <p className="px-6 py-4 text-gray-600">{answer}</p>
+        <p className="px-6 py-4 text-gray-600 font-sans">{answer}</p>
       </div>
     </div>
   );

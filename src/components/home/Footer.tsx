@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <div className="max-w-[1200px] mx-auto p-4 flex flex-col gap-8 mb-4">
+    <div className="max-w-[1200px] mx-auto p-4 flex flex-col gap-8 mb-4 font-sans">
 
-<div className="flex flex-col md:flex-row items-center justify-between bg-[#BEE36E] max-h-[300px] rounded-xl">
+<div className="flex flex-col md:flex-row items-center justify-between bg-[#BEE36E] max-h-[300px] rounded-xl overflow-hidden">
     {/* Left Section */}
     <div className="w-full md:w-1/2 h-full flex justify-center md:justify-start">
         <img 
@@ -16,7 +17,7 @@ const Footer: React.FC = () => {
 
     {/* Right Section */}
     <div className="flex flex-col gap-3 w-full md:w-1/2 text-center md:text-left mt-4 md:mt-0">
-        <h1 className="text-xl md:text-4xl font-bold text-white">
+        <h1 className="text-xl md:text-4xl font-bold text-white font-onest">
             Empower Change with every Donation!
         </h1>
         <p className="text-sm md:text-xs text-white">
@@ -24,14 +25,14 @@ const Footer: React.FC = () => {
             and fostering lasting change for communities in need around the world.
         </p>
         <div className="flex flex-col md:flex-row gap-4 items-center justify-center md:justify-start">
-            <button className="text-white px-4 py-2 rounded-full flex items-center gap-2 border border-white">
+            <Link to={"/home/campaigns/create"} className="text-white px-4 py-2 rounded-full flex items-center gap-2 border border-white">
                 START CAMPAIGN 
                 <img src="/arrow-1.png" alt="arrow" className="w-[20px] h-[20px]" />
-            </button>
-            <button className="bg-white font-bold text-black px-4 py-2 rounded-full flex items-center gap-2">
+            </Link>
+            <Link to={"/home/campaigns"} className="bg-white font-bold text-black px-4 py-2 rounded-full flex items-center gap-2">
                 Donate Now 
                 <img src="/arrow-black.png" alt="arrow" className="w-[20px] h-[20px]" />
-            </button>
+            </Link>
         </div>
     </div>
 </div>
@@ -48,12 +49,12 @@ const Footer: React.FC = () => {
                 <div className='flex flex-col md:justify-between md:flex-row gap-4 md:gap-8 mb-8'>
                     <div className='flex flex-col gap-2'>
                         <p className='text-sm'>Toll free Customer care</p>
-                        <p className='text-sm font-bold'>1213 14 1441 1</p>
+                        <p className='text-sm font-bold font-onest'>1213 14 1441 1</p>
                     </div>
 
                     <div className='flex flex-col gap-2'>
                         <p className='text-sm'>Need live support!</p>
-                        <p className='text-sm font-bold'>info@tch.com</p>
+                        <p className='text-sm font-bold font-onest'>info@tch.com</p>
                     </div>
                 </div>
             </div>
@@ -114,7 +115,7 @@ const Footer: React.FC = () => {
 
             <div className='grid grid-cols-1 sm:grid-cols-3 gap-8'>
                 <div className='flex flex-col gap-2'>
-                    <h2 className='text-sm font-bold mb-2'>Quick Links</h2>
+                    <h2 className='text-sm font-bold mb-2 font-onest'>Quick Links</h2>
                     <a href="/" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Home</a>
                     <a href="/about" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>About Us</a>
                     <a href="/services" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Services</a>
@@ -122,7 +123,7 @@ const Footer: React.FC = () => {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <h2 className='text-sm font-bold mb-2'>Services</h2>
+                    <h2 className='text-sm font-bold mb-2 font-onest'>Services</h2>
                     <a href="/food-security" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Food Security Initiative</a>
                     <a href="/healthcare" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Healthcare Access</a>
                     <a href="/education" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Education</a>
@@ -130,7 +131,7 @@ const Footer: React.FC = () => {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <h2 className='text-sm font-bold mb-2'>Support</h2>
+                    <h2 className='text-sm font-bold mb-2 font-onest'>Support</h2>
                     <a href="/faq" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>FAQ</a>
                     <a href="/support" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Support</a>
                     <a href="/terms" className='text-sm hover:text-[#BEE36E] transition-colors duration-300'>Terms & Conditions</a>

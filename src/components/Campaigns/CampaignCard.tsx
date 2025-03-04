@@ -7,14 +7,14 @@ const CampaignCard: React.FC = () => {
     const progress = (raised / goal) * 100;
 
   return (
-    <div className='flex flex-col border border-[#020D1914] p-4 gap-4 rounded-lg overflow-hidden max-w-[400px] hover:shadow-lg hover:border-[#BEE36E] transition-all duration-300'>
+    <div className='font-sans flex flex-col border border-[#020D1914] p-4 gap-4 rounded-lg overflow-hidden max-w-[400px] hover:shadow-lg hover:border-[#BEE36E] transition-all duration-300'>
 
         {/* Campaign Image */}
         <img src="/campaign-card.png" alt="campaign-card" className='w-full h-[200px] object-cover rounded-lg' />
 
         {/* Campaign Title */}
         <div className='flex flex-col gap-2'>
-            <p className='text-lg font-bold'>Just Plain Darren needs you.</p>
+            <p className='text-lg font-bold font-onest'>Just Plain Darren needs you.</p>
             <p className='text-sm text-gray-500'>Darren Scott, one of South Africa’s most beloved radio and TV sports personalities.</p>
         </div>
 

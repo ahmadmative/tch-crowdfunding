@@ -39,9 +39,9 @@ const OurFeatureSection: React.FC = () => {
             <p className="text-xs font-normal leading-[15px] text-[#000000] tracking-[3.5px]">OUR FEATURES</p>
         </div>
 
-        <h1 className="text-4xl text-center font-bold">Highlights our impactful work</h1>
+        <h1 className="text-4xl text-center font-bold font-onest">Highlights our impactful work</h1>
 
-        <p className="text-xs text-gray-500 leading-relaxed">Discover the positive change we've created through our programs, partnerships, and dedicated
+        <p className="text-xs text-gray-500 leading-relaxed font-sans">Discover the positive change we've created through our programs, partnerships, and dedicated
         efforts. From healthcare and education to environmental sustainability.</p>
         
     </div>

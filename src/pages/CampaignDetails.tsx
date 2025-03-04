@@ -32,7 +32,7 @@ const CampaignDetails = () => {
     ]
 
 
-    return <div className='max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[100px] overflow-x-hidden'>
+    return <div className='max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[100px] overflow-x-hidden font-sans'>
         {/* upper section */}
         <div className='flex justify-between md:w-[75%] w-full'>
             <div className='flex flex-col'>
@@ -75,11 +75,11 @@ const CampaignDetails = () => {
                         <img src="/campaign-details.png" alt="location" className='w-[50px] h-full rounded-md' />
 
                         <div className='flex flex-col h-full justify-between'>
-                            <p className='text-normal font-bold text-black'>Camerom williams</p>
+                            <p className='text-normal font-bold text-black font-onest'>Camerom williams</p>
 
                             <div className='flex items-center gap-2'>
                                 <img src="/clock.png" alt="location" className='w-[20px] h-[20px] rounded-lg' />
-                                <p className='text-xs font-bold text-gray-600'>November 2024</p>
+                                <p className='text-xs font-bold text-gray-600 font-onest'>November 2024</p>
                             </div>
                         </div>
 
@@ -88,8 +88,8 @@ const CampaignDetails = () => {
                     {/* funds required section */}
                     <div className='flex flex-col items-center gap-2'>
                         
-                        <p className=' font-bold text-black '>Required Funds</p>
-                        <p className='text-[#BEE36E] font-bold text-2xl' >R{raised}</p>
+                        <p className=' font-bold text-black font-onest'>Required Funds</p>
+                        <p className='text-[#BEE36E] font-bold text-2xl font-onest' >R{raised}</p>
                     </div>
 
                     {/* donate btn */}
@@ -107,14 +107,14 @@ const CampaignDetails = () => {
                 <div className='flex flex-col gap-2 py-6'>
                     {/* title & story section */}
                     <div className='flex flex-col'>
-                        <p className='text-sm font-bold text-black py-2'>Just Plain Darren needs you.</p>
+                        <p className='text-sm font-bold text-black py-2 font-onest'>Just Plain Darren needs you.</p>
                         <p className='text-xs text-gray-600 leading-6'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
                         </p>
                     </div>
 
                     {/* goal section */}
                     <div className='flex flex-col'>
-                        <p className='text-sm font-bold text-black py-2'>Our Challenge & Goal</p>
+                        <p className='text-sm font-bold text-black py-2 font-onest'>Our Challenge & Goal</p>
                         <p className='text-xs text-gray-600 leading-6'>However, if you intended to refer to body or organ donation, that is a separate topic. Organ donation involves the voluntary donation of
                         organs or tissues from a living or deceased person to help save or improve the lives of others in need of transplantation. including poverty, education, healthcare, disaster relief, environmental conservation, and more. People can contribute to charities by
                         making financial donations, volunteering their time and skills, It is a generous act that can make a significant difference in someone's life by providing them with a chance for a healthier future.</p>
@@ -133,7 +133,7 @@ const CampaignDetails = () => {
 
         {/* donors section */}
         <div className='flex flex-col md:w-[25%] w-full'>
-                <p className='text-sm font-bold text-black py-2'>Donations</p>
+                <p className='text-sm font-bold text-black py-2 font-onest'>Donations</p>
 
                 <div className='flex flex-col gap-2 overflow-y-auto max-h-[500px] scrollbar-hide border border-gray-300 rounded-lg p-4'>
                     {/* filter section */}
