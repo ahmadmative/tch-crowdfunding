@@ -1,16 +1,68 @@
 import React from 'react';
 
-interface NotificationProps {
+interface NotificationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   title: string;
   message: string;
-  type: 'success' | 'error' | 'info';
+  type?: 'success' | 'error' | 'info';
 }
 
-const Notification: React.FC<NotificationProps> = ({ title, message, type }) => {
+const Notification: React.FC<NotificationModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+  type = 'success'
+}) => {
+  if (!isOpen) return null;
+
   return (
-    <div className={`p-4 rounded-md ${type === 'success' ? 'bg-green-100 text-green-700' : type === 'error' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
-      <h4 className="font-bold">{title}</h4>
-      <p>{message}</p>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
+      
+      {/* Modal */}
+      <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 relative z-10">
+        <div className="flex flex-col items-center text-center">
+          {/* Success Icon */}
+          {type === 'success' && (
+            <div className="w-20 h-20 rounded-full bg-[#BEE36E] flex items-center justify-center mb-6">
+              <svg 
+                className="w-10 h-10 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={3} 
+                  d="M5 13l4 4L19 7" 
+                />
+              </svg>
+            </div>
+          )}
+
+          {/* Title */}
+          <h2 className="text-2xl font-bold mb-2">
+            {title}
+          </h2>
+
+          {/* Message */}
+          <p className=" mb-8">
+            {message}
+          </p>
+
+          {/* Continue Button */}
+          <button
+            onClick={onClose}
+            className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

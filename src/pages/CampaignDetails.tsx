@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DonationForm from '../components/donation/DonationForm';
+import DonorCard from '../components/donation/DonorCard';
 
 const CampaignDetails = () => {
     const { id } = useParams();
     const raised = 8500;
     const goal = 10000;
     const progress = (raised / goal) * 100;
+    const [activeTab, setActiveTab] = useState<"Hot" | "All">("Hot");
+
+    const donors = [
+        {
+            name: 'Camerom williams',
+            amount: 150,
+            date: 'November 2024',
+            avatar: '/campaign-details.png'
+        },
+        {   
+            name: 'Camerom williams',
+            amount: 150,
+            date: 'November 2024',
+            avatar: '/campaign-details.png'
+        },
+        {   
+            name: 'Camerom williams',
+            amount: 150,
+            date: 'November 2024',
+            avatar: '/campaign-details.png'
+        }
+    ]
 
 
-    return <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 items-center pt-[100px] overflow-x-hidden'>
+    return <div className='max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[100px] overflow-x-hidden'>
         {/* upper section */}
-        <div className='flex items-center justify-between w-[75%]'>
+        <div className='flex justify-between md:w-[75%] w-full'>
             <div className='flex flex-col'>
                 {/* image section */}
                 <div className='relative flex items-center gap-2 rounded-xl overflow-hidden'>
@@ -106,12 +129,37 @@ const CampaignDetails = () => {
 
             </div>
 
-            {/* donors section */}
-            <div className='flex flex-col'>
-                <p>donor1</p>
-                <p>donor2</p>
-            </div>
         </div>
+
+        {/* donors section */}
+        <div className='flex flex-col md:w-[25%] w-full'>
+                <p className='text-sm font-bold text-black py-2'>Donations</p>
+
+                <div className='flex flex-col gap-2 overflow-y-auto max-h-[500px] scrollbar-hide border border-gray-300 rounded-lg p-4'>
+                    {/* filter section */}
+                    <div className="flex items-center gap-2 p-2">
+                        {["Hot", "All"].map((tab) => (
+                            <p
+                            key={tab}
+                            className={`text-sm font-bold cursor-pointer px-4 py-1 rounded-full transition-all duration-300 
+                                ${activeTab === tab ? "bg-[#BEE36E] text-black" : "bg-white border border-gray-300 text-gray-600"}`}
+                            onClick={() => setActiveTab(tab as "Hot" | "All")}
+                            >
+                            {tab}
+                            </p>
+                        ))}
+                    </div>
+
+                    {/* card */}
+                    {donors.map((donor) => (
+                        <DonorCard key={donor.name} {...donor} />
+                    ))}
+                    
+
+                    
+                </div>
+                
+            </div>
 
         {/* details section */}
     </div>;
