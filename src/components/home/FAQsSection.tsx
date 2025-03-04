@@ -42,14 +42,14 @@ const FAQsSection: React.FC = () => {
             <div className="flex flex-col gap-4 w-full lg:w-1/2">
                 <div className="flex items-center justify-center lg:justify-end">
                     <img 
-                    src="/chooseus-1.png" 
+                    src="/chooseUs-1.png" 
                     alt="chooseus-1" 
                     className="w-full max-w-[350px] md:max-w-[480px] h-auto rounded-[20px]" 
                     />
                 </div>
                 
                 <img 
-                    src="/chooseus-2.png" 
+                    src="/chooseUs-2.png" 
                     alt="chooseus-2" 
                     className="w-full max-w-[300px] md:max-w-[412px] h-auto mt-[-50px] md:mt-[-100px] rounded-[20px] border-[8px] md:border-[15px] border-white self-start md:self-auto" 
                 />
