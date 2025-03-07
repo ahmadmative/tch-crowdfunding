@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -6,6 +7,7 @@ interface NotificationModalProps {
   title: string;
   message: string;
   type?: 'success' | 'error' | 'info';
+  link?: string | null;
 }
 
 const Notification: React.FC<NotificationModalProps> = ({
@@ -13,6 +15,7 @@ const Notification: React.FC<NotificationModalProps> = ({
   onClose,
   title,
   message,
+  link = null,
   type = 'success'
 }) => {
   if (!isOpen) return null;
@@ -43,6 +46,23 @@ const Notification: React.FC<NotificationModalProps> = ({
               </svg>
             </div>
           )}
+          {type === 'error' && (
+            <div className="w-20 h-20 rounded-full bg-[#BEE36E] flex items-center justify-center mb-6">
+              <svg 
+                className="w-10 h-10 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={3}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          )}
 
           {/* Title */}
           <h2 className="text-2xl font-bold mb-2 font-onest">
@@ -54,13 +74,19 @@ const Notification: React.FC<NotificationModalProps> = ({
             {message}
           </p>
 
+          {link && (
+            <Link to={link} className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200">Continue</Link>
+          )}
+
           {/* Continue Button */}
-          <button
-            onClick={onClose}
-            className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200"
-          >
-            Continue
-          </button>
+          {!link && (
+            <button
+              onClick={onClose}
+              className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200"
+            >
+              ok
+            </button>
+          )}
         </div>
       </div>
     </div>

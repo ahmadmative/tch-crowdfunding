@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EyeIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../config/url';
+import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 // Mock data for the charts
 const campaignStatusData = [
@@ -67,6 +71,15 @@ const campaignsData = [
 const CampaignsManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('all');
   const [selectedCampaign, setSelectedCampaign] = useState<number | null>(null);
+  const [cardData,setCardData]=useState<any>([])
+  const [campaignStatusData,setCampaignStatusData]=useState<any>([])
+  const [fundsOverTimeData,setFundsOverTimeData]=useState<any>([])
+  const [topCampaignsData,setTopCampaignsData]=useState<any>([])
+  const [campaignsData,setCampaignsData]=useState<any>([])
+  const [loading,setLoading]=useState<any>(true)
+  const [error,setError]=useState<any>("")
+  const [search,setSearch]=useState<any>("")
+  const [status,setStatus]=useState<any>("")
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -93,6 +106,80 @@ const CampaignsManagement: React.FC = () => {
     }
   }, [pathname]);
 
+  useEffect(()=>{
+    setCampaignsData(campaignsData.filter((campaign:any)=>campaign.title.toLowerCase().includes(search.toLowerCase())))
+  },[search])
+
+  useEffect(()=>{
+    setCampaignsData(campaignsData.filter((campaign:any)=>campaign.status.toLowerCase().includes( selectedTab.toLowerCase())))
+  },[selectedTab])
+
+  
+
+  
+
+  useEffect(()=>{
+    setCampaignsData(campaignsData.filter((campaign:any)=>campaign.status.toLowerCase().includes(status.toLowerCase())))
+  },[status])
+
+
+    
+  useEffect(()=>{
+    const fetch=async()=>{
+      try{
+      const res=await axios.get(`${BASE_URL}/analytics/campaign/stats`)
+      setCardData(res.data)
+      console.log(res.data)
+
+      const res2=await axios.get(`${BASE_URL}/analytics/campaign/status`)
+      setCampaignStatusData(res2.data)
+      console.log(res2.data)
+
+      const res3=await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`)
+      setFundsOverTimeData(res3.data)
+      console.log(res3.data)
+
+      const res4=await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`)
+      setTopCampaignsData(res4.data)
+      console.log(res4.data)
+
+      const res5=await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`)
+      setCampaignsData(res5.data)
+      console.log(res5.data)
+
+
+      }catch(err:any){
+        console.log(err)
+        setError(err.message)
+      }finally{
+        setLoading(false)
+      }
+    }
+    fetch()
+  },[])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        <p>{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
 
   return (
     <div className="space-y-6">
@@ -108,22 +195,22 @@ const CampaignsManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Campaigns</h3>
-          <p className="text-3xl font-bold text-primary-600">72</p>
+          <p className="text-3xl font-bold text-primary-600">{cardData.totalCampaigns}</p>
           <p className="text-sm text-gray-600 mt-2">Across all statuses</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Active Campaigns</h3>
-          <p className="text-3xl font-bold text-green-600">24</p>
+          <p className="text-3xl font-bold text-green-600">{cardData.activeCampaigns}</p>
           <p className="text-sm text-gray-600 mt-2">Currently running</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Funds Raised</h3>
-          <p className="text-3xl font-bold text-blue-600">$273,000</p>
+          <p className="text-3xl font-bold text-blue-600">{cardData.totalFundsRaised}</p>
           <p className="text-sm text-gray-600 mt-2">All time</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Success Rate</h3>
-          <p className="text-3xl font-bold text-purple-600">85%</p>
+          <p className="text-3xl font-bold text-purple-600">{cardData.successRate}%</p>
           <p className="text-sm text-gray-600 mt-2">Goal achievement</p>
         </div>
       </div>
@@ -139,7 +226,7 @@ const CampaignsManagement: React.FC = () => {
                 <XAxis dataKey="status" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill="#0ea5e9" />
+                <Bar dataKey="total" fill="#0ea5e9" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -150,10 +237,10 @@ const CampaignsManagement: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={fundsOverTimeData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="_id" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="amount" stroke="#0ea5e9" />
+                <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -164,9 +251,9 @@ const CampaignsManagement: React.FC = () => {
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold mb-4">Top 5 Campaigns</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          {topCampaignsData.map((campaign, index) => (
+          {topCampaignsData.map((campaign:any, index:any) => (
             <div key={index} className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-semibold text-gray-800 truncate">{campaign.name}</h4>
+              <h4 className="font-semibold text-gray-800 truncate">{campaign.title}</h4>
               <p className="text-primary-600 font-bold mt-2">${campaign.amount.toLocaleString()}</p>
             </div>
           ))}
@@ -218,9 +305,10 @@ const CampaignsManagement: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search campaigns..."
+                onChange={(e)=>setSearch(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
-              <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <select onChange={(e)=>setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                 <option value="">All Statuses</option>
                 <option value="active">Active</option>
                 <option value="pending">Pending</option>
@@ -243,37 +331,37 @@ const CampaignsManagement: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {campaignsData.map((campaign) => (
+                {campaignsData.map((campaign:any) => (
                   <tr key={campaign.id} className="border-b">
                     <td className="py-3 px-4">{campaign.title}</td>
-                    <td className="py-3 px-4">{campaign.creator}</td>
+                    <td className="py-3 px-4">{campaign.userDetails.name}</td>
                     <td className="py-3 px-4">
                       <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(campaign.status)}`}>
                         {campaign.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4">${campaign.fundsRaised.toLocaleString()}</td>
+                    <td className="py-3 px-4">${campaign.totalDonations.toLocaleString()}</td>
                     <td className="py-3 px-4">
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div
                           className="bg-primary-600 h-2.5 rounded-full"
-                          style={{ width: `${(campaign.fundsRaised / campaign.goal) * 100}%` }}
+                          style={{ width: `${(campaign.totalDonations / campaign.amount) * 100}%` }}
                         ></div>
                       </div>
                       <span className="text-sm text-gray-600">
-                        {((campaign.fundsRaised / campaign.goal) * 100).toFixed(0)}%
+                        {((campaign.totalDonations / campaign.amount) * 100).toFixed(0)}%
                       </span>
                     </td>
-                    <td className="py-3 px-4">{campaign.startDate}</td>
-                    <td className="py-3 px-4">{campaign.endDate}</td>
+                    <td className="py-3 px-4">{dayjs(campaign.startDate).format('DD-MM-YYYY')}</td>
+                    <td className="py-3 px-4">{dayjs(campaign.endDate).format('DD-MM-YYYY')}</td>
                     <td className="py-3 px-4">
                       <div className="flex space-x-2">
-                        <button
-                          onClick={() => setSelectedCampaign(campaign.id)}
+                        <Link
+                          to={`/admin/campaigns/${campaign._id}`}
                           className="text-gray-600 hover:text-gray-800"
                         >
                           <EyeIcon className="h-5 w-5" />
-                        </button>
+                        </Link>
                         {campaign.status === 'Pending' && (
                           <>
                             <button className="text-green-600 hover:text-green-800">
@@ -319,25 +407,25 @@ const CampaignsManagement: React.FC = () => {
                 <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
-            {campaignsData.find(c => c.id === selectedCampaign) && (
+            {campaignsData.find((c:any) => c.id === selectedCampaign) && (
               <div className="space-y-4">
                 <div>
                   <h3 className="font-semibold">Description</h3>
                   <p className="text-gray-600">
-                    {campaignsData.find(c => c.id === selectedCampaign)?.description}
+                    {campaignsData.find((c:any) => c.id === selectedCampaign)?.description}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h3 className="font-semibold">Goal</h3>
                     <p className="text-gray-600">
-                      ${campaignsData.find(c => c.id === selectedCampaign)?.goal.toLocaleString()}
+                      ${campaignsData.find((c:any) => c.id === selectedCampaign)?.goal.toLocaleString()}
                     </p>
                   </div>
                   <div>
                     <h3 className="font-semibold">Funds Raised</h3>
                     <p className="text-gray-600">
-                      ${campaignsData.find(c => c.id === selectedCampaign)?.fundsRaised.toLocaleString()}
+                      ${campaignsData.find((c:any) => c.id === selectedCampaign)?.totalDonations.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -348,7 +436,7 @@ const CampaignsManagement: React.FC = () => {
                   >
                     Close
                   </button>
-                  {campaignsData.find(c => c.id === selectedCampaign)?.status === 'pending' && (
+                  {campaignsData.find((c:any) => c.id === selectedCampaign)?.status === 'pending' && (
                     <>
                       <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                         Approve

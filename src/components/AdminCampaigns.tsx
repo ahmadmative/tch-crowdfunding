@@ -16,7 +16,7 @@ interface Campaign {
   lastDonationDate: string;
 }
 
-const Campaigns = () => {
+const AdminCampaigns = () => {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Select Category');
@@ -33,7 +33,7 @@ const Campaigns = () => {
   useEffect(() => {
     startTransition(async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`);
+        const res = await axios.get(`${BASE_URL}/campaigns/getAllByAdmin`);
         setCampaigns(res.data);
         setFilteredCampaigns(res.data);
       } catch (error) {
@@ -96,7 +96,7 @@ const Campaigns = () => {
   }, [searchQuery, selectedCategory, minAmount, maxAmount, sortBy, campaigns]);
 
   return (
-    <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 min-h-screen items-center pt-[100px] overflow-x-hidden font-sans'>
+    <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 min-h-screen items-center pt-[10px] overflow-x-hidden font-sans'>
       {/* Header Section */}
       <div className="w-full flex items-center justify-center gap-2">
         <img src="/home-header.png" alt="home-header" className="w-[20px] h-[15px]" />
@@ -115,7 +115,7 @@ const Campaigns = () => {
           <input 
             type="text" 
             placeholder='Search Campaigns' 
-            className='w-full h-[20px] rounded-full outline-none px-2'
+            className='w-full h-[20px] rounded-full outline-none px-2 bg-transparent'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -209,7 +209,7 @@ const Campaigns = () => {
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {filteredCampaigns.map((campaign) => (
-            <CampaignCard key={campaign._id} campaign={campaign} />
+            <CampaignCard key={campaign._id} campaign={campaign} admin={true}/>
           ))}
         </div>
       )}
@@ -217,4 +217,4 @@ const Campaigns = () => {
   );
 };
 
-export default Campaigns;
+export default AdminCampaigns;

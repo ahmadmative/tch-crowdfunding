@@ -1,11 +1,50 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useTransition } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { BASE_URL } from '../config/url';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Notification from '../components/notification/Notification';
 
 const NewPassword = () => {
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
+  const { id } = useParams();
+  const [isPending, startTransition]=useTransition();
+  const [data, setData]=useState({
+    newPassword: '',
+    confirmPassword: ''
+  })
+  const navigate=useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+
+  const handleSubmit=async(e:any)=>{
+    e.preventDefault();
+    console.log(data);
+    startTransition(async()=>{
+      try{
+        const res=await axios.post(`${BASE_URL}/auth/reset-password`, {id, newPassword: data.newPassword, confirmPassword: data.confirmPassword})
+        console.log(res.data);
+        toast.success(res.data.message);
+        setSuccess(res.data.message);
+        // navigate('/signin');
+      }catch(error:any){
+        toast.error(error.response?.data?.message || "Failed to reset password.");
+        setError(error.response?.data?.message || "Failed to reset password.");
+        console.log(error);
+      }finally{
+        // setIsPending(false);
+      }
+    })
+  }
+
+
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-15 px-4 sm:px-6 lg:px-8 font-sans">
+      {success && <Notification isOpen={true} title="Success" message="Password reset successfully" type="success" onClose={() => setSuccess('')} link="/signin"/>}
+      {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
           <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
@@ -26,8 +65,8 @@ const NewPassword = () => {
                 New Password
               </label>
               <input
-                id="NewPassword"
-                name="NewPassword"
+                id="newPassword"
+                name="newPassword"
                 type={hide ? "password" : "text"}
                 required
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
@@ -46,8 +85,8 @@ const NewPassword = () => {
                 Confirm New Password
               </label>
               <input
-                id="ConfirmPassword"
-                name="ConfirmPassword"
+                id="confirmPassword"
+                name="confirmPassword"
                 type={hideConfirm ? "password" : "text"}
                 required
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
@@ -64,9 +103,9 @@ const NewPassword = () => {
           </div>
 
           <div>
-            <Link to="/signin" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]">
-              Create Password
-            </Link>
+            <button disabled={isPending} onClick={handleSubmit} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]">
+              {isPending ? 'Creating Password...' : 'Create Password'}
+            </button>
           </div>
           
 

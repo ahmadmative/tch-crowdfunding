@@ -1,12 +1,53 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useTransition } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../config/url';
+import { toast } from 'react-toastify';
+import Notification from '../components/notification/Notification';
+
+
 
 const SignUp = () => {
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [data, setData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const navigate = useNavigate();
+  const [isPending, startTransition] = useTransition();
+
+  const handleChange = (e: any) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log(data);
+    startTransition(async () => {
+      try {
+        const res = await axios.post(`${BASE_URL}/auth/register`, data);
+        console.log(res.data);
+        // navigate('/signin');
+        toast.success(res.data.message);
+        setSuccess(res.data.message);
+      } catch (error: any) {
+        toast.error(error.response.data.message);
+        console.log(error);
+        setError(error.message || 'An error occurred' || error.response.data.message);
+      }
+    });
+
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-15 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen my-15 px-4 sm:px-6 lg:px-8">
+      {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link="/signin"/>}
+      {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
           <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
@@ -16,14 +57,16 @@ const SignUp = () => {
         <form className="mt-8 space-y-6 font-sans">
           <div className="space-y-4">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Name
               </label>
               <input
-                id="fullName"
-                name="fullName"
+                id="name"
+                name="name"
                 type="text"
                 required
+                value={data.name}
+                onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
                 placeholder="Enter your name"
               />
@@ -38,6 +81,8 @@ const SignUp = () => {
                 name="email"
                 type="email"
                 required
+                value={data.email}
+                onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
                 placeholder="Enter your email"
               />
@@ -53,6 +98,8 @@ const SignUp = () => {
                       name="password"
                       type={hide ? "password" : "text"}
                       required
+                      value={data.password}
+                      onChange={handleChange}
                       className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent pr-10"
                       placeholder="••••••••"
                       />
@@ -72,9 +119,11 @@ const SignUp = () => {
                   id="confirmPassword"
                   name="confirmPassword"
                   type={hideConfirm ? "password" : "text"}
-                required
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
-                placeholder="••••••••"
+                  required
+                  value={data.confirmPassword}
+                  onChange={handleChange}
+                  className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                  placeholder="••••••••"
               />
               <img 
                 src={hideConfirm ? "/hide.png" : "/view.png"} 
@@ -88,11 +137,14 @@ const SignUp = () => {
           <div>
             <button
               type="submit"
+              onClick={handleSubmit}
+              disabled={isPending}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]"
             >
               Register
             </button>
           </div>
+          {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
           <p className="mt-2 text-center text-sm text-gray-600">
             Already have an account?{' '}
             <Link to="/signin" className="font-medium text-[#BEE36E] hover:text-gray-900">

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../config/url';
 
 // Mock data for the charts
 const donationTrendsData = [
@@ -71,7 +73,15 @@ const transactionsData = [
 const DonationsManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('transactions');
   const [selectedTransaction, setSelectedTransaction] = useState<number | null>(null);
-
+  const [donationStats, setDonationStats] = useState<any>(null);
+  const [donationTrends, setDonationTrends] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [paymentMethods, setPaymentMethods] = useState<any>([]);
+  const [topCampaigns, setTopCampaigns] = useState<any>([]);
+  const [transactions, setTransactions] = useState<any>([]);
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'successful':
@@ -86,7 +96,7 @@ const DonationsManagement: React.FC = () => {
   };
   const location = useLocation();
   const pathname = location.pathname;
-  const roles=  ["transactions", "payments", "logs", "settings"]
+  const roles = ["transactions", "payments", "logs", "settings"]
 
   useEffect(() => {
     console.log(pathname)
@@ -95,6 +105,77 @@ const DonationsManagement: React.FC = () => {
       setSelectedTab(urlRole);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    const filteredTransactions = transactions.filter((transaction: any) => {
+      return (
+        (paymentMethod === "" || transaction.paymentMethod === paymentMethod) &&
+        (status === "" || transaction.status === status)
+      );
+    });
+    setTransactions(filteredTransactions);
+  }, [paymentMethod, status]);
+
+
+  useEffect(() => {
+    const fetchDonationStats = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${BASE_URL}/analytics/donations/stats`)
+        setDonationStats(response.data)
+        console.log(donationStats)
+        setLoading(false);
+
+        const response2 = await axios.get(`${BASE_URL}/analytics/donations/trends`)
+        setDonationTrends(response2.data.trends)
+        console.log(donationTrends)
+        setLoading(false);
+
+        const response3 = await axios.get(`${BASE_URL}/analytics/donations/payment-methods`)
+        setPaymentMethods(response3.data.paymentMethods)
+        console.log(paymentMethods)
+        setLoading(false);
+
+        const response4 = await axios.get(`${BASE_URL}/analytics/donations/top-campaigns`)
+        setTopCampaigns(response4.data.topCampaigns)
+        console.log(topCampaigns)
+        setLoading(false);
+
+        const response5 = await axios.get(`${BASE_URL}/analytics/donations/all-transactions`)
+        setTransactions(response5.data.transactions)
+        console.log(transactions)
+        setLoading(false);
+
+      } catch (error) {
+        setError("Error fetching donation stats");
+        setLoading(false);
+      }
+
+    }
+    fetchDonationStats()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        <p>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -112,24 +193,24 @@ const DonationsManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">$273,000</p>
+          <p className="text-3xl font-bold text-primary-600">${donationStats?.totalAmount}</p>
           <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ 15%</span> from last month
+            <span className="text-green-500">↑ {donationStats?.monthlyGrowth}</span> from last month
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Successful Transactions</h3>
-          <p className="text-3xl font-bold text-green-600">1,156</p>
-          <p className="text-sm text-gray-600 mt-2">95.2% success rate</p>
+          <p className="text-3xl font-bold text-green-600">{donationStats?.donationsCompleted}</p>
+          <p className="text-sm text-gray-600 mt-2">{donationStats?.completedPercentage}% success rate</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Failed Transactions</h3>
-          <p className="text-3xl font-bold text-red-600">58</p>
-          <p className="text-sm text-gray-600 mt-2">4.8% failure rate</p>
+          <p className="text-3xl font-bold text-red-600">{donationStats?.donationsFailed}</p>
+          <p className="text-sm text-gray-600 mt-2">{donationStats?.failedPercentage}% rate</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-blue-600">$236</p>
+          <p className="text-3xl font-bold text-blue-600">${donationStats?.avergeDonation}</p>
           <p className="text-sm text-gray-600 mt-2">Per transaction</p>
         </div>
       </div>
@@ -140,12 +221,12 @@ const DonationsManagement: React.FC = () => {
           <h3 className="text-lg font-semibold mb-4">Donation Trends</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={donationTrendsData}>
+              <LineChart data={donationTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="_id" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="amount" stroke="#0ea5e9" />
+                <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -156,14 +237,16 @@ const DonationsManagement: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={paymentMethodsData}
+                  data={paymentMethods}
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  dataKey="percentage"
+                  nameKey="_id"
+                  labelLine={false} // Disables connecting lines for cleaner display
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} // Label each slice
                 >
-                  {paymentMethodsData.map((entry, index) => (
+                  {paymentMethods.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -171,18 +254,19 @@ const DonationsManagement: React.FC = () => {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
+
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">Top Campaigns</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topCampaignsData} layout="vertical">
+              <BarChart data={topCampaigns} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={100} />
+                <YAxis dataKey="title" type="category" width={100} />
                 <Tooltip />
-                <Bar dataKey="amount" fill="#0ea5e9" />
+                <Bar dataKey="totalAmount" fill="#0ea5e9" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -194,31 +278,28 @@ const DonationsManagement: React.FC = () => {
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setSelectedTab('transactions')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              (selectedTab === 'transactions' || selectedTab === 'settings')
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${(selectedTab === 'transactions' || selectedTab === 'settings')
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
             Transaction List
           </button>
           <button
             onClick={() => setSelectedTab('payments')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'payments'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'payments'
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
             Payment Settings
           </button>
           <button
             onClick={() => setSelectedTab('logs')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'logs'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'logs'
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
             Receipt Logs
           </button>
@@ -237,13 +318,13 @@ const DonationsManagement: React.FC = () => {
                   placeholder="Search transactions..."
                   className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
-                <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select onChange={(e)=>setPaymentMethod(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Payment Methods</option>
                   <option value="credit-card">Credit Card</option>
                   <option value="paypal">PayPal</option>
                   <option value="bank-transfer">Bank Transfer</option>
                 </select>
-                <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select onChange={(e)=>setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Statuses</option>
                   <option value="successful">Successful</option>
                   <option value="pending">Pending</option>
@@ -265,11 +346,11 @@ const DonationsManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactionsData.map((transaction) => (
+                  {transactions.map((transaction:any) => (
                     <tr key={transaction.id} className="border-b">
-                      <td className="py-3 px-4">{transaction.donor}</td>
+                      <td className="py-3 px-4">{transaction.donorId.name}</td>
                       <td className="py-3 px-4">${transaction.amount}</td>
-                      <td className="py-3 px-4">{transaction.campaign}</td>
+                      <td className="py-3 px-4">{transaction.campaignId.title}</td>
                       <td className="py-3 px-4">{transaction.paymentMethod}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction.status)}`}>

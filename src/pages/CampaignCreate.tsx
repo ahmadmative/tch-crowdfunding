@@ -1,9 +1,16 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useTransition } from 'react';
 import Notification from '../components/notification/Notification';
+import upload from '../utils/upload';
+import axios from 'axios';
+import { BASE_URL } from '../config/url';
+import { AuthContext } from '../context/userContext';
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 interface CampaignFormData {
   image: File | null;
   title: string;
+  description: string;
   moneyTarget: string;
   category: string;
   event: string;
@@ -20,9 +27,12 @@ interface CampaignFormData {
 }
 
 const CreateCampaignForm: React.FC = () => {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<CampaignFormData>({
-    image: null,
+    image:  null,
     title: '',
+    description: '',
     moneyTarget: '',
     category: '',
     event: '',
@@ -39,51 +49,113 @@ const CreateCampaignForm: React.FC = () => {
   });
 
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const {token, user} = useContext(AuthContext) || {token: null, user: null};
+  const [isPending, startTransition] = useTransition();
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, image: e.target.files![0] }));
+
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log(file);
+        setFormData((prev) => ({ ...prev, image: file }));
+        const imageUrl = URL.createObjectURL(file);
+        setImagePreview(imageUrl);
+        
     }
   };
+
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setIsSuccess(true);
-    // Add your form submission logic here
+    try {
+        if (!user) {
+            toast.error('Please login to create a campaign');
+            return;
+        }
+        startTransition(async () => {
+          try {
+            const imageUrl=await upload(formData.image);
+            const res = await axios.post(`${BASE_URL}/campaigns/create`, {
+                userId: user?.userId,
+                image: imageUrl,
+                title: formData.title,
+                description: formData.description,
+                amount: formData.moneyTarget,
+                category: formData.category,
+            country: formData.event,
+            story: formData.story,
+            goal: formData.challenge,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            address: formData.address,
+            city: formData.city,
+            zipCode: formData.postalCode,
+            video: formData.campaignVideoLinks,
+            media: formData.socialMediaLinks,
+            donorCommunication: formData.donorCommunication
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        console.log(formData);
+        setIsSuccess(true);
+        } catch (error: any) {
+            toast.error('Error creating campaign');
+            setError(error.response.data.message);
+            console.error('Error creating campaign:', error);
+        }
+        });
+    } catch (error) {
+        toast.error('Error creating campaign');
+        console.error('Error creating campaign:', error);
+    }
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6 pt-[100px] ">
-            {isSuccess && <Notification isOpen={isSuccess} onClose={() => setIsSuccess(false)} title="Campaign created successfully" message="Campaign created successfully" />}
+
+            {isSuccess && <Notification isOpen={isSuccess} onClose={() => setIsSuccess(false)} title="Campaign created successfully" message="Campaign created successfully" link={`/home/campaigns`}/>}
+        {error && <Notification isOpen={true} onClose={() => setError("")} title="Error" message={error} />}
+
         <div className='flex flex-col items-center border-2 border-gray-300 rounded-[40px] p-4 font-onest shadow-md'>
         <h1 className="text-2xl font-semibold mb-6">Create New Campaign</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* Image Upload */}
-        <div className='flex flex-col w-full'>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center w-full">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="imageUpload"
-                />
-                <label htmlFor="imageUpload" className="cursor-pointer flex gap-2 justify-center items-center">
+<div className='flex flex-col w-full'>
+    <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center w-full">
+        <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+            id="imageUpload"
+        />
+        <label htmlFor="imageUpload" className="cursor-pointer flex flex-col gap-2 justify-center items-center">
+            {/* Show preview if available */}
+            {formData.image ? (
+                <img src={imagePreview || ''} alt="Preview" className='w-full max-h-[200px] object-contain rounded-lg' />
+            ) : (
+                <>
                     <img src="/cloud-computing.png" alt="Upload" className='w-6 h-6' />
                     <span className="text-gray-500">Upload Image</span>
-                </label>
-            </div>
+                </>
+            )}
+        </label>
+    </div>
+</div>
 
-        </div>
         
 
         {/* Title and Money Target */}
@@ -112,6 +184,20 @@ const CreateCampaignForm: React.FC = () => {
           </div>
         </div>
 
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+          <textarea
+            name="description"
+            placeholder="Add Short Description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows={2}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+          />
+        </div>
+        
+
         {/* Category and Event */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -123,7 +209,12 @@ const CreateCampaignForm: React.FC = () => {
             className="w-full px-4 py-2 border border-gray-300 cursor-pointer rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
             >
             <option value="">Select category</option>
-            <option value="animals">Animals</option>
+            <option value="animals">Education</option>
+            <option value="animals">Health</option>
+            <option value="animals">Environment</option>
+            <option value="animals">Sports</option>
+            <option value="animals">Arts</option>
+            <option value="animals">Other</option>
             {/* Add more categories as needed */}
             </select>
 
@@ -274,9 +365,10 @@ const CreateCampaignForm: React.FC = () => {
         <div className="flex gap-4">
           <button
             type="submit"
+            disabled={isPending}
             className="px-6 py-2 bg-[#BEE36E] text-black rounded-full hover:bg-[#a8cc5c] transition-colors duration-200"
           >
-            Create Campaign
+            {isPending ? 'Creating...' : 'Create Campaign'}
           </button>
           <button
             type="button"

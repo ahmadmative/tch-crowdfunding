@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   HomeIcon, ChartBarIcon, UsersIcon, FolderIcon, 
   CreditCardIcon, ChartPieIcon, BellIcon, CogIcon 
 } from '@heroicons/react/24/outline';
+import { AuthContext } from '../context/userContext';
 
 
 interface MenuItem {
@@ -89,7 +90,10 @@ const menuItems: MenuItem[] = [
   {
     name: 'Create Campaigns',
     icon: CogIcon,
-    path: '/home/campaigns/create',
+    path: '/admin/campaigns',
+    subItems: [
+      { name: 'Create Campaign', path: '/admin/campaigns/create' },
+    ]
     
   }
 ];
@@ -97,6 +101,8 @@ const menuItems: MenuItem[] = [
 const Sidebar: React.FC = () => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const location = useLocation();
+  const {logout} = useContext(AuthContext) || {};
+  const navigate = useNavigate();
 
   const toggleExpand = (itemName: string) => {
     setExpandedItem(expandedItem === itemName ? null : itemName);
@@ -104,6 +110,11 @@ const Sidebar: React.FC = () => {
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
+  const handleLogout = () => {
+    logout?.();
+    navigate('/signin');
   };
 
   return (
@@ -157,7 +168,7 @@ const Sidebar: React.FC = () => {
           <div>
             {/* <p className="text-sm font-medium">Admin User</p> */}
             {/* <p className="text-xs text-gray-400">admin@example.com</p> */}
-            <a href="/signin" className="text-sm font-medium text-red-400 hover:text-red-500">Logout</a>
+            <button onClick={handleLogout} className="text-sm font-medium text-red-400 hover:text-red-500">Logout</button>
           </div>
         </div>
       </div>

@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/userContext';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useContext(AuthContext) || { user: null, logout: () => {} };
+  console.log(user);
+
+  
 
   return (
     <nav className="fixed top-0 left-0 px-4 right-0 bg-white z-50 pt-2 font-sans">
@@ -24,12 +29,26 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className='hidden md:flex items-center gap-4'>
+            {user ? <>
+            <Link to="/dashboard" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+              Dashboard
+            </Link>
+            <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+              Logout
+            </button>
+            <div className='flex items-center gap-2'>
+              {user?.profilePicture ? <img src={user?.profilePicture} alt="avatar" className='w-[40px] h-[40px] rounded-full'/> : <img src={"/user.png"} alt="avatar" className='w-[40px] h-[40px] rounded-full'/>}
+              {/* <p className='text-sm'>{user?.name}</p> */}
+            </div>
+            </> : <>
             <Link to="/signup" className="bg-black flex items-center justify-center text-white px-4 py-2 rounded-full w-[100px] hover:bg-gray-800 transition-colors duration-300">
               Signup
             </Link>
             <Link to="/signin" className="bg-[#BEE36E] flex items-center justify-center text-black px-4 py-2 rounded-full w-[100px] hover:bg-[#a8cc5c] transition-colors duration-300">
               Login
             </Link>
+            </>
+            }
 
           </div>
 
@@ -59,13 +78,29 @@ const Navbar: React.FC = () => {
               <Link to="/contact" className="hover:text-[#BEE36E] transition-colors duration-300">Contact Us</Link>
             
             <div className='flex flex-col gap-3 pt-2'>
+
+            {user && <div className='flex items-center gap-2'>
+              {user?.profilePicture ? <img src={user?.profilePicture} alt="avatar" className='w-[40px] h-[40px] rounded-full'/> : <img src={"/user.png"} alt="avatar" className='w-[40px] h-[40px] rounded-full'/>}
+              <p className='text-sm'>{user?.name}</p>
+            </div>}
               
+              {user ? <> <Link to="/dashboard" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+                Dashboard
+              </Link> 
+              <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+                Logout
+              </button>
+              </>
+              
+              : <>
               <Link to="/signup" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
                 Signup
               </Link>
               <Link to="/signin" className="bg-[#BEE36E] text-black px-4 py-2 rounded-full hover:bg-[#a8cc5c] transition-colors duration-300">
                 Login
               </Link>
+              </>
+              }
 
             </div>
           </div>

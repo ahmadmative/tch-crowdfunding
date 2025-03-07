@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BASE_URL } from '../config/url';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 // Mock data for the charts
 const userDistributionData = [
@@ -46,10 +49,18 @@ const usersData = [
   },
   // Add more mock data as needed
 ];
+const colors = ["#FF6384", "#36A2EB", "#FFCE56"];
 
 const UsersManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('users');
   const location = useLocation();
+  const [quickStats,setQuickStats]=useState<any>({})
+  const [roleDistribution,setRoleDistribution]=useState<any>( )
+  const [newUsers,setNewUsers]=useState<any>([])
+  const [loading,setLoading]=useState<any>(true);
+  const [users,setUsers]=useState<any>([])
+  const [search,setSearch]=useState<any>("")
+  const [role,setRole]=useState<any>("")
 
   const roles=  ["users", "admins", "permissions"]
 
@@ -62,7 +73,67 @@ const UsersManagement: React.FC = () => {
     }
   }, [pathname]);
 
-  
+  useEffect(()=>{
+    const filteredUsers=users.filter((user:any)=>user.name.toLowerCase().includes(search.toLowerCase()))
+    setUsers(filteredUsers)
+  },[search])
+
+  useEffect(()=>{
+    const filteredUsers=users.filter((user:any)=>user.role.toLowerCase().includes(role.toLowerCase()))
+    setUsers(filteredUsers)
+  },[role])
+
+  useEffect(()=>{
+    const fetchUsers=async()=>{
+      try{
+      const res=await axios.get(`${BASE_URL}/analytics/users`)
+      setQuickStats(res.data)
+      console.log(res.data)
+
+      const res2=await axios.get(`${BASE_URL}/analytics/users/roles`)
+      const roleDistribution = res2.data.activeUsersByRole.map((item:any) => ({
+        name: item.role.charAt(0).toUpperCase() + item.role.slice(1), // Capitalize role names
+        value: item.activeCount
+    }));
+      setRoleDistribution(roleDistribution)
+      console.log(res2.data)
+
+      const res3=await axios.get(`${BASE_URL}/analytics/users/trends`)
+      setNewUsers(res3.data.trends)
+      console.log(res3.data)
+
+      const res4=await axios.get(`${BASE_URL}/analytics/users/all`)
+      setUsers(res4.data)
+      console.log(res4.data)
+      }catch(err){
+        console.log(err)
+      }finally{
+        setLoading(false)
+      }
+    }
+    fetchUsers()
+    
+  },[])
+
+  const handleDelete=async(id:any)=>{
+    try{
+      const res=await axios.delete(`${BASE_URL}/analytics/users/${id}`)
+      console.log(res.data)
+      window.location.reload()
+
+      setUsers(users.filter((user:any)=>user.id!==id))
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -78,18 +149,18 @@ const UsersManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Users</h3>
-          <p className="text-3xl font-bold text-primary-600">1,234</p>
-          <p className="text-sm text-gray-600 mt-2">+12% from last month</p>
+          <p className="text-3xl font-bold text-primary-600">{quickStats.totalUsers}</p>
+          <p className="text-sm text-gray-600 mt-2">+{quickStats.monthlyGrowth}% from last month</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Active Users</h3>
-          <p className="text-3xl font-bold text-green-600">1,156</p>
-          <p className="text-sm text-gray-600 mt-2">93.7% of total users</p>
+          <p className="text-3xl font-bold text-green-600">{quickStats.activeUsers}</p>
+          <p className="text-sm text-gray-600 mt-2">+{quickStats.activeUsersPercentage}% of total users</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">New Sign-ups</h3>
-          <p className="text-3xl font-bold text-blue-600">85</p>
-          <p className="text-sm text-gray-600 mt-2">This month</p>
+          <p className="text-3xl font-bold text-blue-600">{quickStats.newSignups}</p>
+          <p className="text-sm text-gray-600 mt-2">+{quickStats.monthlyGrowth}% from last month</p>
         </div>
       </div>
 
@@ -98,38 +169,41 @@ const UsersManagement: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">User Distribution by Role</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
                 <Pie
-                  data={userDistributionData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    data={roleDistribution}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                  {userDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
+                    {roleDistribution?.map((entry :any, index :any) => (
+                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                    ))}
                 </Pie>
                 <Tooltip />
                 <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            </PieChart>
+        </ResponsiveContainer>
           </div>
         </div>
+
+
+        
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">New Users Over Time</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={newUsersData}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={newUsers}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="users" fill="#0ea5e9" />
-              </BarChart>
-            </ResponsiveContainer>
+                <Bar dataKey="total" fill="#0ea5e9" />
+            </BarChart>
+        </ResponsiveContainer>
           </div>
         </div>
       </div>
@@ -180,9 +254,10 @@ const UsersManagement: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Search users..."
+                  onChange={(e)=>setSearch(e.target.value)}
                   className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
-                <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select onChange={(e)=>setRole(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Roles</option>
                   <option value="admin">Admin</option>
                   <option value="creator">Campaign Creator</option>
@@ -203,7 +278,7 @@ const UsersManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {usersData.map((user) => (
+                  {users?.map((user:any) => (
                     <tr key={user.id} className="border-b">
                       <td className="py-3 px-4">{user.name}</td>
                       <td className="py-3 px-4">{user.email}</td>
@@ -223,11 +298,11 @@ const UsersManagement: React.FC = () => {
                           {user.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{user.lastActive}</td>
+                      <td className="py-3 px-4">{dayjs(user.createdAt).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <button className="text-primary-600 hover:text-primary-800">Edit</button>
-                          <button className="text-red-600 hover:text-red-800">Delete</button>
+                          <button className="text-red-600 hover:text-red-800" onClick={()=>handleDelete(user._id)}>Delete</button>
                         </div>
                       </td>
                     </tr>

@@ -9,6 +9,8 @@ import ChooseUsSection from '../components/home/ChooseUsSection';
 import Testimonials from '../components/home/Testimonials';
 import Footer from '../components/home/Footer';
 import FAQsSection from '../components/home/FAQsSection';
+import { ToastContainer } from 'react-toastify';
+
 
 
 const Home: React.FC = () => {
