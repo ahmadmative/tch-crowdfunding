@@ -4,6 +4,7 @@ import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon } from '@heroicons/react/
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../config/url';
+import dayjs from 'dayjs';
 
 // Mock data for the charts
 const donationTrendsData = [
@@ -69,6 +70,8 @@ const transactionsData = [
     date: '2024-02-27 09:30',
   },
 ];
+
+const COLORS = ["#4CAF50", "#2196F3", "#FF5722", "#FFC107", "#9C27B0"];
 
 const DonationsManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('transactions');
@@ -243,17 +246,18 @@ const DonationsManagement: React.FC = () => {
                   outerRadius={80}
                   dataKey="percentage"
                   nameKey="_id"
-                  labelLine={false} // Disables connecting lines for cleaner display
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} // Label each slice
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
                   {paymentMethods.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
+
 
           </div>
         </div>
@@ -318,13 +322,13 @@ const DonationsManagement: React.FC = () => {
                   placeholder="Search transactions..."
                   className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
-                <select onChange={(e)=>setPaymentMethod(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select onChange={(e) => setPaymentMethod(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Payment Methods</option>
                   <option value="credit-card">Credit Card</option>
                   <option value="paypal">PayPal</option>
                   <option value="bank-transfer">Bank Transfer</option>
                 </select>
-                <select onChange={(e)=>setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select onChange={(e) => setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Statuses</option>
                   <option value="successful">Successful</option>
                   <option value="pending">Pending</option>
@@ -346,7 +350,7 @@ const DonationsManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction:any) => (
+                  {transactions.map((transaction: any) => (
                     <tr key={transaction.id} className="border-b">
                       <td className="py-3 px-4">{transaction.donorId.name}</td>
                       <td className="py-3 px-4">${transaction.amount}</td>
@@ -357,7 +361,7 @@ const DonationsManagement: React.FC = () => {
                           {transaction.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{transaction.date}</td>
+                      <td className="py-3 px-4">{dayjs(transaction.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <button className="text-gray-600 hover:text-gray-800">
