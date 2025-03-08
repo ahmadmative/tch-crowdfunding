@@ -216,16 +216,16 @@ const DonationsManagement: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Successful Transactions</h3>
           <p className="text-3xl font-bold text-green-600">{donationStats?.donationsCompleted}</p>
-          <p className="text-sm text-gray-600 mt-2">{donationStats?.completedPercentage}% success rate</p>
+          <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.completedPercentage).toFixed(2)}% success rate</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Failed Transactions</h3>
           <p className="text-3xl font-bold text-red-600">{donationStats?.donationsFailed}</p>
-          <p className="text-sm text-gray-600 mt-2">{donationStats?.failedPercentage}% rate</p>
+          <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.failedPercentage).toFixed(2)}% rate</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-blue-600">${donationStats?.avergeDonation}</p>
+          <p className="text-3xl font-bold text-blue-600">${Number(donationStats?.avergeDonation).toFixed(2)}</p>
           <p className="text-sm text-gray-600 mt-2">Per transaction</p>
         </div>
       </div>
