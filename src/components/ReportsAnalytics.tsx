@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CalendarIcon, DocumentArrowDownIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
+import { BASE_URL } from '../config/url';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 // Mock data for the charts
 const fundraisingTrendsData = [
@@ -57,7 +60,53 @@ const ReportsAnalytics: React.FC = () => {
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
   const location = useLocation();
   const pathname = location.pathname;
-  const roles=  ["campaign", "donor", "custom"]
+  const roles = ["campaign", "donor", "custom"];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>('');
+  const [quickStats, setQuickStats] = useState<any>({});
+  const [donationTrends, setDonationTrends] = useState<any>([]);
+  const [topFiveDonationRaisers, setTopFiveDonationRaisers] = useState<any>([]);
+  const [campaignMetrics, setCampaignMetrics] = useState<any>([]);
+  const [donorGrowth, setDonorGrowth] = useState<any>([]);
+  const [topContributers, setTopContributers] = useState<any>([]);
+  useEffect(() => {
+    const fetchApis = async () => {
+
+      try {
+        const res = await axios.get(`${BASE_URL}/analytics/reports/quick-stats`);
+        setQuickStats(res.data);
+        console.log(res.data);
+
+        const res2 = await axios.get(`${BASE_URL}/analytics/reports/donation-trends`);
+        setDonationTrends(res2.data);
+        console.log(res2.data);
+
+        const res3 = await axios.get(`${BASE_URL}/analytics/reports/top-five-donation-raisers`);
+        setTopFiveDonationRaisers(res3.data);
+        console.log(res3.data);
+
+        const res4 = await axios.get(`${BASE_URL}/analytics/reports/campaign-metrics`);
+        setCampaignMetrics(res4.data);
+        console.log(res4.data);
+
+        const res5 = await axios.get(`${BASE_URL}/analytics/reports/donor-growth`);
+        setDonorGrowth(res5.data);
+        console.log(res5.data);
+
+        const res6 = await axios.get(`${BASE_URL}/analytics/reports/top-contributers`);
+        setTopContributers(res6.data);
+        console.log(res6.data);
+
+      } catch (error: any) {
+        console.log(error);
+        setError(error.response.data.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchApis();
+  }, []);
+
 
   useEffect(() => {
     const urlRole = pathname.split('/').pop();
@@ -65,6 +114,29 @@ const ReportsAnalytics: React.FC = () => {
       setSelectedTab(urlRole);
     }
   }, [pathname]);
+
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        <p>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -94,26 +166,26 @@ const ReportsAnalytics: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">$273,000</p>
+          <p className="text-3xl font-bold text-primary-600">$ {quickStats.totalDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ 15%</span> vs. previous period
+            <span className="text-green-500">↑ {quickStats.monthlyGrowth}</span> vs. previous period
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Active Donors</h3>
-          <p className="text-3xl font-bold text-green-600">1,630</p>
+          <p className="text-3xl font-bold text-green-600">{quickStats.totalDonaters}</p>
           <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ 8%</span> vs. previous period
+            <span className="text-green-500">↑ {quickStats.donatersGrowth}%</span> vs. previous period
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Campaign Success Rate</h3>
-          <p className="text-3xl font-bold text-blue-600">92%</p>
+          <p className="text-3xl font-bold text-blue-600">{quickStats.campaignSuccessRate.toFixed(2)}%</p>
           <p className="text-sm text-gray-600 mt-2">Based on goal achievement</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-purple-600">$168</p>
+          <p className="text-3xl font-bold text-purple-600">$ {quickStats.averageDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">Per donor</p>
         </div>
       </div>
@@ -123,31 +195,28 @@ const ReportsAnalytics: React.FC = () => {
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setSelectedTab('campaign')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'campaign'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'campaign'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Campaign Performance
           </button>
           <button
             onClick={() => setSelectedTab('donor')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'donor'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'donor'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Donor Insights
           </button>
           <button
             onClick={() => setSelectedTab('custom')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'custom'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'custom'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Custom Reports
           </button>
@@ -162,14 +231,14 @@ const ReportsAnalytics: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">Fundraising Trends</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={fundraisingTrendsData}>
+                  <LineChart data={donationTrends}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="amount" name="Amount ($)" stroke="#0ea5e9" />
-                    <Line type="monotone" dataKey="donors" name="Donors" stroke="#6366f1" />
+                    <Line type="monotone" dataKey="totalAmount" name="Amount ($)" stroke="#0ea5e9" />
+                    <Line type="monotone" dataKey="totalDonors" name="Donors" stroke="#6366f1" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -178,12 +247,12 @@ const ReportsAnalytics: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">Top Performing Campaigns</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topCampaignsData} layout="vertical">
+                  <BarChart data={topFiveDonationRaisers} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" width={100} />
+                    <YAxis dataKey="title" type="category" width={100} />
                     <Tooltip />
-                    <Bar dataKey="amount" fill="#0ea5e9" />
+                    <Bar dataKey="totalAmount" fill="#0ea5e9" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -205,24 +274,20 @@ const ReportsAnalytics: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {topCampaignsData.map((campaign, index) => (
+                  {campaignMetrics.map((campaign: any, index: any) => (
                     <tr key={index} className="border-b">
-                      <td className="py-3 px-4">{campaign.name}</td>
-                      <td className="py-3 px-4">${campaign.amount.toLocaleString()}</td>
-                      <td className="py-3 px-4">${(campaign.amount * 1.2).toLocaleString()}</td>
-                      <td className="py-3 px-4">{Math.floor(campaign.amount / 168)}</td>
-                      <td className="py-3 px-4">$168</td>
+                      <td className="py-3 px-4">{campaign.title}</td>
+                      <td className="py-3 px-4">${campaign.fundsRaised.toLocaleString()}</td>
+                      <td className="py-3 px-4">${(campaign.amount).toLocaleString()}</td>
+                      <td className="py-3 px-4">{campaign.totalDonors}</td>
+                      <td className="py-3 px-4">${campaign.averageDonation == null ? 0 : campaign.averageDonation.toLocaleString()}</td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center">
-                          <div className="w-16 bg-gray-200 rounded-full h-2.5 mr-2">
-                            <div
-                              className="bg-primary-600 h-2.5 rounded-full"
-                              style={{ width: '85%' }}
-                            ></div>
-                          </div>
-                          <span>85%</span>
+                        <div className="flex items-center gap-2">
+                          <progress value={campaign.successRate} max="100" className="min-w-20 rounded-full"></progress>
+                          <span>{campaign.successRate.toFixed(2)}%</span>
                         </div>
                       </td>
+
                     </tr>
                   ))}
                 </tbody>
@@ -263,12 +328,12 @@ const ReportsAnalytics: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">Donor Growth</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={fundraisingTrendsData}>
+                  <LineChart data={donorGrowth}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="donors" name="Total Donors" stroke="#0ea5e9" />
+                    <Line type="monotone" dataKey="totalDonors" name="Total Donors" stroke="#0ea5e9" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -289,12 +354,12 @@ const ReportsAnalytics: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {[...Array(5)].map((_, index) => (
+                  {topContributers.map((contributor: any, index: any) => (
                     <tr key={index} className="border-b">
-                      <td className="py-3 px-4">Donor {index + 1}</td>
-                      <td className="py-3 px-4">${((5 - index) * 1000).toLocaleString()}</td>
-                      <td className="py-3 px-4">{6 - index}</td>
-                      <td className="py-3 px-4">2024-02-27</td>
+                      <td className="py-3 px-4">{contributor.donorName}</td>
+                      <td className="py-3 px-4">${contributor.totalDonations.toLocaleString()}</td>
+                      <td className="py-3 px-4">{contributor.numberOfDonations}</td>
+                      <td className="py-3 px-4">{dayjs(contributor.lastDonation).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <span className="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-sm">
                           {index < 3 ? 'Recurring' : 'One-time'}
