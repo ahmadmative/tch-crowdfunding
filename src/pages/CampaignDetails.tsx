@@ -173,10 +173,26 @@ const CampaignDetails = () => {
                 </div>
                 {
                     admin && (
+                        <>
+                        <div className='flex gap-2'>
+                            <p className='text-sm font-bold text-black py-2 font-onest'>Start Date:</p>
+                            <p className='text-sm text-black py-2 font-onest'>{dayjs(campaign?.startDate).format('DD-MM-YYYY')}</p>
+                        </div>
+                        <div className='flex gap-2'>
+                            <p className='text-sm font-bold text-black py-2 font-onest'>End Date:</p>
+                            <p className='text-sm text-black py-2 font-onest'>{dayjs(campaign?.endDate).format('DD-MM-YYYY')}</p>
+                        </div>
+                        <div className='flex gap-2'>
+                            <p className='text-sm font-bold text-black py-2 font-onest'>Posted on:</p>
+                            <p className='text-sm text-black py-2 font-onest'>{dayjs(campaign?.createdAt).format('DD-MM-YYYY')}</p>
+                            <p className='text-sm font-bold text-black py-2 font-onest'>at</p>
+                            <p className='text-sm text-black py-2 font-onest'>{dayjs(campaign?.createdAt).format('HH:mm')}</p>
+                        </div>
                         <div className='flex gap-2'>
                             <p className='text-sm font-bold text-black py-2 font-onest'>Status:</p>
                             <p className={`text-sm font-bold py-2 font-onest rounded-lg p-2 ${status === "active" ? "bg-[#BEE36E] text-black" : status === "cancelled" ? "bg-red-500 text-white" : status === "pending" ? "bg-yellow-500 text-black" : "bg-gray-300 text-black"}`}>{status}</p>
                         </div>
+                        </>
                     )
                 }
 

@@ -34,6 +34,7 @@ const SignIn = () => {
                   userId: res.data.user._id,
                   email: res.data.user.email,
                   name: res.data.user.name,
+                  role: res.data.user.role,
                   isAdmin: res.data.user.isAdmin,
                   profilePicture: res.data.user.profilePicture
                 }

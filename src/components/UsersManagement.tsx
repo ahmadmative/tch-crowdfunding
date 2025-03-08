@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { BASE_URL } from '../config/url';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 // Mock data for the charts
 const userDistributionData = [
@@ -140,9 +141,9 @@ const UsersManagement: React.FC = () => {
       {/* Page Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Users & Roles Management</h1>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+        <Link to={'/users/add'} className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
           Add New User
-        </button>
+        </Link>
       </div>
 
       {/* Analytics Cards */}
@@ -301,7 +302,7 @@ const UsersManagement: React.FC = () => {
                       <td className="py-3 px-4">{dayjs(user.createdAt).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
-                          <button className="text-primary-600 hover:text-primary-800">Edit</button>
+                          <Link to={`/users/edit/${user._id}`} className="text-primary-600 hover:text-primary-800">Edit</Link>
                           <button className="text-red-600 hover:text-red-800" onClick={()=>handleDelete(user._id)}>Delete</button>
                         </div>
                       </td>

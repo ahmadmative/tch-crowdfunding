@@ -34,6 +34,7 @@ const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campa
                 const res = await axios.delete(`${BASE_URL}/campaigns/delete/${campaign._id}`);
                 console.log(res);
                 setIsDeleted(true);
+                window.location.reload();
             } catch (error) {
                 console.log(error);
             }

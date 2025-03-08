@@ -24,6 +24,11 @@ import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './context/userContext';
 import AdminCampaigns from './components/AdminCampaigns';
 import EditCampaign from './components/EditCampaign';
+import AddUsers from './components/AddUsers';
+import DonationDetail from './components/DonationDetail';
+import MainDashboard from './pages/dashboard/main';
+import CampaignerDashboardLayout from './layouts/DashboardLayout';
+import MyCampaigns from './pages/dashboard/MyCampaigns';
 
 function App() {
 
@@ -79,6 +84,8 @@ function App() {
             <Route path="manage/users" element={<UsersManagement />} />
             <Route path="manage/admins" element={<UsersManagement />} />
             <Route path="permissions" element={<UsersManagement />} />
+            <Route path="add" element={<AddUsers />} />
+            <Route path="edit/:id" element={<AddUsers />} />
           </Route>
           <Route path="campaigns">
             <Route index element={<CampaignsManagement />} />
@@ -94,6 +101,7 @@ function App() {
             <Route path="settings/transactions" element={<DonationsManagement />} />
             <Route path="settings/payments" element={<DonationsManagement />} />
             <Route path="settings/logs" element={<DonationsManagement />} />
+            <Route path=":id" element={<DonationDetail />} />
           </Route>
           <Route path="reports">
             <Route index element={<ReportsAnalytics />} />
@@ -117,6 +125,11 @@ function App() {
 
           {/* Catch all unmatched routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+
+        <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
+          <Route index element={<MainDashboard />} />
+          <Route path="campaigns" element={<MyCampaigns />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../config/url';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 // Mock data for the charts
 const donationTrendsData = [
@@ -100,6 +101,17 @@ const DonationsManagement: React.FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const roles = ["transactions", "payments", "logs", "settings"]
+  const [donorName, setDonorName] = useState("");
+
+  useEffect(() => {
+    const filteredTransactions = transactions.filter((transaction: any) => {
+      return (
+        (donorName === "" || transaction.donorId.name.toLowerCase().includes(donorName.toLowerCase()))
+      );
+    });
+    
+    setTransactions(filteredTransactions);
+  }, [donorName]);
 
   useEffect(() => {
     console.log(pathname)
@@ -319,18 +331,20 @@ const DonationsManagement: React.FC = () => {
               <div className="flex space-x-4">
                 <input
                   type="text"
-                  placeholder="Search transactions..."
+                  placeholder="Search donor name..."
+                  onChange={(e) => setDonorName(e.target.value)}
                   className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <select onChange={(e) => setPaymentMethod(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Payment Methods</option>
-                  <option value="credit-card">Credit Card</option>
+                  <option value="credit_card">Credit Card</option>
                   <option value="paypal">PayPal</option>
-                  <option value="bank-transfer">Bank Transfer</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="debit_card">Debit Card</option>
                 </select>
                 <select onChange={(e) => setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Statuses</option>
-                  <option value="successful">Successful</option>
+                  <option value="completed">Successful</option>
                   <option value="pending">Pending</option>
                   <option value="failed">Failed</option>
                 </select>
@@ -364,9 +378,9 @@ const DonationsManagement: React.FC = () => {
                       <td className="py-3 px-4">{dayjs(transaction.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
-                          <button className="text-gray-600 hover:text-gray-800">
+                          <Link to={`/donations/${transaction._id}`} className="text-gray-600 hover:text-gray-800">
                             <EyeIcon className="h-5 w-5" />
-                          </button>
+                          </Link>
                           <button className="text-gray-600 hover:text-gray-800">
                             <ArrowPathIcon className="h-5 w-5" />
                           </button>
@@ -382,7 +396,7 @@ const DonationsManagement: React.FC = () => {
             </div>
             <div className="mt-4 flex justify-between items-center">
               <div className="text-sm text-gray-600">
-                Showing 1 to 10 of 1,214 transactions
+                Showing 1 to 10 of {transactions.length} transactions
               </div>
               <div className="flex space-x-2">
                 <button className="px-3 py-1 border rounded hover:bg-gray-100">Previous</button>
@@ -464,14 +478,14 @@ const DonationsManagement: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold mb-6">Receipt Logs</h2>
           <div className="space-y-4">
-            {transactionsData.map((transaction) => (
+            {transactions.map((transaction: any) => (
               <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <p className="font-semibold">{transaction.donor}</p>
+                  <p className="font-semibold">{transaction.donorId.name}</p>
                   <p className="text-sm text-gray-600">
-                    ${transaction.amount} - {transaction.campaign}
+                    ${transaction.amount} - {transaction.campaignId.title}
                   </p>
-                  <p className="text-xs text-gray-500">{transaction.date}</p>
+                  <p className="text-xs text-gray-500">{dayjs(transaction.date).format('DD-MM-YYYY')}</p>
                 </div>
                 <div className="flex space-x-2">
                   <button className="px-3 py-1 text-primary-600 hover:text-primary-800">

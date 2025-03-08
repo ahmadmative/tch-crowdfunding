@@ -88,7 +88,7 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
-    name: 'Create Campaigns',
+    name: 'View Campaigns',
     icon: CogIcon,
     path: '/admin/campaigns',
     subItems: [

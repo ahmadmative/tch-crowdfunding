@@ -30,9 +30,12 @@ const Navbar: React.FC = () => {
 
           <div className='hidden md:flex items-center gap-4'>
             {user ? <>
-            <Link to="/dashboard" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+            
+            {
+              user?.role !== "donor" && <Link to={user?.role === "admin" ? "/dashboard" : "/user/dashboard"} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
               Dashboard
             </Link>
+            }
             <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
               Logout
             </button>
