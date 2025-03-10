@@ -103,7 +103,7 @@ const CampaignDetails = () => {
                                     <img src="/location.png" alt="location" className='w-[20px] h-[20px]' />
                                     <p className='text-xs font-bold text-black'>{campaign?.city}</p>
                                 </div>
-                                <p className='text-xs font-bold text-black text-right mb-1'>{progress}% Funded</p>
+                                <p className='text-xs font-bold text-black text-right mb-1'>{Number(progress).toFixed(2)}% Funded</p>
                             </div>
 
                             <progress

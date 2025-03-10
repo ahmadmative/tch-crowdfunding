@@ -1,63 +1,64 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import {
     LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
-
-const dummyData = {
-    data: [
-        { createdAt: '2025-01-07T05:19:04.537+00:00', funds: 4000 },
-        { createdAt: '2025-04-14T05:19:04.537+00:00', funds: 3000 },
-        { createdAt: '2025-05-15T05:19:04.537+00:00', funds: 2000 },
-        { createdAt: '2025-06-07T05:19:04.537+00:00', funds: 2780 },
-        { createdAt: '2025-07-03T05:19:04.537+00:00', funds: 1890 },
-        { createdAt: '2025-08-05T05:19:04.537+00:00', funds: 2390 },
-        { createdAt: '2024-03-07T05:19:04.537+00:00', funds: 3490 },
-        { createdAt: '2024-03-08T05:19:04.537+00:00', funds: 4300 },
-        { createdAt: '2025-09-09T05:19:04.537+00:00', funds: 2100 },
-        { createdAt: '2025-12-20T05:19:04.537+00:00', funds: 3100 },
-        { createdAt: '2024-01-28T05:19:04.537+00:00', funds: 4500 },
-        { createdAt: '2025-03-07T05:19:04.537+00:00', funds: 3700 }
-    ]
-};
+import { AuthContext } from '../../context/userContext';
+import { BASE_URL } from '../../config/url';
+import axios from 'axios';
 
 // Format data based on range and selected year
-const formatData = (range: 'yearly' | 'monthly' | 'weekly' | 'daily', year: string) => {
-    const groupedData: Record<string, number> = {};
+const formatData = (data: any, range: any, year: any) => {
+    const groupedData: any = {};
 
-    dummyData.data.forEach(item => {
-        const date = new Date(item.createdAt);
+    data.forEach((item: any) => {
+        const date = new Date(item.date);
         const itemYear = date.getFullYear().toString();
 
-        if (year !== 'all' && itemYear !== year) return; // Filter by selected year
+        if (year !== 'all' && itemYear !== year) return;
 
         let key = '';
         if (range === 'yearly') {
-            key = itemYear; // Year format
+            key = itemYear;
         } else if (range === 'monthly') {
-            key = `${itemYear}-${(date.getMonth() + 1).toString().padStart(2, '0')}`; // YYYY-MM
+            key = `${itemYear}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
         } else if (range === 'weekly') {
             const week = Math.ceil(date.getDate() / 7);
-            key = `${itemYear}-W${week}`; // YYYY-WXX
+            key = `${itemYear}-W${week}`;
         } else if (range === 'daily') {
-            key = date.toISOString().split('T')[0]; // YYYY-MM-DD
+            key = date.toISOString().split('T')[0];
         }
 
-        groupedData[key] = (groupedData[key] || 0) + item.funds;
+        groupedData[key] = (groupedData[key] || 0) + item.amount;
     });
 
-    return Object.entries(groupedData).map(([key, funds]) => ({ date: key, funds }));
+    return Object.entries(groupedData).map(([key, amount]) => ({ date: key, amount }));
 };
 
-const FundsGraph: React.FC = () => {
-    const [selectedRange, setSelectedRange] = useState<'yearly' | 'monthly' | 'weekly' | 'daily'>('yearly');
-    const [selectedYear, setSelectedYear] = useState<string>('all');
+const FundsGraph = () => {
+    const [selectedRange, setSelectedRange] = useState('yearly');
+    const [selectedYear, setSelectedYear] = useState('all');
+
+    const [data, setData] = useState([]);
+    const { user } = useContext(AuthContext) || {};
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`);
+                setData(res.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        if (user?.userId) fetchData();
+    }, [user]);
 
     const availableYears = useMemo(() => {
-        const years = new Set(dummyData.data.map(item => new Date(item.createdAt).getFullYear().toString()));
+        const years = new Set(data.map((item: any) => new Date(item.date).getFullYear().toString()));
         return Array.from(years).sort();
-    }, []);
+    }, [data]);
 
-    const processedData = useMemo(() => formatData(selectedRange, selectedYear), [selectedRange, selectedYear]);
+    const processedData = useMemo(() => formatData(data, selectedRange, selectedYear), [data, selectedRange, selectedYear]);
 
     return (
         <div className='px-4 py-6 border border-gray-200 rounded-lg'>
@@ -80,7 +81,7 @@ const FundsGraph: React.FC = () => {
 
                     <select
                         value={selectedRange}
-                        onChange={(e) => setSelectedRange(e.target.value as 'yearly' | 'monthly' | 'weekly' | 'daily')}
+                        onChange={(e) => setSelectedRange(e.target.value)}
                         className='border border-gray-300 rounded px-3 py-1'
                     >
                         <option value="yearly">Yearly</option>
@@ -97,7 +98,7 @@ const FundsGraph: React.FC = () => {
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
-                    <Line type="monotone" dataKey="funds" stroke="#4CAF50" strokeWidth={3} dot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="amount" stroke="#4CAF50" strokeWidth={3} dot={{ r: 5 }} />
                 </LineChart>
             </ResponsiveContainer>
         </div>

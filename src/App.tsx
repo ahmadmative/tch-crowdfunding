@@ -29,6 +29,10 @@ import DonationDetail from './components/DonationDetail';
 import MainDashboard from './pages/dashboard/main';
 import CampaignerDashboardLayout from './layouts/DashboardLayout';
 import MyCampaigns from './pages/dashboard/MyCampaigns';
+import Donations from './pages/dashboard/Donations';
+import Profile from './pages/dashboard/Profile';
+import EditProfile from './pages/dashboard/EditProfile';
+import CreateCampaign from './pages/dashboard/CreateCampaign';
 
 function App() {
 
@@ -130,6 +134,10 @@ function App() {
         <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
           <Route index element={<MainDashboard />} />
           <Route path="campaigns" element={<MyCampaigns />} />
+          <Route path="donations" element={<Donations />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="profile/edit" element={<EditProfile />} />
+          <Route path="campaigns/create" element={<CreateCampaign />} />
         </Route>
       </Routes>
     </BrowserRouter>

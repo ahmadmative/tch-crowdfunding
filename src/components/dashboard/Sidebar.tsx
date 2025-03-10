@@ -2,7 +2,9 @@ import React, { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     HomeIcon, SparklesIcon, SpeakerWaveIcon, CurrencyDollarIcon, UsersIcon, FolderIcon,
-    CreditCardIcon, ChartPieIcon, BellIcon, CogIcon
+    CreditCardIcon, ChartPieIcon, BellIcon, CogIcon,
+    ArrowRightIcon,
+    ArrowRightStartOnRectangleIcon
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../../context/userContext';
 
@@ -36,6 +38,11 @@ const menuItems: MenuItem[] = [
         icon: UsersIcon,
         path: '/user/dashboard/profile',
     }
+    // {
+    //     name: 'Logout',
+    //     icon: ArrowRightStartOnRectangleIcon,
+    //     path: '/signin',
+    // }
 ];
 
 const Sidebar: React.FC = () => {
@@ -64,9 +71,9 @@ const Sidebar: React.FC = () => {
 
     return (
         <div className="h-screen w-64 bg-gray-900 text-white flex flex-col">
-            <div className="flex justify-center items-center p-4">
+            <Link to="/" className="flex justify-center items-center p-4">
                 <img src={"/logo.png"} alt="logo" className="w-30 h-10" />
-            </div>
+            </Link>
 
             <nav className="flex-1 flex flex-col items-center w-full overflow-y-auto">
                 <ul className="py-4 w-full flex flex-col items-center">
@@ -107,11 +114,11 @@ const Sidebar: React.FC = () => {
 
             <div className="p-4 border-t border-gray-800">
                 <div className="flex items-center">
-                    <div className="w-8 h-8 rounded-full bg-gray-700 mr-3"></div>
+                    
                     <div>
                         {/* <p className="text-sm font-medium">Admin User</p> */}
                         {/* <p className="text-xs text-gray-400">admin@example.com</p> */}
-                        <button onClick={handleLogout} className="text-sm font-medium text-red-400 hover:text-red-500">Logout</button>
+                        <button onClick={handleLogout} className="text-sm font-medium flex items-center gap-2 bg-gray-800 px-4 py-2 rounded-full"><ArrowRightStartOnRectangleIcon className='w-4 h-4' /> Logout</button>
                     </div>
                 </div>
             </div>

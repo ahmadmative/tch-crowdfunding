@@ -75,7 +75,7 @@ const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campa
             {/* Progress Bar */}
             <div className='flex flex-col gap-2'>
                 <div className='flex items-center justify-end'>
-                    <p className='text-sm font-bold text-[#BEE36E]'>{progress}% Funded</p>
+                    <p className='text-sm font-bold text-[#BEE36E]'>{Number(progress).toFixed(2)}% Funded</p>
                 </div>
 
                 <progress 
