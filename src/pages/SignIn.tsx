@@ -117,7 +117,7 @@ const SignIn = () => {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c] cursor-pointer"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={isPending}
             >

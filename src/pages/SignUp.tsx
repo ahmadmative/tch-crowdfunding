@@ -139,7 +139,7 @@ const SignUp = () => {
               type="submit"
               onClick={handleSubmit}
               disabled={isPending}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Register
             </button>
