@@ -47,7 +47,7 @@ const NewPassword = () => {
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
-          <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
+          <img src="/nav-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
           
         </div>
 
