@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
           <p className="text-3xl font-bold text-blue-600">
-            ${quickStats?.totalDonations.toLocaleString()}
+            R{quickStats?.totalDonations.toLocaleString()}
           </p>
           <p className="text-sm text-gray-600 mt-2">
             <span className={`${quickStats?.donationGrowth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -162,7 +162,7 @@ const Dashboard: React.FC = () => {
                 <XAxis dataKey="month" />
                 <YAxis domain={[0, 'auto']} />
                 <Tooltip 
-                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+                  formatter={(value) => `R${Number(value).toLocaleString()}`}
                   labelFormatter={(label) => `Month: ${label}`}
                 />
                 <Legend />
@@ -170,7 +170,7 @@ const Dashboard: React.FC = () => {
                   type="monotone" 
                   dataKey="amount" 
                   stroke="#0ea5e9" 
-                  name="Donations ($)" 
+                  name="Donations (R)" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}

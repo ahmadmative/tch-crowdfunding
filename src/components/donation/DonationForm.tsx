@@ -41,10 +41,10 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
   });
 
   const predefinedAmounts = [
-    { value: '150', label: '$150' },
-    { value: '170', label: '$170' },
-    { value: '190', label: '$190' },
-    { value: '250', label: '$250' },
+    { value: '150', label: 'R150' },
+    { value: '170', label: 'R170' },
+    { value: '190', label: 'R190' },
+    { value: '250', label: 'R250' },
   ];
 
   const validateForm = () => {
@@ -315,7 +315,7 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
         </button>
 
         <div className="text-black py-3 px-6 mt-4 rounded-full font-medium border border-gray-300">
-          Total Amount: ${formData.amount}
+          Total Amount: R{formData.amount}
         </div>
       </div>
     </div>

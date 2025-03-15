@@ -106,7 +106,7 @@ const DonationsManagement: React.FC = () => {
   useEffect(() => {
     const filteredTransactions = transactions.filter((transaction: any) => {
       return (
-        (donorName === "" || transaction.donorId.name.toLowerCase().includes(donorName.toLowerCase()))
+        (donorName === "" || transaction?.donorId?.name.toLowerCase().includes(donorName.toLowerCase()))
       );
     });
     
@@ -208,7 +208,7 @@ const DonationsManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">${donationStats?.totalAmount}</p>
+          <p className="text-3xl font-bold text-primary-600">R{donationStats?.totalAmount}</p>
           <p className="text-sm text-gray-600 mt-2">
             <span className="text-green-500">↑ {donationStats?.monthlyGrowth}</span> from last month
           </p>
@@ -225,7 +225,7 @@ const DonationsManagement: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-blue-600">${Number(donationStats?.avergeDonation).toFixed(2)}</p>
+          <p className="text-3xl font-bold text-blue-600">R{Number(donationStats?.avergeDonation).toFixed(2)}</p>
           <p className="text-sm text-gray-600 mt-2">Per transaction</p>
         </div>
       </div>
@@ -364,21 +364,21 @@ const DonationsManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction: any) => (
+                  {transactions?.map((transaction: any) => (
                     <tr key={transaction.id} className="border-b">
-                      <td className="py-3 px-4">{transaction.donorId.name}</td>
-                      <td className="py-3 px-4">${transaction.amount}</td>
-                      <td className="py-3 px-4">{transaction.campaignId.title}</td>
-                      <td className="py-3 px-4">{transaction.paymentMethod}</td>
+                      <td className="py-3 px-4">{transaction?.donorId?.name}</td>
+                      <td className="py-3 px-4">R{transaction?.amount}</td>
+                      <td className="py-3 px-4">{transaction?.campaignId.title}</td>
+                      <td className="py-3 px-4">{transaction?.paymentMethod}</td>
                       <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction.status)}`}>
-                          {transaction.status}
+                        <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction?.status)}`}>
+                          {transaction?.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{dayjs(transaction.date).format('DD-MM-YYYY')}</td>
+                      <td className="py-3 px-4">{dayjs(transaction?.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
-                          <Link to={`/donations/${transaction._id}`} className="text-gray-600 hover:text-gray-800">
+                          <Link to={`/donations/${transaction?._id}`} className="text-gray-600 hover:text-gray-800">
                             <EyeIcon className="h-5 w-5" />
                           </Link>
                           <button className="text-gray-600 hover:text-gray-800">
@@ -396,7 +396,7 @@ const DonationsManagement: React.FC = () => {
             </div>
             <div className="mt-4 flex justify-between items-center">
               <div className="text-sm text-gray-600">
-                Showing 1 to 10 of {transactions.length} transactions
+                Showing 1 to 10 of {transactions?.length} transactions
               </div>
               <div className="flex space-x-2">
                 <button className="px-3 py-1 border rounded hover:bg-gray-100">Previous</button>
@@ -478,14 +478,14 @@ const DonationsManagement: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold mb-6">Receipt Logs</h2>
           <div className="space-y-4">
-            {transactions.map((transaction: any) => (
-              <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            {transactions?.map((transaction: any) => (
+              <div key={transaction?.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <p className="font-semibold">{transaction.donorId.name}</p>
+                  <p className="font-semibold">{transaction?.donorId?.name}</p>
                   <p className="text-sm text-gray-600">
-                    ${transaction.amount} - {transaction.campaignId.title}
+                    R{transaction?.amount} - {transaction?.campaignId?.title}
                   </p>
-                  <p className="text-xs text-gray-500">{dayjs(transaction.date).format('DD-MM-YYYY')}</p>
+                  <p className="text-xs text-gray-500">{dayjs(transaction?.date).format('DD-MM-YYYY')}</p>
                 </div>
                 <div className="flex space-x-2">
                   <button className="px-3 py-1 text-primary-600 hover:text-primary-800">

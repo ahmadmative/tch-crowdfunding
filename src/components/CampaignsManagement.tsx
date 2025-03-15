@@ -205,7 +205,7 @@ const CampaignsManagement: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Funds Raised</h3>
-          <p className="text-3xl font-bold text-blue-600">{cardData.totalFundsRaised}</p>
+          <p className="text-3xl font-bold text-blue-600">R{cardData.totalFundsRaised}</p>
           <p className="text-sm text-gray-600 mt-2">All time</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
@@ -254,7 +254,7 @@ const CampaignsManagement: React.FC = () => {
           {topCampaignsData.map((campaign:any, index:any) => (
             <div key={index} className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-semibold text-gray-800 truncate">{campaign.title}</h4>
-              <p className="text-primary-600 font-bold mt-2">${campaign.amount.toLocaleString()}</p>
+              <p className="text-primary-600 font-bold mt-2">R{campaign.amount.toLocaleString()}</p>
             </div>
           ))}
         </div>
@@ -340,7 +340,7 @@ const CampaignsManagement: React.FC = () => {
                         {campaign.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4">${campaign.totalDonations.toLocaleString()}</td>
+                    <td className="py-3 px-4">R{campaign.totalDonations.toLocaleString()}</td>
                     <td className="py-3 px-4">
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div

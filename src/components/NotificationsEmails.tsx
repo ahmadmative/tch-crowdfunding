@@ -25,7 +25,7 @@ const notificationsData = [
     id: 1,
     type: 'donation',
     title: 'New Large Donation',
-    message: '$5,000 donation received for Save the Forests campaign',
+    message: 'R5,000 donation received for Save the Forests campaign',
     timestamp: '2 hours ago',
     status: 'unread',
   },

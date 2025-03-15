@@ -166,7 +166,7 @@ const ReportsAnalytics: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">$ {quickStats.totalDonationAmount}</p>
+          <p className="text-3xl font-bold text-primary-600">R {quickStats.totalDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">
             <span className="text-green-500">↑ {quickStats.monthlyGrowth}</span> vs. previous period
           </p>
@@ -185,7 +185,7 @@ const ReportsAnalytics: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-purple-600">$ {quickStats.averageDonationAmount}</p>
+          <p className="text-3xl font-bold text-purple-600">R {quickStats.averageDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">Per donor</p>
         </div>
       </div>
@@ -237,7 +237,7 @@ const ReportsAnalytics: React.FC = () => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="totalAmount" name="Amount ($)" stroke="#0ea5e9" />
+                    <Line type="monotone" dataKey="totalAmount" name="Amount (R)" stroke="#0ea5e9" />
                     <Line type="monotone" dataKey="totalDonors" name="Donors" stroke="#6366f1" />
                   </LineChart>
                 </ResponsiveContainer>
@@ -277,10 +277,10 @@ const ReportsAnalytics: React.FC = () => {
                   {campaignMetrics.map((campaign: any, index: any) => (
                     <tr key={index} className="border-b">
                       <td className="py-3 px-4">{campaign.title}</td>
-                      <td className="py-3 px-4">${campaign.fundsRaised.toLocaleString()}</td>
-                      <td className="py-3 px-4">${(campaign.amount).toLocaleString()}</td>
+                      <td className="py-3 px-4">R{campaign.fundsRaised.toLocaleString()}</td>
+                      <td className="py-3 px-4">R{(campaign.amount).toLocaleString()}</td>
                       <td className="py-3 px-4">{campaign.totalDonors}</td>
-                      <td className="py-3 px-4">${campaign.averageDonation == null ? 0 : campaign.averageDonation.toLocaleString()}</td>
+                      <td className="py-3 px-4">R{campaign.averageDonation == null ? 0 : campaign.averageDonation.toLocaleString()}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           <progress value={campaign.successRate} max="100" className="min-w-20 rounded-full"></progress>
