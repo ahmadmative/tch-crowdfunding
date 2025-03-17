@@ -33,6 +33,8 @@ import Donations from './pages/dashboard/Donations';
 import Profile from './pages/dashboard/Profile';
 import EditProfile from './pages/dashboard/EditProfile';
 import CreateCampaign from './pages/dashboard/CreateCampaign';
+import ProtectedRoute from './protectedRoutes/ProtectedRoutes';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
 
@@ -53,6 +55,7 @@ function App() {
       />
 
       <Routes>
+        <Route path='/unauthorized' element={<Unauthorized />} />
         <Route path="/" element={<NavLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
@@ -68,77 +71,83 @@ function App() {
 
 
 
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route path="/" element={<DashboardLayout />}>
+            {/* <Route index element={<Dashboard />} /> */}
+            <Route path="/admin/campaigns">
+              <Route index element={<AdminCampaigns />} />
+              <Route path="create" element={<CreateCampaignForm />} />
+              <Route path=":id" element={<CampaignDetails />} />
+              <Route path=":id/edit" element={<EditCampaign />} />
 
-        <Route path="/" element={<DashboardLayout />}>
-          {/* <Route index element={<Dashboard />} /> */}
-          <Route path="/admin/campaigns">
-            <Route index element={<AdminCampaigns />} />
-            <Route path="create" element={<CreateCampaignForm />} />
-            <Route path=":id" element={<CampaignDetails />} />
-            <Route path=":id/edit" element={<EditCampaign />} />
-
-          </Route>
-          <Route path="dashboard">
-            <Route index element={<Dashboard />} />
-            <Route path="overview" element={<Dashboard />} />
-            <Route path="metrics" element={<Dashboard />} />
-          </Route>
-          <Route path="users">
-            <Route index element={<UsersManagement />} />
-            <Route path="manage/users" element={<UsersManagement />} />
-            <Route path="manage/admins" element={<UsersManagement />} />
-            <Route path="permissions" element={<UsersManagement />} />
-            <Route path="add" element={<AddUsers />} />
-            <Route path="edit/:id" element={<AddUsers />} />
-          </Route>
-          <Route path="campaigns">
-            <Route index element={<CampaignsManagement />} />
-            <Route path="manage/all" element={<CampaignsManagement />} />
-            <Route path="manage/pending" element={<CampaignsManagement />} />
-            <Route path="manage/active" element={<CampaignsManagement />} />
-            <Route path="performance" element={<CampaignsManagement />} />
+            </Route>
+            <Route path="dashboard">
+              <Route index element={<Dashboard />} />
+              <Route path="overview" element={<Dashboard />} />
+              <Route path="metrics" element={<Dashboard />} />
+            </Route>
+            <Route path="users">
+              <Route index element={<UsersManagement />} />
+              <Route path="manage/users" element={<UsersManagement />} />
+              <Route path="manage/admins" element={<UsersManagement />} />
+              <Route path="permissions" element={<UsersManagement />} />
+              <Route path="add" element={<AddUsers />} />
+              <Route path="edit/:id" element={<AddUsers />} />
+            </Route>
+            <Route path="campaigns">
+              <Route index element={<CampaignsManagement />} />
+              <Route path="manage/all" element={<CampaignsManagement />} />
+              <Route path="manage/pending" element={<CampaignsManagement />} />
+              <Route path="manage/active" element={<CampaignsManagement />} />
+              <Route path="performance" element={<CampaignsManagement />} />
+              
+            </Route>
+            <Route path="donations">
+              <Route index element={<DonationsManagement />} />
+              <Route path="settings" element={<DonationsManagement />} />
+              <Route path="settings/transactions" element={<DonationsManagement />} />
+              <Route path="settings/payments" element={<DonationsManagement />} />
+              <Route path="settings/logs" element={<DonationsManagement />} />
+              <Route path=":id" element={<DonationDetail />} />
+            </Route>
+            <Route path="reports">
+              <Route index element={<ReportsAnalytics />} />
+              <Route path="campaign" element={<ReportsAnalytics />} />
+              <Route path="donor" element={<ReportsAnalytics />} />
+              <Route path="custom" element={<ReportsAnalytics />} />
+            </Route>
+            <Route path="notifications">
+              <Route index element={<NotificationsEmails />} />
+              <Route path="center" element={<NotificationsEmails />} />
+              <Route path="emails" element={<NotificationsEmails />} />
+              <Route path="templates" element={<NotificationsEmails />} />
+            </Route>
+            <Route path="settings">
+              <Route index element={<Settings />} />
+              <Route path="general" element={<Settings />} />
+              <Route path="security" element={<Settings />} />
+              <Route path="integrations" element={<Settings />} />
+            </Route>
             
-          </Route>
-          <Route path="donations">
-            <Route index element={<DonationsManagement />} />
-            <Route path="settings" element={<DonationsManagement />} />
-            <Route path="settings/transactions" element={<DonationsManagement />} />
-            <Route path="settings/payments" element={<DonationsManagement />} />
-            <Route path="settings/logs" element={<DonationsManagement />} />
-            <Route path=":id" element={<DonationDetail />} />
-          </Route>
-          <Route path="reports">
-            <Route index element={<ReportsAnalytics />} />
-            <Route path="campaign" element={<ReportsAnalytics />} />
-            <Route path="donor" element={<ReportsAnalytics />} />
-            <Route path="custom" element={<ReportsAnalytics />} />
-          </Route>
-          <Route path="notifications">
-            <Route index element={<NotificationsEmails />} />
-            <Route path="center" element={<NotificationsEmails />} />
-            <Route path="emails" element={<NotificationsEmails />} />
-            <Route path="templates" element={<NotificationsEmails />} />
-          </Route>
-          <Route path="settings">
-            <Route index element={<Settings />} />
-            <Route path="general" element={<Settings />} />
-            <Route path="security" element={<Settings />} />
-            <Route path="integrations" element={<Settings />} />
-          </Route>
-          
 
-          {/* Catch all unmatched routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Catch all unmatched routes */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
         </Route>
 
-        <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
-          <Route index element={<MainDashboard />} />
-          <Route path="campaigns" element={<MyCampaigns />} />
-          <Route path="donations" element={<Donations />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="profile/edit" element={<EditProfile />} />
-          <Route path="campaigns/create" element={<CreateCampaign />} />
+
+        <Route element={<ProtectedRoute allowedRoles={['campaign creator']} />}>
+          <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
+            <Route index element={<MainDashboard />} />
+            <Route path="campaigns" element={<MyCampaigns />} />
+            <Route path="donations" element={<Donations />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/edit" element={<EditProfile />} />
+            <Route path="campaigns/create" element={<CreateCampaign />} />
+          </Route>
         </Route>
+
+
       </Routes>
     </BrowserRouter>
 
