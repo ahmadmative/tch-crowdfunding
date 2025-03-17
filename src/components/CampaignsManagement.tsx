@@ -127,23 +127,43 @@ const CampaignsManagement: React.FC = () => {
   useEffect(()=>{
     const fetch=async()=>{
       try{
-      const res=await axios.get(`${BASE_URL}/analytics/campaign/stats`)
+      const res=await axios.get(`${BASE_URL}/analytics/campaign/stats`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setCardData(res.data)
       console.log(res.data)
 
-      const res2=await axios.get(`${BASE_URL}/analytics/campaign/status`)
+      const res2=await axios.get(`${BASE_URL}/analytics/campaign/status`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setCampaignStatusData(res2.data)
       console.log(res2.data)
 
-      const res3=await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`)
+      const res3=await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setFundsOverTimeData(res3.data)
       console.log(res3.data)
 
-      const res4=await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`)
+      const res4=await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setTopCampaignsData(res4.data)
       console.log(res4.data)
 
-      const res5=await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`)
+      const res5=await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setCampaignsData(res5.data)
       console.log(res5.data)
 

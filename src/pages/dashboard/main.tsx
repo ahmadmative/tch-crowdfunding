@@ -45,11 +45,19 @@ const MainDashboard = () => {
         const fetch = async () => {
             setLoading(true);
             try {
-                const res = await axios.get(`${BASE_URL}/analytics/campaigner/basic-info/${user?.userId}`);
+                const res = await axios.get(`${BASE_URL}/analytics/campaigner/basic-info/${user?.userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
                 setBasicInfo(res.data);
                 console.log(res.data);
 
-                const res2 = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`);
+                const res2 = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
                 console.log(res2.data);
                 const donations = res2.data.filter((item:any)=>item.donorId === user?.userId);
                 setLatestDonations(donations);

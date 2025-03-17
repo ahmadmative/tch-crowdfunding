@@ -32,7 +32,11 @@ const AddUsers = () => {
     const fetchUser = async () => {
       if (id) {
         try {
-          const res = await axios.get(`${BASE_URL}/auth/profile?id=${id}`);
+          const res = await axios.get(`${BASE_URL}/auth/profile?id=${id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
           console.log(res.data);
           setData({
             name: res.data.user.name,
@@ -53,7 +57,11 @@ const AddUsers = () => {
   const handleUpdate = async () => {
     startTransition(async () => {
     try {
-      const res = await axios.post(`${BASE_URL}/auth/update-profile/${id}`, data);
+      const res = await axios.post(`${BASE_URL}/auth/update-profile/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       console.log(res.data);
       toast.success(res.data.message);
       setSuccess(res.data.message);
@@ -73,7 +81,11 @@ const AddUsers = () => {
     console.log(data);
     startTransition(async () => {
       try {
-        const res = await axios.post(`${BASE_URL}/auth/add-user-by-admin`, data);
+        const res = await axios.post(`${BASE_URL}/auth/add-user-by-admin`, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         console.log(res.data);
         // navigate('/signin');
         toast.success(res.data.message);

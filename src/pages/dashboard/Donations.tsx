@@ -15,7 +15,11 @@ const Donations = () => {
         if(user?.userId){
             const fetchDonations = async ()=>{
                 try {
-                    const res = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`);
+                    const res = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                    });
                     setDonations(res.data);
                     console.log(res.data);
                 } catch (error:any) {

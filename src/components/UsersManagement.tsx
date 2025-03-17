@@ -87,11 +87,19 @@ const UsersManagement: React.FC = () => {
   useEffect(()=>{
     const fetchUsers=async()=>{
       try{
-      const res=await axios.get(`${BASE_URL}/analytics/users`)
+      const res=await axios.get(`${BASE_URL}/analytics/users`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setQuickStats(res.data)
       console.log(res.data)
 
-      const res2=await axios.get(`${BASE_URL}/analytics/users/roles`)
+      const res2=await axios.get(`${BASE_URL}/analytics/users/roles`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       const roleDistribution = res2.data.activeUsersByRole.map((item:any) => ({
         name: item.role.charAt(0).toUpperCase() + item.role.slice(1), // Capitalize role names
         value: item.activeCount
@@ -99,11 +107,19 @@ const UsersManagement: React.FC = () => {
       setRoleDistribution(roleDistribution)
       console.log(res2.data)
 
-      const res3=await axios.get(`${BASE_URL}/analytics/users/trends`)
+      const res3=await axios.get(`${BASE_URL}/analytics/users/trends`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setNewUsers(res3.data.trends)
       console.log(res3.data)
 
-      const res4=await axios.get(`${BASE_URL}/analytics/users/all`)
+      const res4=await axios.get(`${BASE_URL}/analytics/users/all` ,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      })
       setUsers(res4.data)
       console.log(res4.data)
       }catch(err){

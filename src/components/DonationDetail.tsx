@@ -13,7 +13,11 @@ const DonationDetail = () => {
     useEffect(() => {
         const fetchDonation = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/analytics/donations/${id}`);
+                const response = await axios.get(`${BASE_URL}/analytics/donations/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
                 if (response.data.donation) {
                     setDonation(response.data.donation);
                 } else {

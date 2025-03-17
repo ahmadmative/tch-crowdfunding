@@ -31,7 +31,7 @@ const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campa
     const handleDelete = async () => {
         startTransition(async()=>{
             try {
-                const res = await axios.delete(`${BASE_URL}/campaigns/delete/${campaign._id}`);
+                const res = await axios.delete(`${BASE_URL}/campaigns/delete/${campaign._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
                 console.log(res);
                 setIsDeleted(true);
                 window.location.reload();

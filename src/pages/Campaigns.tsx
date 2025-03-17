@@ -33,7 +33,18 @@ const Campaigns = () => {
   useEffect(() => {
     startTransition(async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`);
+        const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return;
+      }
+      
+        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setCampaigns(res.data);
         setFilteredCampaigns(res.data);
       } catch (error) {

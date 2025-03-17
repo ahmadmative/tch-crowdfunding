@@ -57,19 +57,35 @@ const Dashboard: React.FC = () => {
         setLoading(true);
         
         // Fetch dashboard stats
-        const statsRes = await axios.get(`${BASE_URL}/dashboard`);
+        const statsRes = await axios.get(`${BASE_URL}/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setQuickStats(statsRes.data);
 
         // Fetch donation trends
-        const donationTrendsRes = await axios.get(`${BASE_URL}/dashboard/donation-trends`);
+        const donationTrendsRes = await axios.get(`${BASE_URL}/dashboard/donation-trends`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setDonationTrends(donationTrendsRes.data.trends);
 
         // Fetch campaign trends
-        const campaignTrendsRes = await axios.get(`${BASE_URL}/dashboard/campaign-trends`);
+        const campaignTrendsRes = await axios.get(`${BASE_URL}/dashboard/campaign-trends`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setCampaignTrends(campaignTrendsRes.data.trends);
 
         // Fetch recent activity
-        const activityRes = await axios.get(`${BASE_URL}/dashboard/recent-activity`);
+        const activityRes = await axios.get(`${BASE_URL}/dashboard/recent-activity`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setRecentActivity(activityRes.data.activities);
 
       } catch (err) {

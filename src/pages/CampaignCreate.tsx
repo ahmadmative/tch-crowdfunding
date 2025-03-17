@@ -79,6 +79,14 @@ const CreateCampaignForm: React.FC = () => {
             toast.error('Please login to create a campaign');
             return;
         }
+        const token = localStorage.getItem('token');
+
+      if (!token) {
+        toast.error('Please login to create a campaign');
+        console.error('No token found. Please log in.');
+        return;
+      }
+
         startTransition(async () => {
           try {
             const imageUrl=await upload(formData.image);
@@ -101,9 +109,9 @@ const CreateCampaignForm: React.FC = () => {
             media: formData.socialMediaLinks,
             donorCommunication: formData.donorCommunication
         }, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         console.log(formData);

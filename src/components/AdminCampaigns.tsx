@@ -33,7 +33,11 @@ const AdminCampaigns = () => {
   useEffect(() => {
     startTransition(async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/campaigns/getAllByAdmin`);
+        const res = await axios.get(`${BASE_URL}/campaigns/getAllByAdmin`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setCampaigns(res.data);
         setFilteredCampaigns(res.data);
       } catch (error) {

@@ -120,7 +120,11 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
     console.log(user)
     startTransition(async () => {
       try {
-        const response = await axios.post(`${BASE_URL}/donations`, formData);
+        const response = await axios.post(`${BASE_URL}/donations`, formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (response.status === 201) {
           setIsDonate(true);
           // Reset form

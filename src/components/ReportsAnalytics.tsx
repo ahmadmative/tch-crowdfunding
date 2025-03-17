@@ -73,27 +73,51 @@ const ReportsAnalytics: React.FC = () => {
     const fetchApis = async () => {
 
       try {
-        const res = await axios.get(`${BASE_URL}/analytics/reports/quick-stats`);
+        const res = await axios.get(`${BASE_URL}/analytics/reports/quick-stats`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setQuickStats(res.data);
         console.log(res.data);
 
-        const res2 = await axios.get(`${BASE_URL}/analytics/reports/donation-trends`);
+        const res2 = await axios.get(`${BASE_URL}/analytics/reports/donation-trends`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setDonationTrends(res2.data);
         console.log(res2.data);
 
-        const res3 = await axios.get(`${BASE_URL}/analytics/reports/top-five-donation-raisers`);
+        const res3 = await axios.get(`${BASE_URL}/analytics/reports/top-five-donation-raisers`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setTopFiveDonationRaisers(res3.data);
         console.log(res3.data);
 
-        const res4 = await axios.get(`${BASE_URL}/analytics/reports/campaign-metrics`);
+        const res4 = await axios.get(`${BASE_URL}/analytics/reports/campaign-metrics`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setCampaignMetrics(res4.data);
         console.log(res4.data);
 
-        const res5 = await axios.get(`${BASE_URL}/analytics/reports/donor-growth`);
+        const res5 = await axios.get(`${BASE_URL}/analytics/reports/donor-growth` , {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setDonorGrowth(res5.data);
         console.log(res5.data);
 
-        const res6 = await axios.get(`${BASE_URL}/analytics/reports/top-contributers`);
+        const res6 = await axios.get(`${BASE_URL}/analytics/reports/top-contributers`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
         setTopContributers(res6.data);
         console.log(res6.data);
 

@@ -136,27 +136,47 @@ const DonationsManagement: React.FC = () => {
     const fetchDonationStats = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${BASE_URL}/analytics/donations/stats`)
+        const response = await axios.get(`${BASE_URL}/analytics/donations/stats`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         setDonationStats(response.data)
         console.log(donationStats)
         setLoading(false);
 
-        const response2 = await axios.get(`${BASE_URL}/analytics/donations/trends`)
+        const response2 = await axios.get(`${BASE_URL}/analytics/donations/trends`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         setDonationTrends(response2.data.trends)
         console.log(donationTrends)
         setLoading(false);
 
-        const response3 = await axios.get(`${BASE_URL}/analytics/donations/payment-methods`)
+        const response3 = await axios.get(`${BASE_URL}/analytics/donations/payment-methods`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         setPaymentMethods(response3.data.paymentMethods)
         console.log(paymentMethods)
         setLoading(false);
 
-        const response4 = await axios.get(`${BASE_URL}/analytics/donations/top-campaigns`)
+        const response4 = await axios.get(`${BASE_URL}/analytics/donations/top-campaigns`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         setTopCampaigns(response4.data.topCampaigns)
         console.log(topCampaigns)
         setLoading(false);
 
-        const response5 = await axios.get(`${BASE_URL}/analytics/donations/all-transactions`)
+        const response5 = await axios.get(`${BASE_URL}/analytics/donations/all-transactions`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         setTransactions(response5.data.transactions)
         console.log(transactions)
         setLoading(false);

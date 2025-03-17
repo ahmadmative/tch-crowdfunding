@@ -44,7 +44,11 @@ const FundsGraph = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`);
+                const res = await axios.get(`${BASE_URL}/analytics/campaigner/latest-donations/${user?.userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
                 setData(res.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

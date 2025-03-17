@@ -31,9 +31,20 @@ const CampaignDetails = () => {
 
     const handleAction = (action: string) => {
         console.log(action)
+        const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return;
+      }
+      
         startTransition(async () => {
             try {
-                const res = await axios.put(`${BASE_URL}/campaigns/updateStatus/${id}`, { status: action })
+                const res = await axios.put(`${BASE_URL}/campaigns/updateStatus/${id}`, { status: action },{
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
                 console.log(res)
                 setStatus(action)
                 toast.success("Campaign status updated successfully")

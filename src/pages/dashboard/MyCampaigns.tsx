@@ -57,7 +57,11 @@ const MyCampaigns = () => {
       }
       const fetch =async()=>{
         try {
-          const res=await axios.get(`${BASE_URL}/campaigns/getAllByUser/${user?.userId}`)
+          const res=await axios.get(`${BASE_URL}/campaigns/getAllByUser/${user?.userId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          })
           setCampaigns(res.data);
           console.log(res.data);
             
