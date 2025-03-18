@@ -134,7 +134,11 @@ const UsersManagement: React.FC = () => {
 
   const handleDelete=async(id:any)=>{
     try{
-      const res=await axios.delete(`${BASE_URL}/analytics/users/${id}`)
+      const res=await axios.delete(`${BASE_URL}/analytics/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+        })
       console.log(res.data)
       window.location.reload()
 

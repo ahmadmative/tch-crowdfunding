@@ -123,7 +123,11 @@ const EditCampaign = () => {
         try {
             const imgUrl = await upload(pic);
             formData.image = imgUrl;
-            await axios.put(`${BASE_URL}/campaigns/update/${id}`, formData);
+            await axios.put(`${BASE_URL}/campaigns/update/${id}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             toast.success('Campaign updated successfully');
             navigate('/admin/campaigns');
         } catch (error) {
