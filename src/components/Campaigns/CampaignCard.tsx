@@ -21,7 +21,7 @@ interface Campaign {
 }
 
 
-const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campaign, admin = false }) => {
+const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean, campaigner?:boolean }> = ({ campaign, admin = false, campaigner=false }) => {
     const [isPending, startTransition]=useTransition();
     const [isDeleted, setIsDeleted]=useState(false);
     const raised = campaign.totalDonations;
@@ -88,7 +88,7 @@ const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campa
                 />
             </div>
 
-            {!admin && <div className='flex items-center justify-center'>
+            {!admin && !campaigner && <div className='flex items-center justify-center'>
                 <Link to={`/home/campaigns/${campaign._id}`} className='bg-[#BEE36E] text-center hover:bg-[#a8cc5c] transition-colors duration-200 text-black font-semibold px-4 py-2 rounded-full w-full'>Donate Now</Link>
             </div>}
 
@@ -96,6 +96,12 @@ const CampaignCard: React.FC<{ campaign: Campaign, admin?: boolean }> = ({ campa
                 <button onClick={handleDelete} disabled={isPending} className='text-center text-[#a8cc5c] disabled:opacity-50 border border-[#a8cc5c] transition-colors duration-200 hover:text-black font-semibold px-4 py-2 rounded-full w-full'>{isPending ? "Deleting..." : "Delete"}</button>
                 <Link to={`/admin/campaigns/${campaign._id}`} className='bg-[#BEE36E] text-center hover:bg-[#a8cc5c] transition-colors duration-200 text-black font-semibold px-4 py-2 rounded-full w-full'>Preview</Link>
             </div>}
+
+            {campaigner && <div className='flex items-center justify-center gap-2'>
+                <button onClick={handleDelete} disabled={isPending} className='text-center text-[#a8cc5c] disabled:opacity-50 border border-[#a8cc5c] transition-colors duration-200 hover:text-black font-semibold px-4 py-2 rounded-full w-full'>{isPending ? "Deleting..." : "Delete"}</button>
+                <Link to={`/user/dashboard/campaigns/${campaign._id}`} className='bg-[#BEE36E] text-center hover:bg-[#a8cc5c] transition-colors duration-200 text-black font-semibold px-4 py-2 rounded-full w-full'>Preview</Link>
+            </div>}
+
         </div>
     );
 };

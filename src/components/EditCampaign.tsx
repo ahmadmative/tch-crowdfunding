@@ -129,7 +129,7 @@ const EditCampaign = () => {
                 }
             });
             toast.success('Campaign updated successfully');
-            navigate('/admin/campaigns');
+            window.history.back();
         } catch (error) {
             console.error('Error updating campaign:', error);
             toast.error('Failed to update campaign');
@@ -420,7 +420,7 @@ const EditCampaign = () => {
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"
-                        onClick={() => navigate('/admin/campaigns')}
+                        onClick={() => window.history.back()}
                         className="px-4 py-2 border rounded-md hover:bg-gray-50"
                     >
                         Cancel

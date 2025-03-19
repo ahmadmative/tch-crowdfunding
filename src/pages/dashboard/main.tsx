@@ -81,10 +81,10 @@ const MainDashboard = () => {
         );
       }
     
-      if (error) {
+      if (error ) {
         return (
           <div className="text-center text-red-600 p-4">
-            <p>{error}</p>
+            <p>{"Something went wrong! please signin again"}</p>
             <button 
               onClick={() => window.location.reload()} 
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -116,11 +116,11 @@ const MainDashboard = () => {
 
 
             {/* Recent Donations & graph */}
-            <div className='flex justify-between gap-4'>
-                <div className='w-1/2'>
+            <div className='flex w-full md:flex-row flex-col justify-between  gap-4'>
+                <div className='w-full md:w-1/2'>
                     <LatestDonations latestDonations={latestDonations} />
                 </div>
-                <div className='w-1/2'>
+                <div className='w-full md:w-1/2'>
                     <FundsGraph />
                 </div>
             </div>

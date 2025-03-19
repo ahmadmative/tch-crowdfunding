@@ -1,11 +1,10 @@
 import React from 'react';
+import CreateCampaignForm from '../CampaignCreate';
 
 const CreateCampaign = () => {
     return (
         <div>
-            <div>
-                <h1>Create Campaign</h1>
-            </div>
+            <CreateCampaignForm />
         </div>
     );
 };

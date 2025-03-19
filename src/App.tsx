@@ -35,6 +35,7 @@ import EditProfile from './pages/dashboard/EditProfile';
 import CreateCampaign from './pages/dashboard/CreateCampaign';
 import ProtectedRoute from './protectedRoutes/ProtectedRoutes';
 import Unauthorized from './pages/Unauthorized';
+import EditCampaignPage from './pages/dashboard/EditCampaignPage';
 
 function App() {
 
@@ -138,12 +139,14 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={['campaign creator']} />}>
           <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
-            <Route index element={<MainDashboard />} />
+            <Route path='overview' element={<MainDashboard />} />
             <Route path="campaigns" element={<MyCampaigns />} />
             <Route path="donations" element={<Donations />} />
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<EditProfile />} />
             <Route path="campaigns/create" element={<CreateCampaign />} />
+            <Route path="campaigns/:id" element={<CampaignDetails />} />
+            <Route path='campaigns/:id/edit' element={<EditCampaign />} />
           </Route>
         </Route>
 

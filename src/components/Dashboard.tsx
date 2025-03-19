@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
   if (error) {
     return (
       <div className="text-center text-red-600 p-4">
-        <p>{error}</p>
+        <p>{error}(token expired), please SignIn again</p>
         <button 
           onClick={() => window.location.reload()} 
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

@@ -17,6 +17,14 @@ const SignIn = () => {
         password: ''
     });
     const { login } = useContext(AuthContext) || { login: () => {} };
+    const [user, setUser]= useState({
+      userId: "",
+      email: "",
+      name: "",
+      role: "",
+      isAdmin: false,
+      profilePicture: ""
+    });
 
     const handleChange = (e : any) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -39,6 +47,7 @@ const SignIn = () => {
                   profilePicture: res.data.user.profilePicture
                 }
                 login(user, res.data.token);
+                setUser(user);
                 // navigate('/home/campaigns');
                 toast.success(res.data.message);
                 setSuccess(res.data.message);
@@ -50,7 +59,7 @@ const SignIn = () => {
     };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link="/home/campaigns"/>}
+      {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link={`${user?.role === "admin" ? "/dashboard" : user?.role === "donor" ? "/home/campaigns" : "/user/dashboard/overview"}`}/>}
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white px-8 py-12 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>

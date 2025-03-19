@@ -1,45 +1,30 @@
 import React from 'react';
 import CampaignCard from '../Campaigns/CampaignCard';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../../config/url';
 
 const CampaignsSection: React.FC = () => {
-  const campaigns=[
-    {
-      _id:"1",
-      image:"/campaign-card.png",
-      title:"Campaign 1",
-      description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      amount:1000,
-      totalDonations:500,
-      lastDonationDate:"2021-01-01",
-      city:"New York",
-      createdAt:"2021-01-01"  
+  const [campaigns, setCampaigns] = React.useState([]);
 
-    },
-    {
-      _id:"2",
-      image:"/campaign-card.png",
-      title:"Campaign 2",
-      description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      amount:1000,
-      totalDonations:500,
-      lastDonationDate:"2021-01-01",
-      city:"New York",
-      createdAt:"2021-01-01"  
-    },
-    {
-      _id:"2",
-      image:"/campaign-card.png",
-      title:"Campaign 2",
-      description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      amount:1000,
-      totalDonations:500,
-      lastDonationDate:"2021-01-01",
-      city:"New York",
-      createdAt:"2021-01-01"  
-    },
-    
-  ]
+  React.useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        const data = await res.data;
+        setCampaigns(data);
+      } catch (error) {
+        console.error('Error fetching campaigns:', error);
+      }
+    };
+    fetchCampaigns();
+  }, [])
+
+
   return (
     <section className="max-w-[1200px] mx-auto py-16 px-4 text-black flex flex-col items-center gap-4">
       {/* Header */}
@@ -55,7 +40,7 @@ const CampaignsSection: React.FC = () => {
 
         {/* Compaign Card */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {campaigns.map((campaign)=>(
+          {campaigns.slice(-3).map((campaign: any)=>(
             <CampaignCard key={campaign._id} campaign={campaign} />
           ))}
         </div>

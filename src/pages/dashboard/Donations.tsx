@@ -89,7 +89,7 @@ const Donations = () => {
                     <img src={item.user.profilePicture? item.user.profilePicture : '/user.png'} alt="avatar" className='w-10 h-10 rounded-full' />
 
 
-                    <p className='text-sm '>${item.amount}</p>
+                    <p className='text-sm '>R{item.amount}</p>
                     <p className='text-xs text-gray-500'>{item.status}</p>
 
                     <div className='flex items-center p-2 rounded-full hover:bg-gray-100 cursor-pointer'>

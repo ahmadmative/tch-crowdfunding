@@ -66,7 +66,7 @@ const FundsGraph = () => {
 
     return (
         <div className='px-4 py-6 border border-gray-200 rounded-lg'>
-            <div className='flex justify-between items-center mb-4'>
+            <div className='flex md:flex-row flex-col justify-between items-center mb-4'>
                 <h2 className='text-xl font-bold'>Funds Raised Over Time</h2>
 
                 <div className='flex items-center gap-4'>

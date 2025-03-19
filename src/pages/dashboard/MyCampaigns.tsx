@@ -103,7 +103,7 @@ const MyCampaigns = () => {
 
     return (
         <div className='flex flex-col gap-4'>
-            <div className='flex justify-between items-center'>
+            <div className='flex flex-col sm:flex-row justify-between items-center'>
                 <div className='flex flex-col gap-2'>
                     <h1 className='text-2xl font-bold'>My Campaigns</h1>
                     <p className='text-gray-500'>{dayjs(new Date()).format('DD MMM YYYY')}</p>
@@ -123,7 +123,7 @@ const MyCampaigns = () => {
             {/* campaign list */}
             <div className='flex flex-wrap items-center justify-center gap-4'>
                 {campaigns.map((campaign: any)=>(
-                    <CampaignCard key={campaign._id} campaign={campaign} />
+                    <CampaignCard key={campaign._id} campaign={campaign} campaigner={true}/>
                 ))}
 
 

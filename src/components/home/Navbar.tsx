@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
             {user ? <>
             
             {
-              user?.role !== "donor" && <Link to={user?.role === "admin" ? "/dashboard" : "/user/dashboard"} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+              user?.role !== "donor" && <Link to={user?.role === "admin" ? "/dashboard" : "/user/dashboard/overview"} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
               Dashboard
             </Link>
             }
@@ -87,9 +87,13 @@ const Navbar: React.FC = () => {
               <p className='text-sm'>{user?.name}</p>
             </div>}
               
-              {user ? <> <Link to="/dashboard" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
-                Dashboard
-              </Link> 
+              {user ? <> 
+
+                {
+              user?.role !== "donor" && <Link to={user?.role === "admin" ? "/dashboard" : "/user/dashboard/overview"} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
+              Dashboard
+            </Link>
+            }
               <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-300">
                 Logout
               </button>
