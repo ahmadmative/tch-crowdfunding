@@ -1,8 +1,9 @@
-import React, { useContext, useState, useTransition } from 'react';
+import React, { useContext, useEffect, useRef, useState, useTransition } from 'react';
 import Notification from '../notification/Notification';
 import { AuthContext } from '../../context/userContext';
 import axios from 'axios';
-import { BASE_URL } from '../../config/url';
+import { BASE_URL, SOCKET_URL } from '../../config/url';
+import { io, Socket } from 'socket.io-client';
 
 type PaymentMethod = 'Test Donation' | 'Cardiant Donation' | 'Office Donation';
 
@@ -18,7 +19,7 @@ interface FormData {
   houseNumber: string;
 }
 
-const DonationForm: React.FC<{ id: string }> = ({ id }) => {
+const DonationForm: React.FC<{ id: string, campaigner: string }> = ({ id, campaigner }) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('Test Donation');
   const [customAmount, setCustomAmount] = useState('');
   const [selectedAmount, setSelectedAmount] = useState<string>('150');
@@ -27,6 +28,7 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
   const [errors, setErrors] = useState("")
   const { user } = useContext(AuthContext) || { user: null };
   const [isPending, startTransition] = useTransition();
+  const socketRef = useRef<Socket | null>(null);
 
   const [formData, setFormData] = useState<FormData>({
     donorId: user?.userId,
@@ -39,6 +41,20 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
     city: '',
     houseNumber: '',
   });
+
+  // Connect to Socket.IO server
+  useEffect(() => {
+    socketRef.current = io(`${SOCKET_URL}`); // Replace with your server URL
+
+    socketRef.current.emit('join-room', campaigner);
+
+    // Cleanup on unmount
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
+  }, []);
 
   const predefinedAmounts = [
     { value: '150', label: 'R150' },
@@ -125,6 +141,25 @@ const DonationForm: React.FC<{ id: string }> = ({ id }) => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
+        
+
+        const res =await axios.post(`${BASE_URL}/notifications/create`, {
+          userId: campaigner,
+          title: "New Donation",
+          message: `A new donation of R${formData.amount} has been made to your campaign.`,
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+
+        const notification = res.data;
+
+        socketRef.current?.emit('send-notification', {campaigner, notification});
+        
+          
+        
         if (response.status === 201) {
           setIsDonate(true);
           // Reset form

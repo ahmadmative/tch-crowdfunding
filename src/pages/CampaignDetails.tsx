@@ -77,26 +77,7 @@ const CampaignDetails = () => {
     fetchCampaign();
   }, [id]);
 
-  const donors = [
-    {
-      name: "Camerom williams",
-      amount: 150,
-      date: "November 2024",
-      avatar: "/campaign-details.png",
-    },
-    {
-      name: "Camerom williams",
-      amount: 150,
-      date: "November 2024",
-      avatar: "/campaign-details.png",
-    },
-    {
-      name: "Camerom williams",
-      amount: 150,
-      date: "November 2024",
-      avatar: "/campaign-details.png",
-    },
-  ];
+
 
   if (!campaign)
     return (
@@ -372,7 +353,9 @@ const CampaignDetails = () => {
             </div>
           )}
 
-          {!admin && !campaigner && <DonationForm id={id as string} />}
+          
+
+          {!admin && !campaigner && <DonationForm id={id as string} campaigner={campaign?.userDetails[0]?._id} />}
 
           {campaigner && (
             <div className="flex justify-end w-full">
