@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import React, { createContext, useState, useEffect } from "react";
+import { BASE_URL } from "../config/url";
 
 interface User {
   userId: string;
@@ -32,8 +33,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (storedToken) {
         const decodedUser: User = jwtDecode(storedToken);
-        setToken(storedToken);
-        setUser(decodedUser);
+        const fetchedUser = async () => {
+          try {
+            const response = await fetch(`${BASE_URL}/auth/profile?id=${decodedUser.userId}`);
+            const userData = await response.json();
+            
+            console.log("context user",userData);
+            setUser({
+              userId: userData.user._id,
+              email: userData.user.email,
+              name: userData.user.name,
+              role: userData.user.role,
+              isAdmin: userData.user.isAdmin,
+              profilePicture: userData.user.profilePicture
+            });
+            setToken(userData.token);
+          } catch (error) {
+            console.log(error);
+          }
+            
+        }
+        fetchedUser();
+        
+        // setUser(decodedUser);
     }
   }, []);
 

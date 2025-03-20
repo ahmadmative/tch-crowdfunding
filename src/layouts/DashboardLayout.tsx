@@ -36,7 +36,7 @@ const CampaignerDashboardLayout: React.FC = () => {
   // Connect to Socket.IO server
   useEffect(() => {
     if (user?.userId) {
-      socketRef.current = io(`${SOCKET_URL}`); // Replace with your server URL
+      socketRef.current = io(`${SOCKET_URL}`); // Your server URL
 
       // Join the user's room
       socketRef.current.emit('join-room', user.userId);
@@ -46,6 +46,7 @@ const CampaignerDashboardLayout: React.FC = () => {
         console.log('New notification received:', newNotification);
         setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
         setNewNotificationCount((prevCount) => prevCount + 1);
+        setUnSeenIds((prevIds) => [newNotification._id, ...prevIds]);
       });
 
       // Cleanup on unmount
@@ -55,15 +56,14 @@ const CampaignerDashboardLayout: React.FC = () => {
         }
       };
     }
-  }, [user?.userId, socketRef]);
+  }, [user?.userId]);
 
   // Close the notification section when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
         setNotificationSection(false);
-        setNewNotificationCount(0);
-        console.log('Notification section closed', unSeenIds)
+        markNotificationsAsSeen(); // Mark notifications as seen when the section is closed
       }
     };
 
@@ -71,12 +71,46 @@ const CampaignerDashboardLayout: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [unSeenIds]); // Add unSeenIds as a dependency
 
-  
+  // Mark notifications as seen
+  const markNotificationsAsSeen = async () => {
+    try {
+      if (unSeenIds.length > 0) {
+        await axios.put(
+          `${BASE_URL}/notifications/update`,
+          {
+            ids: unSeenIds,
+            seen: true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+
+        // Update local state to reflect the seen status
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notification) =>
+            unSeenIds.includes(notification._id)
+              ? { ...notification, seen: true }
+              : notification
+          )
+        );
+
+        // Reset the unseen IDs and notification count
+        setUnSeenIds([]);
+        setNewNotificationCount(0);
+      }
+    } catch (error) {
+      console.error('Error marking notifications as seen:', error);
+    }
+  };
 
   // Fetch notifications
   useEffect(() => {
+    if(!user){return}
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(`${BASE_URL}/notifications/get/${user?.userId}`, {
@@ -85,9 +119,11 @@ const CampaignerDashboardLayout: React.FC = () => {
           },
         });
         setNotifications(res.data);
-        setNewNotificationCount(res.data.filter((notification: any) => notification.seen === true).length);
-        setUnSeenIds(res.data.filter((notification: any) => notification.seen === true));
-        
+
+        // Calculate the number of unseen notifications
+        const unseenNotifications = res.data.filter((notification: Notification) => !notification.seen);
+        setNewNotificationCount(unseenNotifications.length);
+        setUnSeenIds(unseenNotifications.map((notification: Notification) => notification._id));
       } catch (error) {
         console.log(error);
       }
@@ -124,7 +160,9 @@ const CampaignerDashboardLayout: React.FC = () => {
               notificationSection ? 'bg-gray-100' : ''
             } hover:bg-gray-100`}
           >
-            <div className='absolute top-0 right-0 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center'>{newNotificationCount}</div>
+            <div className="absolute top-0 right-0 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+              {newNotificationCount}
+            </div>
             <BellIcon className="w-6 h-6" />
           </div>
 
@@ -143,7 +181,12 @@ const CampaignerDashboardLayout: React.FC = () => {
                 <div className="w-full h-[1px] bg-gray-200 my-2"></div>
                 {notifications.length > 0 ? (
                   notifications.map((notification) => (
-                    <div key={notification._id} className={`flex flex-col items-start  my-2 p-2 rounded-md ${notification.seen ? '' : 'bg-gray-200'}`}>
+                    <div
+                      key={notification._id}
+                      className={`flex flex-col items-start my-2 p-2 rounded-md ${
+                        notification.seen ? '' : 'bg-gray-200'
+                      }`}
+                    >
                       <p className="text-sm text-gray-600">{notification.message}</p>
                       <p className="text-xs text-gray-400">
                         {dayjs(notification.createdAt).fromNow()}

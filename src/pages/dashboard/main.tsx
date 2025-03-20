@@ -60,7 +60,7 @@ const MainDashboard = () => {
                 });
                 console.log(res2.data);
                 const donations = res2.data.filter((item:any)=>item.donorId === user?.userId);
-                setLatestDonations(donations);
+                setLatestDonations(res2.data);
 
 
             } catch (error: any) {

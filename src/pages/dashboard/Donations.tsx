@@ -68,6 +68,8 @@ const Donations = () => {
                     )
                 }
 
+                <div className='w-full max-h-[400px] overflow-y-auto flex flex-col gap-4'>
+
                 {/* donation card */}
                 {donations?.map((item:any)=>(
                     <div className='flex items-center justify-between gap-2'>
@@ -100,6 +102,8 @@ const Donations = () => {
 
                 </div>
                 ))}
+
+                </div>
 
 
             </div>

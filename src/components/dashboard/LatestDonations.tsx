@@ -46,7 +46,7 @@ const LatestDonations: React.FC<{ latestDonations: any }> = ({ latestDonations }
                 <Link to='/user/dashboard/donations' className='text-xs text-gray-500 hover:text-gray-700'>View All</Link>
             </div>
 
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 max-h-[400px] overflow-y-auto'>
 
                 {latestDonations?.map((item: any) => (
                     <div key={item.id} className='flex flex-col gap-4 hover:bg-gray-200 cursor-pointer p-2 sm:p-4 rounded-lg'>

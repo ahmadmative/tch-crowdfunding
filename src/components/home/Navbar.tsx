@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/userContext';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext) || { user: null, logout: () => {} };
-  console.log(user);
+  // console.log(user);
 
   
 
@@ -40,7 +41,7 @@ const Navbar: React.FC = () => {
               Logout
             </button>
             <div className='flex items-center gap-2'>
-              {user?.profilePicture ? <img src={user?.profilePicture} alt="avatar" className='w-[40px] h-[40px] rounded-full'/> : <img src={"/user.png"} alt="avatar" className='w-[40px] h-[40px] rounded-full'/>}
+              {user?.profilePicture ? <img src={user?.profilePicture} alt="avatar" className='w-[40px] h-[40px] rounded-full'/> : <UserCircleIcon className="w-10 h-10" />}
               {/* <p className='text-sm'>{user?.name}</p> */}
             </div>
             </> : <>
