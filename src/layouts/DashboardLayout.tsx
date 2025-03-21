@@ -30,7 +30,6 @@ const CampaignerDashboardLayout: React.FC = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const [newNotificationCount, setNewNotificationCount] = useState(0);
   const [unSeenIds, setUnSeenIds] = useState<string[]>([]);
-
   const socketRef = useRef<Socket | null>(null);
 
   // Connect to Socket.IO server
@@ -207,7 +206,18 @@ const CampaignerDashboardLayout: React.FC = () => {
             to="/user/dashboard/profile"
             className="flex items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100"
           >
-            <UserCircleIcon className="w-6 h-6" />
+            {
+              user?.profilePicture ? (
+                <img
+                  src={user?.profilePicture}
+                  alt="Profile"
+                  className="w-6 h-6 rounded-full"
+                />
+              ) : (
+                <UserCircleIcon className="w-6 h-6" />
+              )
+            }
+            
           </Link>
         </div>
 

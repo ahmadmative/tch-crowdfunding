@@ -7,8 +7,7 @@ interface User {
   email: string;
   name: string;
   role: string;
-  isAdmin: boolean;
-  profilePicture: string;
+  profilePicture: "";
 }
 
 interface AuthContextType {
@@ -44,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               email: userData.user.email,
               name: userData.user.name,
               role: userData.user.role,
-              isAdmin: userData.user.isAdmin,
               profilePicture: userData.user.profilePicture
             });
             setToken(userData.token);

@@ -8,7 +8,7 @@ import Notification from '../components/notification/Notification';
 import GoogleLoginButton from '../components/home/GoogleButton';
 import MicrosoftLoginButton from '../components/home/MicrosoftButton';
 
-const SignIn = () => {
+const AdminSignIn = () => {
     const [hide, setHide] = useState(true);
     const navigate = useNavigate();
     const [isPending, startTransition] = useTransition();
@@ -38,11 +38,13 @@ const SignIn = () => {
             try {
                 const res = await axios.post(`${BASE_URL}/auth/login`, data);
                 console.log(res.data);
-                if(res.data.user.role === "admin") {
-                  toast.error("Admin can't login from this page");
-                  navigate("/admin/signin");
-                  return
+                if (res.data.user.role !== "admin") {
+                    toast.error("only admin can login from this page");
+                    setError("only admin can login from this page");
+                    return 
                 }
+
+
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('user', JSON.stringify(res.data.user));
                 const user = {
@@ -65,7 +67,7 @@ const SignIn = () => {
         });
     };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen my-[80px] px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link={`${user?.role === "admin" ? "/dashboard" : user?.role === "donor" ? "/home/campaigns" : "/user/dashboard/overview"}`}/>}
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white px-8 py-12 rounded-xl shadow-lg">
@@ -139,32 +141,14 @@ const SignIn = () => {
             >
               Login
             </button>
-          </div>
+          </div>          
 
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-[#BEE36E] hover:text-gray-900">
-              Register
-            </Link>
-          </p>
-
-          <div className="flex items-center justify-center space-x-4">
-          <GoogleLoginButton/>
-            
-          </div>
-
-          <div className="flex items-center justify-center space-x-4">
-          
-          <MicrosoftLoginButton/>
-          </div>
-
-          
         </form>
       </div>
     </div>
   );
 };
 
-export default SignIn;
+export default AdminSignIn;
 
 

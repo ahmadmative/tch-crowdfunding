@@ -4,6 +4,8 @@ import axios from 'axios';
 import { BASE_URL } from '../config/url';
 import { toast } from 'react-toastify';
 import Notification from '../components/notification/Notification';
+import GoogleLoginButton from '../components/home/GoogleButton';
+import MicrosoftLoginButton from '../components/home/MicrosoftButton';
 
 
 
@@ -19,7 +21,7 @@ const SignUp = () => {
     confirmPassword: '',
   });
   const navigate = useNavigate();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const handleChange = (e: any) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -28,24 +30,37 @@ const SignUp = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     console.log(data);
-    startTransition(async () => {
-      try {
-        const res = await axios.post(`${BASE_URL}/auth/register`, data);
-        console.log(res.data);
-        // navigate('/signin');
-        toast.success(res.data.message);
-        setSuccess(res.data.message);
-      } catch (error: any) {
-        toast.error(error.response.data.message);
-        console.log(error);
-        setError(error.message || 'An error occurred' || error.response.data.message);
+  
+    // Set loading state
+    setIsPending(true);
+  
+    try {
+      const otp = Math.floor(1000 + Math.random() * 9000).toString();
+  
+      // Send OTP to the backend
+      const res = await axios.post(`${BASE_URL}/auth/send-otp`, {
+        email: data.email,
+        otp,
+      });
+  
+      if (res.data) {
+        // Navigate to the email verification page with OTP and user data
+        navigate('/email/verification', { state: { otp: res.data.otp, userData: data } });
+        toast.success('OTP sent successfully to your email.');
       }
-    });
-
+    } catch (error: any) {
+      // Handle errors
+      toast.error(error.response?.data?.message || 'Failed to send OTP.');
+      console.error(error);
+      setError(error.response?.data?.message || 'An error occurred');
+    } finally {
+      // Reset loading state
+      setIsPending(false);
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen my-15 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen my-[80px] px-4 sm:px-6 lg:px-8">
       {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link="/signin"/>}
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
@@ -151,6 +166,16 @@ const SignUp = () => {
               Login
             </Link>
           </p>
+
+          <div className="flex items-center justify-center space-x-4">
+          <GoogleLoginButton/>
+            
+          </div>
+
+          <div className="flex items-center justify-center space-x-4">
+          
+          <MicrosoftLoginButton/>
+          </div>
 
           
         </form>

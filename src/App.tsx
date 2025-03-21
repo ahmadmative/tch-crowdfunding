@@ -36,6 +36,8 @@ import CreateCampaign from './pages/dashboard/CreateCampaign';
 import ProtectedRoute from './protectedRoutes/ProtectedRoutes';
 import Unauthorized from './pages/Unauthorized';
 import EditCampaignPage from './pages/dashboard/EditCampaignPage';
+import EmailVerification from './pages/EmailVerification';
+import AdminSignIn from './pages/AdminLogin';
 
 function App() {
 
@@ -60,9 +62,11 @@ function App() {
         <Route path="/" element={<NavLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/admin/signin" element={<AdminSignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
           <Route path="/verification/:id" element={<Verification />} />
+          <Route path="/email/verification" element={<EmailVerification />} />
           <Route path="/newpassword/:id" element={<NewPassword />} />
           <Route path="/home/campaigns" element={<Campaigns />} />
           <Route path="/home/campaigns/:id" element={<CampaignDetails />} />
@@ -137,7 +141,7 @@ function App() {
         </Route>
 
 
-        <Route element={<ProtectedRoute allowedRoles={['campaign creator']} />}>
+        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
           <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
             <Route path='overview' element={<MainDashboard />} />
             <Route path="campaigns" element={<MyCampaigns />} />

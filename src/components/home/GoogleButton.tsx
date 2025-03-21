@@ -1,24 +1,22 @@
-// src/components/GoogleLoginButton.js
-import React from 'react';
+import React, { useContext, useEffect } from "react";
 
 const GoogleLoginButton = () => {
   const handleLogin = () => {
-    window.open('http://localhost:5000/auth/google', '_self');
+    window.open("http://localhost:5000/auth/google", "_self");
   };
 
   return (
     <button
       onClick={handleLogin}
-      style={{
-        backgroundColor: '#4285F4',
-        color: 'white',
-        padding: '10px 20px',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-      }}
+      className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+      type="button"
     >
-      Login with Google
+      <img
+        className="h-5 w-5 mr-2"
+        src="https://www.svgrepo.com/show/475656/google-color.svg"
+        alt="Google logo"
+      />
+      Sign in with Google
     </button>
   );
 };
