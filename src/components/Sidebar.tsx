@@ -114,7 +114,7 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     logout?.();
-    navigate('/signin');
+    navigate('/');
   };
 
   return (

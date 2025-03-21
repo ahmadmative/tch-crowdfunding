@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   useEffect(() => {
     if (!token) {
       // If no token, redirect to login
-      navigate('/signin');
+      navigate('/');
       return;
     }
 

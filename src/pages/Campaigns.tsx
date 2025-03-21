@@ -28,29 +28,25 @@ const Campaigns = () => {
   const categories = ['Education', 'Health', 'Sports', 'Arts', 'Environment', 'Other'];
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    startTransition(async () => {
+    const fetch= async () => {
       try {
-        const token = localStorage.getItem('token');
-
-      if (!token) {
-        console.error('No token found. Please log in.');
-        return;
-      }
       
-        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(`${BASE_URL}/campaigns/getAllWithDonations`);
         setCampaigns(res.data);
         setFilteredCampaigns(res.data);
       } catch (error) {
         console.error('Error fetching campaigns:', error);
+        setError("Error fetching campaigns");
+      }finally{
+        setIsPending(false);
       }
-    });
+    };
+
+    fetch();
   }, []);
 
   // Apply filters whenever search, category, or amount filters change
@@ -105,6 +101,8 @@ const Campaigns = () => {
 
     setFilteredCampaigns(filtered);
   }, [searchQuery, selectedCategory, minAmount, maxAmount, sortBy, campaigns]);
+
+
 
   return (
     <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 min-h-screen items-center pt-[100px] overflow-x-hidden font-sans'>

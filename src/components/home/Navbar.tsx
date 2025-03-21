@@ -16,17 +16,19 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-full">
           {/* Rest of the navbar content stays the same */}
           <div className='flex items-center gap-4'>
+            <Link to="/">
             <img src={"/nav-logo.png"} alt="logo" width={100} height={100} className=""/>
+            </Link>
             <img src={"/line.png"} alt="logo" className='w-[1px] h-[30px] hidden md:block'/>
             
-            <div className="hidden md:flex items-center gap-4">
+            {/* <div className="hidden md:flex items-center gap-4">
               <Link to="/" className="hover:text-[#BEE36E] transition-colors duration-300">Home</Link>
               <Link to="/campaigns" className="hover:text-[#BEE36E] transition-colors duration-300">About Us</Link>
               <Link to="/donate" className="hover:text-[#BEE36E] transition-colors duration-300">Services</Link>
               <Link to="/about" className="hover:text-[#BEE36E] transition-colors duration-300">Blog</Link>
               <Link to="/contact" className="hover:text-[#BEE36E] transition-colors duration-300">Donate</Link>
               <Link to="/contact" className="hover:text-[#BEE36E] transition-colors duration-300">Contact Us</Link>
-            </div>
+            </div> */}
           </div>
 
           <div className='hidden md:flex items-center gap-4'>
@@ -74,13 +76,13 @@ const Navbar: React.FC = () => {
           ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}
         `}>
           <div className="flex flex-col p-4 gap-4">
-              <Link to="/" className="hover:text-[#BEE36E] transition-colors duration-300">Home</Link>
+              {/* <Link to="/" className="hover:text-[#BEE36E] transition-colors duration-300">Home</Link>
               <Link to="/campaigns" className="hover:text-[#BEE36E] transition-colors duration-300">About Us</Link>
               <Link to="/donate" className="hover:text-[#BEE36E] transition-colors duration-300">Services</Link>
               <Link to="/about" className="hover:text-[#BEE36E] transition-colors duration-300">Blog</Link>
               <Link to="/contact" className="hover:text-[#BEE36E] transition-colors duration-300">Donate</Link>
               <Link to="/contact" className="hover:text-[#BEE36E] transition-colors duration-300">Contact Us</Link>
-            
+             */}
             <div className='flex flex-col gap-3 pt-2'>
 
             {user && <div className='flex items-center gap-2'>

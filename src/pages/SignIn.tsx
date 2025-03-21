@@ -37,10 +37,10 @@ const SignIn = () => {
         startTransition(async () => {
             try {
                 const res = await axios.post(`${BASE_URL}/auth/login`, data);
-                console.log(res.data);
+                console.log("frontend",res.data.user);
                 if(res.data.user.role === "admin") {
-                  toast.error("Admin can't login from this page");
-                  navigate("/admin/signin");
+                  toast.error("user can't login from this page");
+                  navigate("/");
                   return
                 }
                 localStorage.setItem('token', res.data.token);
@@ -66,7 +66,7 @@ const SignIn = () => {
     };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen my-[80px] px-4 sm:px-6 lg:px-8">
-      {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link={`${user?.role === "admin" ? "/dashboard" : user?.role === "donor" ? "/home/campaigns" : "/user/dashboard/overview"}`}/>}
+      {success && <Notification isOpen={true} title="Success" message="login successfully" type="success" onClose={() => setSuccess('')} link="/dashboard"/>}
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white px-8 py-12 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>

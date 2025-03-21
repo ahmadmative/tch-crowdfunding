@@ -59,11 +59,11 @@ function App() {
 
       <Routes>
         <Route path='/unauthorized' element={<Unauthorized />} />
-        <Route path="/" element={<NavLayout />}>
+        {/* <Route path="/" element={<NavLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/admin/signin" element={<AdminSignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} /> */}
+          <Route path="/" element={<AdminSignIn />} />
+          {/* <Route path="/signup" element={<SignUp />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
           <Route path="/verification/:id" element={<Verification />} />
           <Route path="/email/verification" element={<EmailVerification />} />
@@ -72,7 +72,7 @@ function App() {
           <Route path="/home/campaigns/:id" element={<CampaignDetails />} />
           <Route path="/home/campaigns/create" element={<CreateCampaignForm />} />
 
-        </Route>
+        </Route> */}
 
 
 
@@ -141,7 +141,7 @@ function App() {
         </Route>
 
 
-        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+        {/* <Route element={<ProtectedRoute allowedRoles={['user']} />}>
           <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
             <Route path='overview' element={<MainDashboard />} />
             <Route path="campaigns" element={<MyCampaigns />} />
@@ -152,7 +152,7 @@ function App() {
             <Route path="campaigns/:id" element={<CampaignDetails />} />
             <Route path='campaigns/:id/edit' element={<EditCampaign />} />
           </Route>
-        </Route>
+        </Route> */}
 
 
       </Routes>
