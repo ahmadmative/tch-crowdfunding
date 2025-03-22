@@ -176,7 +176,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="Title"
               value={formData.title}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
           <div>
@@ -187,7 +187,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="R1 50000"
               value={formData.moneyTarget}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
         </div>
@@ -201,7 +201,7 @@ const CreateCampaignForm: React.FC = () => {
             value={formData.description}
             onChange={handleInputChange}
             rows={2}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
         
@@ -214,7 +214,7 @@ const CreateCampaignForm: React.FC = () => {
             name="category"
             value={formData.category}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 border border-gray-300 cursor-pointer rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 cursor-pointer rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             >
             <option value="">Select category</option>
             <option value="animals">Education</option>
@@ -234,7 +234,7 @@ const CreateCampaignForm: React.FC = () => {
               name="event"
               value={formData.event}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 cursor-pointer rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 cursor-pointer rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             >
               <option value="">Select event</option>
               <option value="event1">Event 1</option>
@@ -252,7 +252,7 @@ const CreateCampaignForm: React.FC = () => {
             value={formData.story}
             onChange={handleInputChange}
             rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
 
@@ -265,7 +265,7 @@ const CreateCampaignForm: React.FC = () => {
             value={formData.challenge}
             onChange={handleInputChange}
             rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
 
@@ -278,7 +278,7 @@ const CreateCampaignForm: React.FC = () => {
               name="startDate"
               value={formData.startDate}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
           <div>
@@ -288,7 +288,7 @@ const CreateCampaignForm: React.FC = () => {
               name="endDate"
               value={formData.endDate}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
         </div>
@@ -303,7 +303,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="Add Address"
               value={formData.address}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
           <div className="md:col-span-1">
@@ -314,7 +314,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="Johannesburg"
               value={formData.city}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
           <div className="md:col-span-1">
@@ -325,7 +325,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="57986"
               value={formData.postalCode}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
         </div>
@@ -340,7 +340,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="Link"
               value={formData.campaignVideoLinks}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
           <div>
@@ -351,7 +351,7 @@ const CreateCampaignForm: React.FC = () => {
               placeholder="Link"
               value={formData.socialMediaLinks}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
           </div>
         </div>
@@ -365,7 +365,7 @@ const CreateCampaignForm: React.FC = () => {
             value={formData.donorCommunication}
             onChange={handleInputChange}
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
 
@@ -374,14 +374,14 @@ const CreateCampaignForm: React.FC = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="px-6 py-2 bg-[#BEE36E] text-black rounded-full hover:bg-[#a8cc5c] transition-colors duration-200"
+            className="px-6 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-600 transition-colors duration-200"
           >
             {isPending ? 'Creating...' : 'Create Campaign'}
           </button>
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="px-6 py-2 text-[#BEE36E] border border-[#BEE36E] rounded-full hover:text-gray-800 transition-colors duration-200"
+            className="px-6 py-2 text-gray-900 border border-gray-900 rounded-full hover:text-gray-500 transition-colors duration-200"
           >
             Discard
           </button>

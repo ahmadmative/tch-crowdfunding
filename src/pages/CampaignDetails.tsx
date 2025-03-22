@@ -7,6 +7,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline";
 
 const CampaignDetails = () => {
   const { id } = useParams();
@@ -105,11 +106,7 @@ const CampaignDetails = () => {
               <div className="w-full pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <img
-                      src="/location.png"
-                      alt="location"
-                      className="w-[20px] h-[20px]"
-                    />
+                    <MapPinIcon className="w-4 h-4 text-gray-600" />
                     <p className="text-xs font-bold text-black">
                       {campaign?.city}
                     </p>
@@ -124,8 +121,8 @@ const CampaignDetails = () => {
                   max={goal}
                   className="w-full h-2 rounded-full 
                                     [&::-webkit-progress-bar]:bg-gray-300 
-                                    [&::-webkit-progress-value]:bg-[#BEE36E] 
-                                    [&::-moz-progress-bar]:bg-[#BEE36E]"
+                                    [&::-webkit-progress-value]:bg-gray-900 
+                                    [&::-moz-progress-bar]:bg-gray-900"
                 />
               </div>
             </div>
@@ -152,11 +149,7 @@ const CampaignDetails = () => {
                 </p>
 
                 <div className="flex items-center gap-2">
-                  <img
-                    src="/clock.png"
-                    alt="location"
-                    className="w-[20px] h-[20px] rounded-lg"
-                  />
+                  <ClockIcon className="w-4 h-4 text-gray-600" />
                   <p className="text-xs font-bold text-gray-600 font-onest">
                     {dayjs(campaign?.createdAt).fromNow()}
                   </p>
@@ -167,14 +160,14 @@ const CampaignDetails = () => {
             {/* funds required section */}
             <div className="flex flex-col items-center gap-2">
               <p className=" font-bold text-black font-onest">Required Funds</p>
-              <p className="text-[#BEE36E] font-bold text-2xl font-onest">
+              <p className="text-gray-900 font-bold text-2xl font-onest">
                 R{campaign?.amount}
               </p>
             </div>
 
             {/* donate btn */}
 
-            <button className="bg-[#BEE36E] flex items-center justify-center text-black px-4 py-1 md:py-2 rounded-full text-sm font-bold h-[50px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300">
+            <button className="bg-gray-900 flex items-center justify-center text-white px-4 py-1 md:py-2 rounded-full text-sm font-bold h-[50px] shadow-md hover:bg-gray-900/80 transition-all duration-300">
               Donate Now
               <img
                 src="/arrow-black.png"
@@ -246,7 +239,7 @@ const CampaignDetails = () => {
                 <p
                   className={`text-sm font-bold py-2 font-onest rounded-lg p-2 ${
                     status === "active"
-                      ? "bg-[#BEE36E] text-black"
+                      ? "bg-[#bcef4e] text-black"
                       : status === "cancelled"
                       ? "bg-red-500 text-white"
                       : status === "pending"
@@ -299,7 +292,7 @@ const CampaignDetails = () => {
                 <p
                   className={`text-sm font-bold py-2 font-onest rounded-lg p-2 ${
                     status === "active"
-                      ? "bg-[#BEE36E] text-black"
+                      ? "bg-[#c6f365] text-black"
                       : status === "cancelled"
                       ? "bg-red-500 text-white"
                       : status === "pending"
@@ -333,7 +326,7 @@ const CampaignDetails = () => {
                     id="action"
                     name="action"
                     onChange={(e) => handleAction(e.target.value)}
-                    className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#BEE36E] transition"
+                    className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
                   >
                     <option value="">Select Action</option>
                     <option value="active">Approve</option>
@@ -345,7 +338,7 @@ const CampaignDetails = () => {
                 {/* Edit Button */}
                 <Link
                   to={`/admin/campaigns/${id}/edit`}
-                  className="bg-[#BEE36E] text-black px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300"
+                  className="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:bg-gray-700 transition-all duration-300"
                 >
                   Edit
                 </Link>
@@ -357,16 +350,7 @@ const CampaignDetails = () => {
 
           {!admin && !campaigner && <DonationForm id={id as string} campaigner={campaign?.userDetails[0]?._id} />}
 
-          {campaigner && (
-            <div className="flex justify-end w-full">
-              <Link
-                to={`/user/dashboard/campaigns/${id}/edit`}
-                className="bg-[#BEE36E] text-black px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:bg-[#BEE36E]/80 transition-all duration-300"
-              >
-                Edit
-              </Link>
-            </div>
-          )}
+          
         </div>
       </div>
 
@@ -385,7 +369,7 @@ const CampaignDetails = () => {
                 className={`text-sm font-bold cursor-pointer px-4 py-1 rounded-full transition-all duration-300 
                                 ${
                                   activeTab === tab
-                                    ? "bg-[#BEE36E] text-black"
+                                    ? "bg-gray-900 text-white"
                                     : "bg-white border border-gray-300 text-gray-600"
                                 }`}
                 onClick={() => setActiveTab(tab as "Hot" | "All")}

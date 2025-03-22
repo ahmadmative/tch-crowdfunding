@@ -109,7 +109,7 @@ const AddUsers = () => {
         {updateError && <Notification isOpen={true} title="Error" message={updateError} type="error" onClose={() => setUpdateError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
-          <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/>
+          {/* <img src="/footer-logo.png" alt="logo" className='w-[200px] h-[40px]'/> */}
           
         </div>
         
@@ -126,7 +126,7 @@ const AddUsers = () => {
                 required
                 value={data.name}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 placeholder="Enter your name"
               />
             </div>
@@ -142,7 +142,7 @@ const AddUsers = () => {
                 required
                 value={data.email}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 placeholder="Enter your email"
               />
             </div>
@@ -157,7 +157,7 @@ const AddUsers = () => {
                     required
                     value={data.role}
                     onChange={handleChange}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
                     <option value="admin">Admin</option>
                     <option value="campaign creator">Campaigner</option>
@@ -177,7 +177,7 @@ const AddUsers = () => {
                       required
                       value={data.password}
                       onChange={handleChange}
-                      className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent pr-10"
+                      className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent pr-10"
                       placeholder="••••••••"
                       />
                       <img 
@@ -199,7 +199,7 @@ const AddUsers = () => {
                   required
                   value={data.confirmPassword}
                   onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                  className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   placeholder="••••••••"
               />
               <img 
@@ -216,7 +216,7 @@ const AddUsers = () => {
               type="submit"
               onClick={handleSubmit}
               disabled={isPending}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-700"
             >
               Register
             </button>
@@ -225,7 +225,7 @@ const AddUsers = () => {
               type="submit"
               onClick={handleUpdate}
               disabled={isPending}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c]"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-700"
             >
               Update
             </button>

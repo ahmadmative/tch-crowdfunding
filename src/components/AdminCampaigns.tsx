@@ -101,16 +101,9 @@ const AdminCampaigns = () => {
 
   return (
     <div className='max-w-[1200px] mx-auto p-4 flex flex-col gap-5 min-h-screen items-center pt-[10px] overflow-x-hidden font-sans'>
-      {/* Header Section */}
-      <div className="w-full flex items-center justify-center gap-2">
-        <img src="/home-header.png" alt="home-header" className="w-[20px] h-[15px]" />
-        <p className="text-sm font-normal leading-[15px] text-[#000000] tracking-[3.5px]">
-          CAMPAIGNS
-        </p>
-      </div>
-
+    
       <h1 className='text-4xl font-bold font-onest'>All Campaigns</h1>
-      <p className='text-gray-700 text-sm font-sans'>Explore our campaigns and support the causes you care about.</p>
+      {/* <p className='text-gray-700 text-sm font-sans'>Explore our campaigns and support the causes you care about.</p> */}
 
       {/* Search & Filters Section */}
       <div className='flex flex-col md:flex-row items-center justify-center gap-4 relative'>
@@ -173,14 +166,14 @@ const AdminCampaigns = () => {
                     <input
                       type="number"
                       placeholder="Min"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                       value={minAmount}
                       onChange={(e) => setMinAmount(e.target.value)}
                     />
                     <input
                       type="number"
                       placeholder="Max"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                       value={maxAmount}
                       onChange={(e) => setMaxAmount(e.target.value)}
                     />
@@ -190,7 +183,7 @@ const AdminCampaigns = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                   >
