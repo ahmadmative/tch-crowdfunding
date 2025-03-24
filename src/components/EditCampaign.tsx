@@ -308,10 +308,10 @@ const EditCampaign = () => {
             >
               <option value="">Select Category</option>
               <option value="Education">Education</option>
-              <option value="Healthcare">Healthcare</option>
+              <option value="Health">Healthcare</option>
               <option value="Environment">Environment</option>
-              <option value="Social">Social</option>
-              <option value="Technology">Technology</option>
+              <option value="Sports">Sports</option>
+              <option value="Art">Art</option>
               <option value="Other">Other</option>
             </select>
           </div>

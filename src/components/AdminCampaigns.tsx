@@ -24,7 +24,7 @@ const AdminCampaigns = () => {
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const categories = ['Education', 'Health', 'Sports', 'Arts', 'Environment', 'Other'];
+  const categories = ['All','Education', 'Health', 'Sports', 'Arts', 'Environment', 'Other'];
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -59,7 +59,7 @@ const AdminCampaigns = () => {
     }
 
     // Apply category filter
-    if (selectedCategory !== 'Select Category') {
+    if (selectedCategory !== 'All' && selectedCategory !== 'Select Category') {
       filtered = filtered.filter(campaign => 
         campaign?.category === selectedCategory
       );
