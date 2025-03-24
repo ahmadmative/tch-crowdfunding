@@ -24,7 +24,6 @@ const AdminCampaigns = () => {
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-
   const categories = ['Education', 'Health', 'Sports', 'Arts', 'Environment', 'Other'];
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);

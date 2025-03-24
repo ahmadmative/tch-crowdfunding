@@ -101,7 +101,7 @@ const AdminSignIn = () => {
                 Password
               </label>
               <div className="text-sm">
-                <Link to="/forgetpassword" className="font-medium text-[#BEE36E] hover:text-gray-900">
+                <Link to="/forgetpassword" className="font-medium text-gray-900 hover:text-gray-600">
                   Forgot password?
                 </Link>
               </div>
@@ -116,7 +116,7 @@ const AdminSignIn = () => {
                       required
                       value={data.password}
                       onChange={handleChange}
-                      className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent pr-10"
+                      className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent pr-10"
                       placeholder="••••••••"
                       />
                       <img 
@@ -135,7 +135,7 @@ const AdminSignIn = () => {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-[#BEE36E] hover:bg-[#a8cc5c] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={isPending}
             >

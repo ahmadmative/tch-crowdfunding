@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               profilePicture: userData.user.profilePicture
             });
             setToken(userData.token);
+            
           } catch (error) {
             console.log(error);
           }

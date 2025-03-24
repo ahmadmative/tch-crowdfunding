@@ -39,6 +39,7 @@ import EditCampaignPage from './pages/dashboard/EditCampaignPage';
 import EmailVerification from './pages/EmailVerification';
 import AdminSignIn from './pages/AdminLogin';
 
+
 function App() {
 
   return (
@@ -59,26 +60,15 @@ function App() {
 
       <Routes>
         <Route path='/unauthorized' element={<Unauthorized />} />
-        {/* <Route path="/" element={<NavLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} /> */}
-          <Route path="/" element={<AdminSignIn />} />
-          {/* <Route path="/signup" element={<SignUp />} />
-          <Route path="/forgetpassword" element={<ForgetPassword />} />
-          <Route path="/verification/:id" element={<Verification />} />
-          <Route path="/email/verification" element={<EmailVerification />} />
-          <Route path="/newpassword/:id" element={<NewPassword />} />
-          <Route path="/home/campaigns" element={<Campaigns />} />
-          <Route path="/home/campaigns/:id" element={<CampaignDetails />} />
-          <Route path="/home/campaigns/create" element={<CreateCampaignForm />} />
 
-        </Route> */}
+        <Route path="/" element={<AdminSignIn />} />
+         
 
 
 
         <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
           <Route path="/" element={<DashboardLayout />}>
-            {/* <Route index element={<Dashboard />} /> */}
+            
             <Route path="/admin/campaigns">
               <Route index element={<AdminCampaigns />} />
               <Route path="create" element={<CreateCampaignForm />} />
@@ -141,18 +131,7 @@ function App() {
         </Route>
 
 
-        {/* <Route element={<ProtectedRoute allowedRoles={['user']} />}>
-          <Route path="/user/dashboard" element={<CampaignerDashboardLayout/>}>
-            <Route path='overview' element={<MainDashboard />} />
-            <Route path="campaigns" element={<MyCampaigns />} />
-            <Route path="donations" element={<Donations />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="profile/edit" element={<EditProfile />} />
-            <Route path="campaigns/create" element={<CreateCampaign />} />
-            <Route path="campaigns/:id" element={<CampaignDetails />} />
-            <Route path='campaigns/:id/edit' element={<EditCampaign />} />
-          </Route>
-        </Route> */}
+     
 
 
       </Routes>
