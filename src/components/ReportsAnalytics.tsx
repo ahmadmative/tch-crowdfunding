@@ -69,6 +69,7 @@ const ReportsAnalytics: React.FC = () => {
   const [campaignMetrics, setCampaignMetrics] = useState<any>([]);
   const [donorGrowth, setDonorGrowth] = useState<any>([]);
   const [topContributers, setTopContributers] = useState<any>([]);
+
   useEffect(() => {
     const fetchApis = async () => {
 
@@ -190,26 +191,26 @@ const ReportsAnalytics: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">R {quickStats.totalDonationAmount}</p>
+          <p className="text-3xl font-bold text-primary-600">R {quickStats?.totalDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ {quickStats.monthlyGrowth}</span> vs. previous period
+            <span className="text-green-500">↑ {quickStats?.monthlyGrowth}</span> vs. previous period
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Active Donors</h3>
-          <p className="text-3xl font-bold text-green-600">{quickStats.totalDonaters}</p>
+          <p className="text-3xl font-bold text-green-600">{quickStats?.totalDonaters}</p>
           <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ {quickStats.donatersGrowth}%</span> vs. previous period
+            <span className="text-green-500">↑ {quickStats?.donatersGrowth}%</span> vs. previous period
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Campaign Success Rate</h3>
-          <p className="text-3xl font-bold text-blue-600">{quickStats.campaignSuccessRate.toFixed(2)}%</p>
+          <p className="text-3xl font-bold text-blue-600">{quickStats?.campaignSuccessRate?.toFixed(2)}%</p>
           <p className="text-sm text-gray-600 mt-2">Based on goal achievement</p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-purple-600">R {quickStats.averageDonationAmount}</p>
+          <p className="text-3xl font-bold text-purple-600">R {quickStats?.averageDonationAmount}</p>
           <p className="text-sm text-gray-600 mt-2">Per donor</p>
         </div>
       </div>

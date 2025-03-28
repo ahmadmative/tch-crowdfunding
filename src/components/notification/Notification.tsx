@@ -29,7 +29,7 @@ const Notification: React.FC<NotificationModalProps> = ({
       <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 relative z-10">
         <div className="flex flex-col items-center text-center">
           {/* Success Icon */}
-          {type === 'success' && (
+          {/* {type === 'success' && (
             <div className="w-20 h-20 rounded-full bg-[#BEE36E] flex items-center justify-center mb-6">
               <svg 
                 className="w-10 h-10 text-white" 
@@ -45,8 +45,8 @@ const Notification: React.FC<NotificationModalProps> = ({
                 />
               </svg>
             </div>
-          )}
-          {type === 'error' && (
+          )} */}
+          {/* {type === 'error' && (
             <div className="w-20 h-20 rounded-full bg-[#BEE36E] flex items-center justify-center mb-6">
               <svg 
                 className="w-10 h-10 text-white" 
@@ -62,7 +62,7 @@ const Notification: React.FC<NotificationModalProps> = ({
                 />
               </svg>
             </div>
-          )}
+          )} */}
 
           {/* Title */}
           <h2 className="text-2xl font-bold mb-2 font-onest">
@@ -75,14 +75,14 @@ const Notification: React.FC<NotificationModalProps> = ({
           </p>
 
           {link && (
-            <Link to={link} className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200">Continue</Link>
+            <Link to={link} className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-900/90 transition-colors duration-200">Continue</Link>
           )}
 
           {/* Continue Button */}
           {!link && (
             <button
               onClick={onClose}
-              className="w-full bg-[#BEE36E] text-black py-3 rounded-lg font-medium hover:bg-[#a8cc5c] transition-colors duration-200"
+              className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-900/90 transition-colors duration-200"
             >
               ok
             </button>

@@ -281,8 +281,8 @@ const UsersManagement: React.FC = () => {
                 <select onChange={(e)=>setRole(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Roles</option>
                   <option value="admin">Admin</option>
-                  <option value="creator">Campaign Creator</option>
-                  <option value="donor">Donor</option>
+                  <option value="user">Users</option>
+                  {/* <option value="donor">Donor</option> */}
                 </select>
               </div>
             </div>

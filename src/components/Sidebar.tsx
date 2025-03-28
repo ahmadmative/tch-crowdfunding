@@ -19,73 +19,73 @@ const menuItems: MenuItem[] = [
     name: 'Dashboard',
     icon: HomeIcon,
     path: '/dashboard',
-    subItems: [
-      { name: 'Overview of Campaigns & Donations', path: '/dashboard/overview' },
-      // { name: 'Key Performance Metrics', path: '/dashboard/metrics' }
-    ]
+    // subItems: [
+    //   { name: 'Overview of Campaigns & Donations', path: '/dashboard/overview' },
+      
+    // ]
   },
   {
     name: 'Users & Roles',
     icon: UsersIcon,
     path: '/users',
-    subItems: [
-      { name: 'Manage Users', path: '/users/manage/users' },
-      { name: 'Manage Admins', path: '/users/manage/admins' },
-      { name: 'Access Control & Permissions', path: '/users/permissions' }
-    ]
+    // subItems: [
+    //   { name: 'Manage Users', path: '/users/manage/users' },
+    //   { name: 'Manage Admins', path: '/users/manage/admins' },
+    //   { name: 'Access Control & Permissions', path: '/users/permissions' }
+    // ]
   },
   {
     name: 'Campaigns',
     icon: FolderIcon,
     path: '/campaigns',
-    subItems: [
-      { name: 'View Campaigns', path: '/campaigns/manage/all' },
-      { name: 'Pending Campaigns', path: '/campaigns/manage/pending' },
-      { name: 'Active Campaigns', path: '/campaigns/manage/active' },
-      // { name: 'Monitor Campaign Performance', path: '/campaigns/performance' }
-    ]
+    // subItems: [
+    //   { name: 'View Campaigns', path: '/campaigns/manage/all' },
+    //   { name: 'Pending Campaigns', path: '/campaigns/manage/pending' },
+    //   { name: 'Active Campaigns', path: '/campaigns/manage/active' },
+    //   // { name: 'Monitor Campaign Performance', path: '/campaigns/performance' }
+    // ]
   },
   {
     name: 'Donations',
     icon: CreditCardIcon,
     path: '/donations',
-    subItems: [
-      // { name: 'View Donations', path: '/donations/settings' },
-      { name: 'Transaction List', path: '/donations/settings/transactions' },
-      { name: 'Payments', path: '/donations/settings/payments' },
-      // { name: 'Payment Processing Settings', path: '/donations/settings' },
-      { name: 'Receipt Logs', path: '/donations/settings/logs' }
-    ]
+    // subItems: [
+    //   // { name: 'View Donations', path: '/donations/settings' },
+    //   { name: 'Transaction List', path: '/donations/settings/transactions' },
+    //   { name: 'Payments', path: '/donations/settings/payments' },
+    //   // { name: 'Payment Processing Settings', path: '/donations/settings' },
+    //   { name: 'Receipt Logs', path: '/donations/settings/logs' }
+    // ]
   },
   {
     name: 'Reports & Analytics',
     icon: ChartPieIcon,
     path: '/reports',
-    subItems: [
-      { name: 'Campaign Performance', path: '/reports/campaign' },
-      { name: 'Donor Insights', path: '/reports/donor' },
-      { name: 'Custom Reports', path: '/reports/custom' }
-    ]
+    // subItems: [
+    //   { name: 'Campaign Performance', path: '/reports/campaign' },
+    //   { name: 'Donor Insights', path: '/reports/donor' },
+    //   { name: 'Custom Reports', path: '/reports/custom' }
+    // ]
   },
   {
     name: 'Notifications & Emails',
     icon: BellIcon,
     path: '/notifications',
-    subItems: [
-      { name: 'Notification Center', path: '/notifications/center' },
-      { name: 'Email Management', path: '/notifications/emails' },
-      { name: 'Email Templates', path: '/notifications/templates' }
-    ]
+    // subItems: [
+    //   { name: 'Notification Center', path: '/notifications/center' },
+    //   { name: 'Email Management', path: '/notifications/emails' },
+    //   { name: 'Email Templates', path: '/notifications/templates' }
+    // ]
   },
   {
     name: 'Settings',
     icon: CogIcon,
     path: '/settings',
-    subItems: [
-      { name: 'General Platform Settings', path: '/settings/general' },
-      { name: 'Security Settings', path: '/settings/security' },
-      { name: 'Integrations Settings', path: '/settings/integrations' }
-    ]
+    // subItems: [
+    //   { name: 'General Platform Settings', path: '/settings/general' },
+    //   { name: 'Security Settings', path: '/settings/security' },
+    //   { name: 'Integrations Settings', path: '/settings/integrations' }
+    // ]
   },
   {
     name: 'View Campaigns',
@@ -164,7 +164,7 @@ const Sidebar: React.FC = () => {
       
       <div className="p-4 border-t border-gray-800">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-gray-700 mr-3"></div>
+          {/* <div className="w-8 h-8 rounded-full bg-gray-700 mr-3"></div> */}
           <div>
             {/* <p className="text-sm font-medium">Admin User</p> */}
             {/* <p className="text-xs text-gray-400">admin@example.com</p> */}
