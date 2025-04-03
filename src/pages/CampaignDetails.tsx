@@ -167,14 +167,14 @@ const CampaignDetails = () => {
 
             {/* donate btn */}
 
-            <button className="bg-gray-900 flex items-center justify-center text-white px-4 py-1 md:py-2 rounded-full text-sm font-bold h-[50px] shadow-md hover:bg-gray-900/80 transition-all duration-300">
+            {/* <button className="bg-gray-900 flex items-center justify-center text-white px-4 py-1 md:py-2 rounded-full text-sm font-bold h-[50px] shadow-md hover:bg-gray-900/80 transition-all duration-300">
               Donate Now
               <img
                 src="/arrow-black.png"
                 alt="arrow-right"
                 className="w-4 h-4 ml-2"
               />
-            </button>
+            </button> */}
           </div>
 
           {/* campaign details section */}

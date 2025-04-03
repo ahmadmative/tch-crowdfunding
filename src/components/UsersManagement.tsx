@@ -6,50 +6,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
-// Mock data for the charts
-const userDistributionData = [
-  { name: 'Admins', value: 5, color: '#0ea5e9' },
-  { name: 'Campaign Creators', value: 25, color: '#22c55e' },
-  { name: 'Donors', value: 70, color: '#f59e0b' },
-];
 
-const newUsersData = [
-  { month: 'Jan', users: 45 },
-  { month: 'Feb', users: 52 },
-  { month: 'Mar', users: 48 },
-  { month: 'Apr', users: 70 },
-  { month: 'May', users: 65 },
-  { month: 'Jun', users: 85 },
-];
-
-// Mock data for the users table
-const usersData = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'Admin',
-    status: 'Active',
-    lastActive: '2024-02-27 14:30',
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    role: 'Campaign Creator',
-    status: 'Active',
-    lastActive: '2024-02-27 12:15',
-  },
-  {
-    id: 3,
-    name: 'Mike Johnson',
-    email: 'mike@example.com',
-    role: 'Donor',
-    status: 'Suspended',
-    lastActive: '2024-02-25 09:45',
-  },
-  // Add more mock data as needed
-];
 const colors = ["#FF6384", "#36A2EB", "#FFCE56"];
 
 const UsersManagement: React.FC = () => {
@@ -62,6 +19,8 @@ const UsersManagement: React.FC = () => {
   const [users,setUsers]=useState<any>([])
   const [search,setSearch]=useState<any>("")
   const [role,setRole]=useState<any>("")
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [originalUsers, setOriginalUsers] = useState<any>([]);
 
   const roles=  ["users", "admins", "permissions"]
 
@@ -74,15 +33,28 @@ const UsersManagement: React.FC = () => {
     }
   }, [pathname]);
 
-  useEffect(()=>{
-    const filteredUsers=users.filter((user:any)=>user.name.toLowerCase().includes(search.toLowerCase()))
-    setUsers(filteredUsers)
-  },[search])
-
-  useEffect(()=>{
-    const filteredUsers=users.filter((user:any)=>user.role.toLowerCase().includes(role.toLowerCase()))
-    setUsers(filteredUsers)
-  },[role])
+  useEffect(() => {
+    if (!originalUsers.length) return;
+    
+    let filtered = [...originalUsers];
+    
+   
+    if (search) {
+      filtered = filtered.filter((user: any) => 
+        user.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    
+    if (role) {
+      filtered = filtered.filter((user: any) => 
+        user.role.toLowerCase().includes(role.toLowerCase())
+      );
+    }
+    
+    
+    setUsers(filtered);
+  }, [search, role, originalUsers]);
 
   useEffect(()=>{
     const fetchUsers=async()=>{
@@ -120,6 +92,7 @@ const UsersManagement: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         }
       })
+      setOriginalUsers(res4.data);
       setUsers(res4.data)
       console.log(res4.data)
       }catch(err){
@@ -147,6 +120,46 @@ const UsersManagement: React.FC = () => {
       console.log(err)
     }
   }
+
+
+
+  const toggleDropdown = (userId: string) => {
+    setOpenDropdownId(openDropdownId === userId ? null : userId);
+  };
+
+
+  const handleChangeStatus=async(id:any,status:any)=>{
+    try{
+      const res=await axios.post(`${BASE_URL}/auth/update-status/${id}`,{
+        status:status
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+        })
+      console.log(res.data)
+      window.location.reload()
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  const closeAllDropdowns = () => {
+    setOpenDropdownId(null);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      closeAllDropdowns();
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+
 
   if (loading) {
     return (
@@ -320,11 +333,64 @@ const UsersManagement: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4">{dayjs(user.createdAt).format('DD-MM-YYYY')}</td>
-                      <td className="py-3 px-4">
+                      <td className="relative py-3 px-4 flex items-center space-x-2">
                         <div className="flex space-x-2">
-                          <Link to={`/users/edit/${user._id}`} className="text-primary-600 hover:text-primary-800">Edit</Link>
-                          <button className="text-red-600 hover:text-red-800" onClick={()=>handleDelete(user._id)}>Delete</button>
+                          <Link 
+                            to={`/users/edit/${user._id}`} 
+                            className="text-primary-600 hover:text-primary-800"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Edit
+                          </Link>
+                          <button 
+                            className="text-red-600 hover:text-red-800" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(user._id);
+                            }}
+                          >
+                            Delete
+                          </button>
                         </div>
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDropdown(user._id);
+                          }} 
+                          className='p-2 hover:bg-slate-200 rounded-full cursor-pointer'
+                        >
+                          ...
+                        </div>
+                        {openDropdownId === user._id && (
+                          <div 
+                            className='absolute right-0 top-10 w-40 bg-white shadow-lg rounded-lg p-2 z-10 border border-gray-200'
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button 
+                              className='w-full text-left p-2 hover:bg-gray-100 rounded'
+                              onClick={() => {
+                                // Handle status change to Active
+                                //active
+                                handleChangeStatus(user._id,'active')
+
+                                closeAllDropdowns();
+                              }}
+                            >
+                              Active
+                            </button>
+                            <button 
+                              className='w-full text-left p-2 hover:bg-gray-100 rounded'
+                              onClick={() => {
+                                // Handle status change to Inactive
+                                // suspended
+                                handleChangeStatus(user._id,'suspended')
+                                closeAllDropdowns();
+                              }}
+                            >
+                              Suspend
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

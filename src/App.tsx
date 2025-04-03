@@ -26,17 +26,17 @@ import AdminCampaigns from './components/AdminCampaigns';
 import EditCampaign from './components/EditCampaign';
 import AddUsers from './components/AddUsers';
 import DonationDetail from './components/DonationDetail';
-import MainDashboard from './pages/dashboard/main';
-import CampaignerDashboardLayout from './layouts/DashboardLayout';
-import MyCampaigns from './pages/dashboard/MyCampaigns';
-import Donations from './pages/dashboard/Donations';
-import Profile from './pages/dashboard/Profile';
-import EditProfile from './pages/dashboard/EditProfile';
-import CreateCampaign from './pages/dashboard/CreateCampaign';
+// import MainDashboard from './pages/dashboard/main';
+// import CampaignerDashboardLayout from './layouts/DashboardLayout';
+// import MyCampaigns from './pages/dashboard/MyCampaigns';
+// import Donations from './pages/dashboard/Donations';
+// import Profile from './pages/dashboard/Profile';
+// import EditProfile from './pages/dashboard/EditProfile';
+// import CreateCampaign from './pages/dashboard/CreateCampaign';
 import ProtectedRoute from './protectedRoutes/ProtectedRoutes';
 import Unauthorized from './pages/Unauthorized';
-import EditCampaignPage from './pages/dashboard/EditCampaignPage';
-import EmailVerification from './pages/EmailVerification';
+// import EditCampaignPage from './pages/dashboard/EditCampaignPage';
+// import EmailVerification from './pages/EmailVerification';
 import AdminSignIn from './pages/AdminLogin';
 
 

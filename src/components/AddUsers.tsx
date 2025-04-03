@@ -160,8 +160,8 @@ const AddUsers = () => {
                     className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
                     <option value="admin">Admin</option>
-                    <option value="campaign creator">Campaigner</option>
-                    <option value="donor">Donor</option>
+                    <option value="user">User</option>
+                    {/* <option value="donor">Donor</option> */}
                 </select>
             </div>
 
