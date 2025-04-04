@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { BellIcon, EnvelopeIcon, DocumentDuplicateIcon, MagnifyingGlassIcon, ClockIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
+import EmailTemplateEditorModal from './templates/Editor';
+import AdminMailModal from './AdminMails/AdminMailModal';
+import axios from 'axios';
+import { BASE_URL } from '../config/url';
 
 // Mock data for the charts
 const emailEngagementData = [
@@ -93,10 +97,33 @@ const scheduledEmailsData = [
 const NotificationsEmails: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('center');
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading]= useState(true);
+  const [error, setError]= useState("");
 
   const location = useLocation();
   const pathname = location.pathname;
   const roles=  ["center", "emails", "templates"]
+
+  useEffect(() => {
+    const fetchTempaltes=async()=>{
+      try {
+        const res = await axios.get(`${BASE_URL}/template/all`);
+        console.log(res.data);
+        setTemplates(res.data);
+        
+      } catch (error) {
+        setError("Error fetching templates");
+      }finally{
+        setLoading(false);
+      }
+    }
+
+    fetchTempaltes();
+    
+  }, [])
 
   useEffect(() => {
     const urlRole = pathname.split('/').pop();
@@ -105,16 +132,44 @@ const NotificationsEmails: React.FC = () => {
     }
   }, [pathname]);
 
+
+
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        <p>{error}(token expired), please SignIn again</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+  
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Notifications & Emails</h1>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center">
+        <button onClick={() => setIsEmailModalOpen(true)} className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center">
           <EnvelopeIcon className="h-5 w-5 mr-2" />
           Compose Email
         </button>
       </div>
+
+      <AdminMailModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)} />
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -322,12 +377,21 @@ const NotificationsEmails: React.FC = () => {
       {/* Template Library Tab */}
       {selectedTab === 'templates' && (
         <div className="space-y-6">
+          <EmailTemplateEditorModal 
+            isOpen={isTemplateModalOpen} 
+            onClose={() => setIsTemplateModalOpen(false)} 
+          />
+
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Email Templates</h3>
-              <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+              <button 
+                onClick={() => setIsTemplateModalOpen(true)}
+                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+              >
                 Create Template
               </button>
+              {/* <EmailTemplateEditorModal/> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {emailTemplatesData.map((template) => (
