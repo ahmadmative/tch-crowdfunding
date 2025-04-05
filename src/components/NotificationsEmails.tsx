@@ -6,6 +6,8 @@ import EmailTemplateEditorModal from './templates/Editor';
 import AdminMailModal from './AdminMails/AdminMailModal';
 import axios from 'axios';
 import { BASE_URL } from '../config/url';
+import dayjs from 'dayjs';
+import TemplatesComponent from './templates/Templates';
 
 // Mock data for the charts
 const emailEngagementData = [
@@ -99,7 +101,7 @@ const NotificationsEmails: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [templates, setTemplates] = useState([]);
+  const [templates, setTemplates] = useState<any>([]);
   const [loading, setLoading]= useState(true);
   const [error, setError]= useState("");
 
@@ -393,35 +395,7 @@ const NotificationsEmails: React.FC = () => {
               </button>
               {/* <EmailTemplateEditorModal/> */}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {emailTemplatesData.map((template) => (
-                <div key={template.id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-semibold">{template.name}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{template.description}</p>
-                      <p className="text-xs text-gray-500 mt-2">Last used: {template.lastUsed}</p>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="text-primary-600 hover:text-primary-800">
-                        <PencilIcon className="h-5 w-5" />
-                      </button>
-                      <button className="text-gray-600 hover:text-gray-800">
-                        <DocumentDuplicateIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-700">Subject: {template.subject}</p>
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <button className="text-primary-600 hover:text-primary-800 text-sm font-medium">
-                      Use Template
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TemplatesComponent templates={templates} />
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { XMarkIcon, VariableIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { BASE_URL } from '../../config/url';
+import { useTemplate } from '../../context/TemplateContext';
 
 interface EmailTemplateEditorModalProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface EmailTemplateEditorModalProps {
   refreshTemplates?: () => void;
 }
 
-const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTemplateEditorModalProps) => {
+const EditTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTemplateEditorModalProps) => {
   const [template, setTemplate] = useState({
     name: '',
     subject: '',
@@ -18,6 +19,20 @@ const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTe
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeVariable, setActiveVariable] = useState('');
+  const {selectedTemplate} = useTemplate();
+  console.log("slecteed template edit:", selectedTemplate);
+
+  useEffect(() => {
+    if (selectedTemplate) {
+      setTemplate(
+        {
+          name: selectedTemplate.name,
+          subject: selectedTemplate.subject,
+          body: selectedTemplate.body,
+        }
+      );
+    }
+  }, [selectedTemplate]);
 
   const handleAddVariable = () => {
     if (!activeVariable) return;
@@ -195,4 +210,4 @@ const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTe
   );
 };
 
-export default EmailTemplateEditorModal;
+export default EditTemplateEditorModal;

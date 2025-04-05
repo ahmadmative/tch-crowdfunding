@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { BASE_URL } from '../../config/url';
 import axios from 'axios';
+import { useTemplate } from '../../context/TemplateContext';
 
 interface AdminMailModalProps {
   isOpen: boolean;
@@ -13,18 +14,26 @@ const AdminMailModal: React.FC<AdminMailModalProps> = ({ isOpen, onClose }) => {
   const [message, setMessage] = useState('');
   const [recipientType, setRecipientType] = useState('all');
   const [isSending, setIsSending] = useState(false);
+  const { selectedTemplate } = useTemplate();
+
+
+
+  useEffect(() => {
+    if (selectedTemplate) {
+      setSubject(selectedTemplate.subject);
+      setMessage(selectedTemplate.body);
+    }
+  }, [selectedTemplate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
     try {
-      console.log(subject, message, recipientType);
       const res = await axios.post(`${BASE_URL}/mail/users/send`, {
         subject,
         message,
         recipientType,
-      })
-      console.log(res.data);
+      });
       onClose();
       setSubject('');
       setMessage('');

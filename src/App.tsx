@@ -38,12 +38,14 @@ import Unauthorized from './pages/Unauthorized';
 // import EditCampaignPage from './pages/dashboard/EditCampaignPage';
 // import EmailVerification from './pages/EmailVerification';
 import AdminSignIn from './pages/AdminLogin';
+import { TemplateProvider } from './context/TemplateContext';
 
 
 function App() {
 
   return (
     <AuthProvider>
+      <TemplateProvider>
       <BrowserRouter>
       <ToastContainer 
         position="top-right" 
@@ -136,6 +138,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    </TemplateProvider>
 
     </AuthProvider>
     
