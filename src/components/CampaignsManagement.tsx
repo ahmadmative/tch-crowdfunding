@@ -10,17 +10,17 @@ import { Link } from 'react-router-dom';
 
 
 const CampaignsManagement: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('all');
+  const [selectedTab, setSelectedTab] = useState('stats');
   const [selectedCampaign, setSelectedCampaign] = useState<number | null>(null);
-  const [cardData,setCardData]=useState<any>([])
-  const [campaignStatusData,setCampaignStatusData]=useState<any>([])
-  const [fundsOverTimeData,setFundsOverTimeData]=useState<any>([])
-  const [topCampaignsData,setTopCampaignsData]=useState<any>([])
-  const [campaignsData,setCampaignsData]=useState<any>([])
-  const [loading,setLoading]=useState<any>(true)
-  const [error,setError]=useState<any>("")
-  const [search,setSearch]=useState<any>("")
-  const [status,setStatus]=useState<any>("")
+  const [cardData, setCardData] = useState<any>([])
+  const [campaignStatusData, setCampaignStatusData] = useState<any>([])
+  const [fundsOverTimeData, setFundsOverTimeData] = useState<any>([])
+  const [topCampaignsData, setTopCampaignsData] = useState<any>([])
+  const [campaignsData, setCampaignsData] = useState<any>([])
+  const [loading, setLoading] = useState<any>(true)
+  const [error, setError] = useState<any>("")
+  const [search, setSearch] = useState<any>("")
+  const [status, setStatus] = useState<any>("")
   const [originalCampaignsData, setOriginalCampaignsData] = useState<any>([]);
 
   const getStatusColor = (status: string) => {
@@ -38,104 +38,104 @@ const CampaignsManagement: React.FC = () => {
 
   const location = useLocation();
   const pathname = location.pathname;
-  const roles=  ["all", "pending", "active"]
+  const roles = ["all", "pending", "active"]
+
+  // useEffect(() => {
+  //   console.log(pathname)
+  //   const urlRole = pathname.split('/').pop();
+  //   if (urlRole && roles.includes(urlRole)) {
+  //     setSelectedTab(urlRole);
+  //   }
+  // }, [pathname]);
+
+
+
 
   useEffect(() => {
-    console.log(pathname)
-    const urlRole = pathname.split('/').pop();
-    if (urlRole && roles.includes(urlRole)) {
-      setSelectedTab(urlRole);
-    }
-  }, [pathname]);
+    const fetch = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/analytics/campaign/stats`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
+        setCardData(res.data)
+        console.log(res.data)
 
-  
+        const res2 = await axios.get(`${BASE_URL}/analytics/campaign/status`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
+        setCampaignStatusData(res2.data)
+        console.log(res2.data)
 
-    
-  useEffect(()=>{
-    const fetch=async()=>{
-      try{
-      const res=await axios.get(`${BASE_URL}/analytics/campaign/stats`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        }
-      })
-      setCardData(res.data)
-      console.log(res.data)
+        const res3 = await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
+        setFundsOverTimeData(res3.data)
+        console.log(res3.data)
 
-      const res2=await axios.get(`${BASE_URL}/analytics/campaign/status`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        }
-      })
-      setCampaignStatusData(res2.data)
-      console.log(res2.data)
+        const res4 = await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
+        setTopCampaignsData(res4.data)
+        console.log(res4.data)
 
-      const res3=await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`,{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        }
-      })
-      setFundsOverTimeData(res3.data)
-      console.log(res3.data)
-
-      const res4=await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        }
-      })
-      setTopCampaignsData(res4.data)
-      console.log(res4.data)
-
-      const res5=await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        }
-      })
-      setOriginalCampaignsData(res5.data);
-      setCampaignsData(res5.data)
-      console.log(res5.data)
+        const res5 = await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        })
+        setOriginalCampaignsData(res5.data);
+        setCampaignsData(res5.data)
+        console.log(res5.data)
 
 
-      }catch(err:any){
+      } catch (err: any) {
         console.log(err)
         setError(err.message)
-      }finally{
+      } finally {
         setLoading(false)
       }
     }
     fetch()
-  },[])
+  }, [])
 
 
   // filter 
   useEffect(() => {
     if (!originalCampaignsData.length) return;
-    
+
     let filtered = [...originalCampaignsData];
-    
+
     if (search) {
-      filtered = filtered.filter((campaign: any) => 
+      filtered = filtered.filter((campaign: any) =>
         campaign.title.toLowerCase().includes(search.toLowerCase())
       );
     }
-    
-    
+
+
     if (status) {
-      filtered = filtered.filter((campaign: any) => 
+      filtered = filtered.filter((campaign: any) =>
         campaign.status.toLowerCase().includes(status.toLowerCase())
       );
     }
-    
-    
+
+
     if (selectedTab !== 'all') {
-      filtered = filtered.filter((campaign: any) => 
+      filtered = filtered.filter((campaign: any) =>
         campaign.status.toLowerCase().includes(selectedTab.toLowerCase())
       );
     }
-    
+
     setCampaignsData(filtered);
   }, [search, status, selectedTab, originalCampaignsData]);
-  
+
 
 
   if (loading) {
@@ -150,8 +150,8 @@ const CampaignsManagement: React.FC = () => {
     return (
       <div className="text-center text-red-600 p-4">
         <p>{error}</p>
-        <button 
-          onClick={() => window.location.reload()} 
+        <button
+          onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Retry
@@ -163,121 +163,135 @@ const CampaignsManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Campaigns Management</h1>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-          Create Campaign
-        </button>
-      </div>
 
-      {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Total Campaigns</h3>
-          <p className="text-3xl font-bold text-primary-600">{cardData.totalCampaigns}</p>
-          <p className="text-sm text-gray-600 mt-2">Across all statuses</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Active Campaigns</h3>
-          <p className="text-3xl font-bold text-green-600">{cardData.activeCampaigns}</p>
-          <p className="text-sm text-gray-600 mt-2">Currently running</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Total Funds Raised</h3>
-          <p className="text-3xl font-bold text-blue-600">R{cardData.totalFundsRaised}</p>
-          <p className="text-sm text-gray-600 mt-2">All time</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Success Rate</h3>
-          <p className="text-3xl font-bold text-purple-600">{cardData.successRate}%</p>
-          <p className="text-sm text-gray-600 mt-2">Goal achievement</p>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Campaigns by Status</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={campaignStatusData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="status" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="total" fill="#0ea5e9" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Funds Raised Over Time</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={fundsOverTimeData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" tickFormatter={(value) => dayjs(value).format('DD MMM YYYY')}/>
-                <YAxis />
-                <Tooltip labelFormatter={(value) => dayjs(value).format('DD MMMM YYYY')}/>
-                <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Campaigns Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold mb-4">Top 5 Campaigns</h3>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          {topCampaignsData.map((campaign:any, index:any) => (
-            <div key={index} className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-semibold text-gray-800 truncate">{campaign.title}</h4>
-              <p className="text-primary-600 font-bold mt-2">R{campaign.amount.toLocaleString()}</p>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Tab Navigation */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setSelectedTab('all')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'all'
+            onClick={() => setSelectedTab('stats')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'stats'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
+          >
+            Campaigns Statistics
+          </button>
+          <button
+            onClick={() => setSelectedTab('all')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'all'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
             All Campaigns
           </button>
           <button
             onClick={() => setSelectedTab('pending')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'pending'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'pending'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Pending Approval
           </button>
           <button
             onClick={() => setSelectedTab('active')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'active'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'active'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Active Campaigns
           </button>
         </nav>
       </div>
 
+      {
+        selectedTab === "stats" && (
+          <>
+            {/* Page Header */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-gray-800">Campaigns Management</h1>
+              <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                Create Campaign
+              </button>
+            </div>
+
+            {/* Analytics Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Total Campaigns</h3>
+                <p className="text-3xl font-bold text-primary-600">{cardData.totalCampaigns}</p>
+                <p className="text-sm text-gray-600 mt-2">Across all statuses</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Active Campaigns</h3>
+                <p className="text-3xl font-bold text-green-600">{cardData.activeCampaigns}</p>
+                <p className="text-sm text-gray-600 mt-2">Currently running</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Total Funds Raised</h3>
+                <p className="text-3xl font-bold text-blue-600">R{cardData.totalFundsRaised}</p>
+                <p className="text-sm text-gray-600 mt-2">All time</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Success Rate</h3>
+                <p className="text-3xl font-bold text-purple-600">{cardData.successRate}%</p>
+                <p className="text-sm text-gray-600 mt-2">Goal achievement</p>
+              </div>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Campaigns by Status</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={campaignStatusData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="status" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="total" fill="#0ea5e9" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Funds Raised Over Time</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={fundsOverTimeData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="_id" tickFormatter={(value) => dayjs(value).format('DD MMM YYYY')} />
+                      <YAxis />
+                      <Tooltip labelFormatter={(value) => dayjs(value).format('DD MMMM YYYY')} />
+                      <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            {/* Top Campaigns Section */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Top 5 Campaigns</h3>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {topCampaignsData.map((campaign: any, index: any) => (
+                  <div key={index} className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 truncate">{campaign.title}</h4>
+                    <p className="text-primary-600 font-bold mt-2">R{campaign.amount.toLocaleString()}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )
+      }
+
       {/* Campaigns Table */}
-      <div className="bg-white rounded-lg shadow">
+      {selectedTab !== "stats" &&<div className="bg-white rounded-lg shadow">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Campaign List</h2>
@@ -285,11 +299,11 @@ const CampaignsManagement: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search campaigns..."
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
-              <select onChange={(e)=>setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                <option value="">All Statuses</option>
+              <select onChange={(e) => setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
@@ -311,7 +325,7 @@ const CampaignsManagement: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {campaignsData.map((campaign:any) => (
+                {campaignsData.map((campaign: any) => (
                   <tr key={campaign.id} className="border-b">
                     <td className="py-3 px-4">{campaign.title}</td>
                     <td className="py-3 px-4">{campaign.userDetails.name}</td>
@@ -372,7 +386,7 @@ const CampaignsManagement: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Campaign Details Modal */}
       {selectedCampaign && (
@@ -387,25 +401,25 @@ const CampaignsManagement: React.FC = () => {
                 <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
-            {campaignsData.find((c:any) => c.id === selectedCampaign) && (
+            {campaignsData.find((c: any) => c.id === selectedCampaign) && (
               <div className="space-y-4">
                 <div>
                   <h3 className="font-semibold">Description</h3>
                   <p className="text-gray-600">
-                    {campaignsData.find((c:any) => c.id === selectedCampaign)?.description}
+                    {campaignsData.find((c: any) => c.id === selectedCampaign)?.description}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h3 className="font-semibold">Goal</h3>
                     <p className="text-gray-600">
-                      ${campaignsData.find((c:any) => c.id === selectedCampaign)?.goal.toLocaleString()}
+                      ${campaignsData.find((c: any) => c.id === selectedCampaign)?.goal.toLocaleString()}
                     </p>
                   </div>
                   <div>
                     <h3 className="font-semibold">Funds Raised</h3>
                     <p className="text-gray-600">
-                      ${campaignsData.find((c:any) => c.id === selectedCampaign)?.totalDonations.toLocaleString()}
+                      ${campaignsData.find((c: any) => c.id === selectedCampaign)?.totalDonations.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -416,7 +430,7 @@ const CampaignsManagement: React.FC = () => {
                   >
                     Close
                   </button>
-                  {campaignsData.find((c:any) => c.id === selectedCampaign)?.status === 'pending' && (
+                  {campaignsData.find((c: any) => c.id === selectedCampaign)?.status === 'pending' && (
                     <>
                       <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                         Approve

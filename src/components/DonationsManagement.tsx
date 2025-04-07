@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 const COLORS = ["#4CAF50", "#2196F3", "#FF5722", "#FFC107", "#9C27B0"];
 
 const DonationsManagement: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('transactions');
+  const [selectedTab, setSelectedTab] = useState('stats');
   const [selectedTransaction, setSelectedTransaction] = useState<number | null>(null);
   const [donationStats, setDonationStats] = useState<any>(null);
   const [donationTrends, setDonationTrends] = useState<any>([]);
@@ -53,32 +53,32 @@ const DonationsManagement: React.FC = () => {
   }, [pathname]);
 
   useEffect(() => {
-  if (!originalTransactions.length) return;
+    if (!originalTransactions.length) return;
 
-  let filtered = [...originalTransactions];
+    let filtered = [...originalTransactions];
 
-  // Apply donor name filter
-  if (donorName) {
-    filtered = filtered.filter(transaction => 
-      transaction?.donorId?.name?.toLowerCase().includes(donorName.toLowerCase())
-    );
-  }
+    // Apply donor name filter
+    if (donorName) {
+      filtered = filtered.filter(transaction =>
+        transaction?.donorId?.name?.toLowerCase().includes(donorName.toLowerCase())
+      );
+    }
 
-  // Apply payment method filter
-  if (paymentMethod) {
-    filtered = filtered.filter(transaction => 
-      transaction.paymentMethod === paymentMethod
-    );
-  }
+    // Apply payment method filter
+    if (paymentMethod) {
+      filtered = filtered.filter(transaction =>
+        transaction.paymentMethod === paymentMethod
+      );
+    }
 
-  // Apply status filter
-  if (status) {
-    filtered = filtered.filter(transaction => 
-      transaction.status === status
-    );
-  }
+    // Apply status filter
+    if (status) {
+      filtered = filtered.filter(transaction =>
+        transaction.status === status
+      );
+    }
 
-  setTransactions(filtered);
+    setTransactions(filtered);
   }, [donorName, paymentMethod, status, originalTransactions]);
 
 
@@ -127,7 +127,7 @@ const DonationsManagement: React.FC = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           }
         })
-        setOriginalTransactions(response5.data.transactions); 
+        setOriginalTransactions(response5.data.transactions);
         setTransactions(response5.data.transactions)
         console.log(transactions)
         setLoading(false);
@@ -165,104 +165,20 @@ const DonationsManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Donations Management</h1>
-        <div className="flex space-x-4">
-          <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-            Download Reports
-          </button>
-        </div>
-      </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
-          <p className="text-3xl font-bold text-primary-600">R{donationStats?.totalAmount}</p>
-          <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ {donationStats?.monthlyGrowth}</span> from last month
-          </p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Successful Transactions</h3>
-          <p className="text-3xl font-bold text-green-600">{donationStats?.donationsCompleted}</p>
-          <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.completedPercentage).toFixed(2)}% success rate</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Failed Transactions</h3>
-          <p className="text-3xl font-bold text-red-600">{donationStats?.donationsFailed}</p>
-          <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.failedPercentage).toFixed(2)}% rate</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
-          <p className="text-3xl font-bold text-blue-600">R{Number(donationStats?.avergeDonation).toFixed(2)}</p>
-          <p className="text-sm text-gray-600 mt-2">Per transaction</p>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Donation Trends</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={donationTrends}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Payment Methods</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={paymentMethods}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="count"
-                  nameKey="paymentMethod"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {paymentMethods.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-
-
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Top Campaigns</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topCampaigns} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="title" type="category" width={100} />
-                <Tooltip />
-                <Bar dataKey="totalAmount" fill="#0ea5e9" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
 
       {/* Tab Navigation */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setSelectedTab('stats')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${(selectedTab === 'stats')
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+          >
+            Donation Statistics
+          </button>
           <button
             onClick={() => setSelectedTab('transactions')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${(selectedTab === 'transactions' || selectedTab === 'settings')
@@ -292,6 +208,110 @@ const DonationsManagement: React.FC = () => {
           </button>
         </nav>
       </div>
+
+
+      {
+        selectedTab === "stats" && (
+          <>
+            {/* Page Header */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-gray-800">Donations Management</h1>
+              <div className="flex space-x-4">
+                <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                  Download Reports
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Total Donations</h3>
+                <p className="text-3xl font-bold text-primary-600">R{donationStats?.totalAmount}</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  <span className="text-green-500">↑ {donationStats?.monthlyGrowth}</span> from last month
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Successful Transactions</h3>
+                <p className="text-3xl font-bold text-green-600">{donationStats?.donationsCompleted}</p>
+                <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.completedPercentage).toFixed(2)}% success rate</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Failed Transactions</h3>
+                <p className="text-3xl font-bold text-red-600">{donationStats?.donationsFailed}</p>
+                <p className="text-sm text-gray-600 mt-2">{Number(donationStats?.failedPercentage).toFixed(2)}% rate</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Average Donation</h3>
+                <p className="text-3xl font-bold text-blue-600">R{Number(donationStats?.avergeDonation).toFixed(2)}</p>
+                <p className="text-sm text-gray-600 mt-2">Per transaction</p>
+              </div>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Donation Trends</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={donationTrends}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="_id" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="totalAmount" stroke="#0ea5e9" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Payment Methods</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={paymentMethods}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        dataKey="count"
+                        nameKey="paymentMethod"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {paymentMethods.map((entry: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+
+
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Top Campaigns</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={topCampaigns} layout="vertical">
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis type="number" />
+                      <YAxis dataKey="title" type="category" width={100} />
+                      <Tooltip />
+                      <Bar dataKey="totalAmount" fill="#0ea5e9" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          </>
+        )
+      }
+
+
 
       {/* Transactions Table */}
       {(selectedTab === 'transactions' || selectedTab === 'settings') && (

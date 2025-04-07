@@ -52,6 +52,7 @@ const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTe
         subject: '',
         body: 'Hello {donor_name}!' 
       });
+      window.location.reload();
     } catch (err) {
       setError('Failed to save template. Please try again.');
       console.error('Error saving template:', err);

@@ -97,42 +97,42 @@ const scheduledEmailsData = [
 ];
 
 const NotificationsEmails: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('center');
+  const [selectedTab, setSelectedTab] = useState('stats');
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [templates, setTemplates] = useState<any>([]);
-  const [loading, setLoading]= useState(true);
-  const [error, setError]= useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const location = useLocation();
   const pathname = location.pathname;
-  const roles=  ["center", "emails", "templates"]
+  const roles = ["center", "emails", "templates"]
 
   useEffect(() => {
-    const fetchTempaltes=async()=>{
+    const fetchTempaltes = async () => {
       try {
         const res = await axios.get(`${BASE_URL}/template/all`);
         console.log(res.data);
         setTemplates(res.data);
-        
+
       } catch (error) {
         setError("Error fetching templates");
-      }finally{
+      } finally {
         setLoading(false);
       }
     }
 
     fetchTempaltes();
-    
+
   }, [])
 
-  useEffect(() => {
-    const urlRole = pathname.split('/').pop();
-    if (urlRole && roles.includes(urlRole)) {
-      setSelectedTab(urlRole);
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   const urlRole = pathname.split('/').pop();
+  //   if (urlRole && roles.includes(urlRole)) {
+  //     setSelectedTab(urlRole);
+  //   }
+  // }, [pathname]);
 
 
 
@@ -149,8 +149,8 @@ const NotificationsEmails: React.FC = () => {
     return (
       <div className="text-center text-red-600 p-4">
         <p>{error}(token expired), please SignIn again</p>
-        <button 
-          onClick={() => window.location.reload()} 
+        <button
+          onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Retry
@@ -158,79 +158,94 @@ const NotificationsEmails: React.FC = () => {
       </div>
     );
   }
-  
+
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Notifications & Emails</h1>
-        <button onClick={() => setIsEmailModalOpen(true)} className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center">
-          <EnvelopeIcon className="h-5 w-5 mr-2" />
-          Compose Email
-        </button>
-      </div>
 
-      <AdminMailModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)} />
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Total Emails Sent</h3>
-          <p className="text-3xl font-bold text-primary-600">12,847</p>
-          <p className="text-sm text-gray-600 mt-2">Last 30 days</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Average Open Rate</h3>
-          <p className="text-3xl font-bold text-green-600">72%</p>
-          <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ 5%</span> vs. last month
-          </p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Click-through Rate</h3>
-          <p className="text-3xl font-bold text-blue-600">28%</p>
-          <p className="text-sm text-gray-600 mt-2">
-            <span className="text-green-500">↑ 3%</span> vs. last month
-          </p>
-        </div>
-      </div>
 
       {/* Tab Navigation */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setSelectedTab('center')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'center'
+            onClick={() => setSelectedTab('stats')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'stats'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
+          >
+            Statistics
+          </button>
+
+          <button
+            onClick={() => setSelectedTab('center')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'center'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
             Notification Center
           </button>
           <button
             onClick={() => setSelectedTab('emails')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'emails'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'emails'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Bulk Email Management
           </button>
           <button
             onClick={() => setSelectedTab('templates')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              selectedTab === 'templates'
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'templates'
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+              }`}
           >
             Template Library
           </button>
         </nav>
       </div>
+
+      {
+        selectedTab === 'stats' && (
+          <>
+            {/* Page Header */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-gray-800">Notifications & Emails</h1>
+              <button onClick={() => setIsEmailModalOpen(true)} className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center">
+                <EnvelopeIcon className="h-5 w-5 mr-2" />
+                Compose Email
+              </button>
+            </div>
+
+            <AdminMailModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)} />
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Total Emails Sent</h3>
+                <p className="text-3xl font-bold text-primary-600">12,847</p>
+                <p className="text-sm text-gray-600 mt-2">Last 30 days</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Average Open Rate</h3>
+                <p className="text-3xl font-bold text-green-600">72%</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  <span className="text-green-500">↑ 5%</span> vs. last month
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-2">Click-through Rate</h3>
+                <p className="text-3xl font-bold text-blue-600">28%</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  <span className="text-green-500">↑ 3%</span> vs. last month
+                </p>
+              </div>
+            </div>
+          </>
+        )
+      }
 
       {/* Notification Center Tab */}
       {selectedTab === 'center' && (
@@ -242,9 +257,8 @@ const NotificationsEmails: React.FC = () => {
                 {notificationsData.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 rounded-lg ${
-                      notification.status === 'unread' ? 'bg-primary-50' : 'bg-gray-50'
-                    }`}
+                    className={`p-4 rounded-lg ${notification.status === 'unread' ? 'bg-primary-50' : 'bg-gray-50'
+                      }`}
                   >
                     <div className="flex items-start justify-between">
                       <div>
@@ -379,15 +393,15 @@ const NotificationsEmails: React.FC = () => {
       {/* Template Library Tab */}
       {selectedTab === 'templates' && (
         <div className="space-y-6">
-          <EmailTemplateEditorModal 
-            isOpen={isTemplateModalOpen} 
-            onClose={() => setIsTemplateModalOpen(false)} 
+          <EmailTemplateEditorModal
+            isOpen={isTemplateModalOpen}
+            onClose={() => setIsTemplateModalOpen(false)}
           />
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Email Templates</h3>
-              <button 
+              <button
                 onClick={() => setIsTemplateModalOpen(true)}
                 className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
               >

@@ -14,12 +14,12 @@ const EditTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTem
   const [template, setTemplate] = useState({
     name: '',
     subject: '',
-    body: 'Hello {donor_name}!', // Default content with example variable
+    body: 'Hello {donor_name}!',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeVariable, setActiveVariable] = useState('');
-  const {selectedTemplate} = useTemplate();
+  const {selectedTemplate, setSelectedTemplate} = useTemplate();
   console.log("slecteed template edit:", selectedTemplate);
 
   useEffect(() => {
@@ -52,21 +52,18 @@ const EditTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTem
 
     try {
       setIsLoading(true);
-      await axios.post(`${BASE_URL}/template/create`, {
+      const res = await axios.patch(`${BASE_URL}/template/${selectedTemplate?._id}`, {
         name: template.name,
         subject: template.subject,
         body: template.body, // Store as plain text
         variables: extractVariables(template.body)
       });
-      
-      if (refreshTemplates) refreshTemplates();
+
+      setSelectedTemplate(res.data);
+      window.location.reload();
+
       onClose();
-      // Reset form
-      setTemplate({ 
-        name: '', 
-        subject: '',
-        body: 'Hello {donor_name}!' 
-      });
+      
     } catch (err) {
       setError('Failed to save template. Please try again.');
       console.error('Error saving template:', err);
@@ -201,7 +198,7 @@ const EditTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTem
                 Saving...
               </>
             ) : (
-              'Save Template'
+              'Update Template'
             )}
           </button>
         </div>

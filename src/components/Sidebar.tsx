@@ -89,12 +89,19 @@ const menuItems: MenuItem[] = [
   },
   {
     name: 'View Campaigns',
-    icon: CogIcon,
+    icon: FolderIcon,
     path: '/admin/campaigns',
     subItems: [
       { name: 'Create Campaign', path: '/admin/campaigns/create' },
     ]
-    
+  },
+  {
+    name: 'Withdraw Requests',
+    icon: CreditCardIcon,
+    path: '/requests',
+    // subItems: [
+    //   { name: 'Create Campaign', path: '/admin/campaigns/create' },
+    // ]
   }
 ];
 

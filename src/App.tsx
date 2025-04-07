@@ -10,14 +10,14 @@ import DonationsManagement from './components/DonationsManagement';
 import ReportsAnalytics from './components/ReportsAnalytics';
 import NotificationsEmails from './components/NotificationsEmails';
 import Settings from './components/Settings';
-import Home from './pages/Home';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
-import NavLayout from './layouts/NavLayout';
-import Verification from './pages/Verification';
-import ForgetPassword from './pages/ForgetPassword';
-import NewPassword from './pages/NewPassword';
-import Campaigns from './pages/Campaigns';
+// import Home from './pages/Home';
+// import SignUp from './pages/SignUp';
+// import SignIn from './pages/SignIn';
+// import NavLayout from './layouts/NavLayout';
+// import Verification from './pages/Verification';
+// import ForgetPassword from './pages/ForgetPassword';
+// import NewPassword from './pages/NewPassword';
+// import Campaigns from './pages/Campaigns';
 import CampaignDetails from './pages/CampaignDetails';
 import CreateCampaignForm from './pages/CampaignCreate';
 import { ToastContainer } from 'react-toastify';
@@ -39,6 +39,7 @@ import Unauthorized from './pages/Unauthorized';
 // import EmailVerification from './pages/EmailVerification';
 import AdminSignIn from './pages/AdminLogin';
 import { TemplateProvider } from './context/TemplateContext';
+import WithDrawRequests from './components/WithDrawRequests';
 
 
 function App() {
@@ -125,6 +126,8 @@ function App() {
               <Route path="security" element={<Settings />} />
               <Route path="integrations" element={<Settings />} />
             </Route>
+            <Route path="/requests" element={<WithDrawRequests />} />
+
             
 
             {/* Catch all unmatched routes */}
