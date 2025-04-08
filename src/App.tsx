@@ -40,6 +40,8 @@ import Unauthorized from './pages/Unauthorized';
 import AdminSignIn from './pages/AdminLogin';
 import { TemplateProvider } from './context/TemplateContext';
 import WithDrawRequests from './components/WithDrawRequests';
+import FAQsUpdate from './components/FAQsSection';
+import AboutUsSectionUpdate from './components/AboutUsSection';
 
 
 function App() {
@@ -127,6 +129,13 @@ function App() {
               <Route path="integrations" element={<Settings />} />
             </Route>
             <Route path="/requests" element={<WithDrawRequests />} />
+
+            <Route path='/content'>
+              <Route path="faqs" element={<FAQsUpdate />} />
+              <Route path="about" element={<AboutUsSectionUpdate />} />
+            </Route>
+
+            
 
             
 

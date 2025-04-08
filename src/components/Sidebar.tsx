@@ -2,117 +2,100 @@ import React, { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   HomeIcon, ChartBarIcon, UsersIcon, FolderIcon, 
-  CreditCardIcon, ChartPieIcon, BellIcon, CogIcon 
+  CreditCardIcon, ChartPieIcon, BellIcon, CogIcon,
+  DocumentTextIcon, QuestionMarkCircleIcon, InformationCircleIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../context/userContext';
-
 
 interface MenuItem {
   name: string;
   icon: React.ElementType;
   path: string;
-  subItems?: { name: string; path: string; }[];
+  subItems?: { name: string; path: string; icon?: React.ElementType }[];
 }
 
 const menuItems: MenuItem[] = [
   {
     name: 'Dashboard',
     icon: HomeIcon,
-    path: '/dashboard',
-    // subItems: [
-    //   { name: 'Overview of Campaigns & Donations', path: '/dashboard/overview' },
-      
-    // ]
+    path: '/dashboard'
   },
   {
     name: 'Users & Roles',
     icon: UsersIcon,
-    path: '/users',
-    // subItems: [
-    //   { name: 'Manage Users', path: '/users/manage/users' },
-    //   { name: 'Manage Admins', path: '/users/manage/admins' },
-    //   { name: 'Access Control & Permissions', path: '/users/permissions' }
-    // ]
+    path: '/users'
   },
   {
     name: 'Campaigns',
     icon: FolderIcon,
-    path: '/campaigns',
-    // subItems: [
-    //   { name: 'View Campaigns', path: '/campaigns/manage/all' },
-    //   { name: 'Pending Campaigns', path: '/campaigns/manage/pending' },
-    //   { name: 'Active Campaigns', path: '/campaigns/manage/active' },
-    //   // { name: 'Monitor Campaign Performance', path: '/campaigns/performance' }
-    // ]
+    path: '/campaigns'
   },
   {
     name: 'Donations',
     icon: CreditCardIcon,
-    path: '/donations',
-    // subItems: [
-    //   // { name: 'View Donations', path: '/donations/settings' },
-    //   { name: 'Transaction List', path: '/donations/settings/transactions' },
-    //   { name: 'Payments', path: '/donations/settings/payments' },
-    //   // { name: 'Payment Processing Settings', path: '/donations/settings' },
-    //   { name: 'Receipt Logs', path: '/donations/settings/logs' }
-    // ]
+    path: '/donations'
   },
   {
     name: 'Reports & Analytics',
     icon: ChartPieIcon,
-    path: '/reports',
-    // subItems: [
-    //   { name: 'Campaign Performance', path: '/reports/campaign' },
-    //   { name: 'Donor Insights', path: '/reports/donor' },
-    //   { name: 'Custom Reports', path: '/reports/custom' }
-    // ]
+    path: '/reports'
   },
   {
-    name: 'Notifications & Emails',
+    name: 'Notifications',
     icon: BellIcon,
-    path: '/notifications',
-    // subItems: [
-    //   { name: 'Notification Center', path: '/notifications/center' },
-    //   { name: 'Email Management', path: '/notifications/emails' },
-    //   { name: 'Email Templates', path: '/notifications/templates' }
-    // ]
+    path: '/notifications'
   },
   {
     name: 'Settings',
     icon: CogIcon,
-    path: '/settings',
-    // subItems: [
-    //   { name: 'General Platform Settings', path: '/settings/general' },
-    //   { name: 'Security Settings', path: '/settings/security' },
-    //   { name: 'Integrations Settings', path: '/settings/integrations' }
-    // ]
+    path: '/settings'
   },
   {
-    name: 'View Campaigns',
-    icon: FolderIcon,
-    path: '/admin/campaigns',
+    name: 'Core Content',
+    icon: DocumentTextIcon,
+    path: '#', 
     subItems: [
-      { name: 'Create Campaign', path: '/admin/campaigns/create' },
+      { 
+        name: 'FAQs Section', 
+        path: '/content/faqs',
+        icon: QuestionMarkCircleIcon 
+      },
+      { 
+        name: 'About Section', 
+        path: '/content/about',
+        icon: InformationCircleIcon 
+      },
+      { 
+        name: 'Fees Section', 
+        path: '/content/fees',
+        icon: CurrencyDollarIcon 
+      },
+      { 
+        name: 'Homepage Content', 
+        path: '/content/homepage',
+        icon: HomeIcon 
+      },
+      { 
+        name: 'Terms & Conditions', 
+        path: '/content/terms',
+        icon: DocumentTextIcon 
+      }
     ]
-  },
-  {
-    name: 'Withdraw Requests',
-    icon: CreditCardIcon,
-    path: '/requests',
-    // subItems: [
-    //   { name: 'Create Campaign', path: '/admin/campaigns/create' },
-    // ]
   }
 ];
 
 const Sidebar: React.FC = () => {
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const location = useLocation();
-  const {logout} = useContext(AuthContext) || {};
+  const { logout } = useContext(AuthContext) || {};
   const navigate = useNavigate();
 
   const toggleExpand = (itemName: string) => {
-    setExpandedItem(expandedItem === itemName ? null : itemName);
+    setExpandedItems(prev => ({
+      ...prev,
+      [itemName]: !prev[itemName]
+    }));
   };
 
   const isActive = (path: string) => {
@@ -122,6 +105,13 @@ const Sidebar: React.FC = () => {
   const handleLogout = () => {
     logout?.();
     navigate('/');
+  };
+
+  const handleItemClick = (item: MenuItem, e: React.MouseEvent) => {
+    if (item.subItems) {
+      e.preventDefault();
+      toggleExpand(item.name);
+    }
   };
 
   return (
@@ -136,28 +126,31 @@ const Sidebar: React.FC = () => {
             <li key={item.name} className="mb-1">
               <Link
                 to={item.path}
-                onClick={(e) => {
-                  // e.preventDefault();
-                  toggleExpand(item.name);
-                }}
+                onClick={(e) => handleItemClick(item, e)}
                 className={`w-full px-4 py-2 flex items-center hover:bg-gray-800 transition-colors duration-200 ${
                   isActive(item.path) ? 'bg-gray-800' : ''
                 }`}
               >
                 <item.icon className="h-5 w-5 mr-3" />
                 <span>{item.name}</span>
+                {/* {item.subItems && (
+                  <span className="ml-auto transform transition-transform duration-200">
+                    {expandedItems[item.name] ? '▼' : '▶'}
+                  </span>
+                )} */}
               </Link>
               
-              {expandedItem === item.name && item.subItems && (
+              {item.subItems && expandedItems[item.name] && (
                 <ul className="bg-gray-800 py-2">
                   {item.subItems.map((subItem) => (
                     <li key={subItem.name}>
                       <Link
                         to={subItem.path}
-                        className={`block px-12 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ${
+                        className={`block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 ${
                           isActive(subItem.path) ? 'bg-gray-700 text-white' : ''
-                        }`}
+                        } flex items-center`}
                       >
+                        {subItem.icon && <subItem.icon className="h-4 w-4 mr-3" />}
                         {subItem.name}
                       </Link>
                     </li>
@@ -170,17 +163,15 @@ const Sidebar: React.FC = () => {
       </nav>
       
       <div className="p-4 border-t border-gray-800">
-        <div className="flex items-center">
-          {/* <div className="w-8 h-8 rounded-full bg-gray-700 mr-3"></div> */}
-          <div>
-            {/* <p className="text-sm font-medium">Admin User</p> */}
-            {/* <p className="text-xs text-gray-400">admin@example.com</p> */}
-            <button onClick={handleLogout} className="text-sm font-medium text-red-400 hover:text-red-500">Logout</button>
-          </div>
-        </div>
+        <button 
+          onClick={handleLogout} 
+          className="text-sm font-medium text-red-400 hover:text-red-500"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
 };
 
-export default Sidebar; 
+export default Sidebar;
