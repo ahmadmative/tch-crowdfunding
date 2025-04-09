@@ -234,7 +234,7 @@ const AboutUsSectionUpdate = () => {
                 name="subtitle"
                 value={aboutData.subtitle}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
               />
             </div>
 
@@ -245,7 +245,7 @@ const AboutUsSectionUpdate = () => {
                 name="title"
                 value={aboutData.title}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
               />
             </div>
 
@@ -256,7 +256,7 @@ const AboutUsSectionUpdate = () => {
                 value={aboutData.description}
                 onChange={handleInputChange}
                 rows={3}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
               />
             </div>
           </div>
@@ -273,7 +273,7 @@ const AboutUsSectionUpdate = () => {
                   type="text"
                   value={feature}
                   onChange={(e) => handleFeatureChange(index, e.target.value)}
-                  className="flex-1 p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
                 />
                 <button
                   type="button"
@@ -292,7 +292,7 @@ const AboutUsSectionUpdate = () => {
               value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
               placeholder="New feature text"
-              className="flex-1 p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-1 p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
             />
             <button
               type="button"
@@ -317,7 +317,7 @@ const AboutUsSectionUpdate = () => {
                     type="text"
                     value={stat.value}
                     onChange={(e) => handleStatChange(index, 'value', e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
                   />
                 </div>
                 <div>
@@ -326,7 +326,7 @@ const AboutUsSectionUpdate = () => {
                     type="text"
                     value={stat.label}
                     onChange={(e) => handleStatChange(index, 'label', e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-gray-900"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ const AboutUsSectionUpdate = () => {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:scale-105 transition-transform duration-300 disabled:bg-blue-300"
+          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:scale-105 transition-transform duration-300 "
         >
           {loading ? "Saving..." : "Save Changes"}
         </button>

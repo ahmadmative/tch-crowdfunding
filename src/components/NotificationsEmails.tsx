@@ -186,15 +186,7 @@ const NotificationsEmails: React.FC = () => {
           >
             Notification Center
           </button>
-          <button
-            onClick={() => setSelectedTab('emails')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'emails'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-          >
-            Bulk Email Management
-          </button>
+         
           <button
             onClick={() => setSelectedTab('templates')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'templates'
@@ -313,82 +305,7 @@ const NotificationsEmails: React.FC = () => {
         </div>
       )}
 
-      {/* Bulk Email Management Tab */}
-      {selectedTab === 'emails' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Email Performance</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={emailOpenRatesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="rate" name="Open Rate (%)" fill="#0ea5e9" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Email Engagement</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={emailEngagementData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      dataKey="value"
-                      label={({ name, value }) => `${name} ${value}%`}
-                    >
-                      {emailEngagementData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Scheduled Emails</h3>
-              <div className="flex space-x-4">
-                <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                  <option value="all">All Recipients</option>
-                  <option value="donors">Donors Only</option>
-                  <option value="creators">Campaign Creators</option>
-                </select>
-                <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-                  Schedule New
-                </button>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {scheduledEmailsData.map((email) => (
-                <div key={email.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-semibold">{email.subject}</p>
-                    <p className="text-sm text-gray-600">
-                      To: {email.recipients} • Scheduled for: {email.scheduledFor}
-                    </p>
-                  </div>
-                  <div className="flex space-x-4">
-                    <button className="text-primary-600 hover:text-primary-800">Edit</button>
-                    <button className="text-red-600 hover:text-red-800">Cancel</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      
 
       {/* Template Library Tab */}
       {selectedTab === 'templates' && (

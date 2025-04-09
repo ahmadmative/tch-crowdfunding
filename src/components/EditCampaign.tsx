@@ -187,7 +187,7 @@ const EditCampaign = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 bg-white border border-gray-100 rounded-[20px] shadow-lg">
       <h1 className="text-2xl font-bold mb-6">Edit Campaign</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">

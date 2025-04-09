@@ -42,6 +42,10 @@ import { TemplateProvider } from './context/TemplateContext';
 import WithDrawRequests from './components/WithDrawRequests';
 import FAQsUpdate from './components/FAQsSection';
 import AboutUsSectionUpdate from './components/AboutUsSection';
+import ChooseUsUpdate from './components/ChooseUsUpdate';
+import FeatureSectionUpdate from './components/FeatureSectionUpdate';
+import TestimonialUpdate from './components/TestimonialUpdate';
+import PayoutUpdate from './components/PayoutSection';
 
 
 function App() {
@@ -133,6 +137,10 @@ function App() {
             <Route path='/content'>
               <Route path="faqs" element={<FAQsUpdate />} />
               <Route path="about" element={<AboutUsSectionUpdate />} />
+              <Route path="choose-us" element={<ChooseUsUpdate />} />
+              <Route path='features' element={<FeatureSectionUpdate/>} />
+              <Route path='testimonial' element={<TestimonialUpdate/>} />
+              <Route path="payouts" element={<PayoutUpdate/>} />
             </Route>
 
             

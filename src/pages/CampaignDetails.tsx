@@ -21,6 +21,7 @@ const CampaignDetails = () => {
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState("");
   const [campaigner, setCampaigner] = useState(false);
+  const [dropDownStatus, setDropDownStatus] = useState("");
 
   useEffect(() => {
     const path = location.pathname;
@@ -32,8 +33,8 @@ const CampaignDetails = () => {
     }
   }, [location]);
 
-  const handleAction = (action: string) => {
-    console.log(action);
+  const handleStatusChange = async () =>{
+    console.log(status);
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -45,7 +46,7 @@ const CampaignDetails = () => {
       try {
         const res = await axios.put(
           `${BASE_URL}/campaigns/updateStatus/${id}`,
-          { status: action },
+          { status: dropDownStatus },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -53,14 +54,16 @@ const CampaignDetails = () => {
           }
         );
         console.log(res);
-        setStatus(action);
+        setStatus(dropDownStatus);
         toast.success("Campaign status updated successfully");
       } catch (error) {
         console.log(error);
         toast.error("Failed to update campaign status");
       }
     });
-  };
+  }
+
+  
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -325,7 +328,7 @@ const CampaignDetails = () => {
                   <select
                     id="action"
                     name="action"
-                    onChange={(e) => handleAction(e.target.value)}
+                    onChange={(e) => setDropDownStatus(e.target.value)}
                     className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
                   >
                     <option value="">Select Action</option>
@@ -333,12 +336,16 @@ const CampaignDetails = () => {
                     <option value="cancelled">Reject</option>
                     <option value="inactive">Pause</option>
                   </select>
+                  <button 
+                    className="bg-gray-900  mt-4 flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
+                    onClick={handleStatusChange}
+                  >Apply Changes</button>
                 </div>
 
                 {/* Edit Button */}
                 <Link
                   to={`/admin/campaigns/${id}/edit`}
-                  className="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:bg-gray-700 transition-all duration-300"
+                  className="bg-gray-900 w-[100px] flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
                 >
                   Edit
                 </Link>

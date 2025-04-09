@@ -42,7 +42,7 @@ const menuItems: MenuItem[] = [
     path: '/reports'
   },
   {
-    name: 'Notifications',
+    name: 'Email Notifications',
     icon: BellIcon,
     path: '/notifications'
   },
@@ -50,6 +50,11 @@ const menuItems: MenuItem[] = [
     name: 'Settings',
     icon: CogIcon,
     path: '/settings'
+  },
+  {
+    name: 'Withdraw',
+    icon: CurrencyDollarIcon,
+    path: '/requests'
   },
   {
     name: 'Core Content',
@@ -67,19 +72,24 @@ const menuItems: MenuItem[] = [
         icon: InformationCircleIcon 
       },
       { 
-        name: 'Fees Section', 
-        path: '/content/fees',
+        name: 'Choose Us Section', 
+        path: '/content/choose-us',
         icon: CurrencyDollarIcon 
       },
       { 
-        name: 'Homepage Content', 
-        path: '/content/homepage',
+        name: 'Features Section', 
+        path: '/content/features',
         icon: HomeIcon 
       },
       { 
-        name: 'Terms & Conditions', 
-        path: '/content/terms',
+        name: 'Testimonials Section', 
+        path: '/content/testimonial',
         icon: DocumentTextIcon 
+      },
+      {
+        name: 'Fees & Payouts Section',
+        path: '/content/payouts',
+        icon: CurrencyDollarIcon
       }
     ]
   }
