@@ -113,6 +113,8 @@ const FeatureSectionUpdate: React.FC = () => {
   const [editedHeaderContent, setEditedHeaderContent] = useState<HeaderContent>(defaultHeaderContent)
   const [editedFeatureCards, setEditedFeatureCards] = useState<FeatureCard[]>([])
   const [hasChanges, setHasChanges] = useState(false)
+  const [image1Loading, setImage1Loading] =useState(false);
+  const [image2Loading, setImage2Loading] = useState(false);
 
 
 
@@ -382,13 +384,16 @@ const FeatureSectionUpdate: React.FC = () => {
   {isEditing ? (
     <div className="flex flex-col gap-2">
       <img src={editedFeatureCards[index].image} alt="feature" className="h-16 w-16 object-cover rounded-md" />
+      {image1Loading && <p>Loading...</p>}
       <input
         type="file"
         accept="image/*"
         onChange={async (e) => {
           const file = e.target.files?.[0]
           if (file) {
+            setImage1Loading(true)
             const uploadedUrl = await upload(file)
+            setImage1Loading(false)
             handleFeatureCardChange(index, "image", uploadedUrl)
           }
         }}
@@ -439,14 +444,18 @@ const FeatureSectionUpdate: React.FC = () => {
   {isEditing ? (
     <div className="flex flex-col gap-2">
       <img src={editedFeatureCards[index].image2} alt="feature" className="h-16 w-16 object-cover rounded-md" />
+      {image2Loading && <p>Loading...</p>}
       <input
         type="file"
         accept="image/*"
         onChange={async (e) => {
           const file = e.target.files?.[0]
           if (file) {
+            setImage2Loading(true)
             const uploadedUrl = await upload(file)
+            setImage2Loading(false)
             handleFeatureCardChange(index, "image2", uploadedUrl)
+
           }
         }}
       />

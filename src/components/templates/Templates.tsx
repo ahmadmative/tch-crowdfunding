@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { useTemplate } from '../../context/TemplateContext';
 import EditTemplateEditorModal from './EditTemplate';
+import { Link } from 'react-router-dom';
 
 interface Template {
   _id: string;
@@ -31,23 +32,22 @@ const TemplatesComponent = ({ templates }: TemplatesComponentProps) => {
               <p className="text-xs text-gray-500 mt-2">Created At: {dayjs(template.createdAt).format('YYYY-MM-DD HH:mm:ss')}</p>
             </div>
             <div className="flex space-x-2">
-              <button onClick={()=> {setSelectedTemplate(template);setEditModal(true)}} className="text-primary-600 hover:text-primary-800">
+              <Link to={`/builder/${template._id}`} className="text-primary-600 hover:text-primary-800">
                 <PencilIcon className="h-5 w-5" />
-              </button>
-              <button className="text-gray-600 hover:text-gray-800">
-                <DocumentDuplicateIcon className="h-5 w-5" />
-              </button>
+              </Link>
+              
             </div>
           </div>
           <div className="mt-4">
             <p className="text-sm text-gray-700">Subject: {template.subject}</p>
             {/* <p className="text-sm text-gray-700">Description: {template.body}</p> */}
           </div>
-          <div className="mt-4 flex justify-end">
+          <div dangerouslySetInnerHTML={{ __html: template.body }} />
+          {/* <div className="mt-4 flex justify-end">
             <button onClick={() => setSelectedTemplate(template)}  className="text-primary-600 hover:text-primary-800 text-sm font-medium">
               Use Template
             </button>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

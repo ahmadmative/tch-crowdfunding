@@ -134,7 +134,7 @@ const CreateCampaignForm: React.FC = () => {
             {isSuccess && <Notification isOpen={isSuccess} onClose={() => setIsSuccess(false)} title="Campaign created successfully" message="Campaign created successfully" link={`/home/campaigns`}/>}
         {error && <Notification isOpen={true} onClose={() => setError("")} title="Error" message={error} />}
 
-        <div className='flex flex-col items-center border-2 border-gray-300 rounded-[40px] p-4 font-onest shadow-md'>
+        <div className='flex flex-col items-center border-2 bg-white border-gray-300 rounded-[40px] p-4 font-onest shadow-md'>
         <h1 className="text-2xl font-semibold mb-6">Create New Campaign</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -279,6 +279,7 @@ const CreateCampaignForm: React.FC = () => {
               value={formData.startDate}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
           <div>
@@ -289,6 +290,7 @@ const CreateCampaignForm: React.FC = () => {
               value={formData.endDate}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
             />
           </div>
         </div>

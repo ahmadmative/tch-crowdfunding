@@ -8,6 +8,7 @@ import axios from 'axios';
 import { BASE_URL } from '../config/url';
 import dayjs from 'dayjs';
 import TemplatesComponent from './templates/Templates';
+import { Link } from 'react-router-dom';
 
 // Mock data for the charts
 const emailEngagementData = [
@@ -318,12 +319,12 @@ const NotificationsEmails: React.FC = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Email Templates</h3>
-              <button
-                onClick={() => setIsTemplateModalOpen(true)}
+              <Link
+                to={"/builder"}
                 className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
               >
                 Create Template
-              </button>
+              </Link>
               {/* <EmailTemplateEditorModal/> */}
             </div>
             <TemplatesComponent templates={templates} />

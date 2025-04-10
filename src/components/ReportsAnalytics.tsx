@@ -111,7 +111,7 @@ const ReportsAnalytics: React.FC = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           }
         });
-        setDonorGrowth(res5.data);
+        setDonorGrowth(res5.data.data);
         console.log(res5.data);
 
         const res6 = await axios.get(`${BASE_URL}/analytics/reports/top-contributers`, {
@@ -124,7 +124,7 @@ const ReportsAnalytics: React.FC = () => {
 
       } catch (error: any) {
         console.log(error);
-        setError(error.response.data.message);
+        setError(error.response);
       } finally {
         setIsLoading(false);
       }
@@ -374,10 +374,10 @@ const ReportsAnalytics: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={donorGrowth}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="totalDonors" name="Total Donors" stroke="#0ea5e9" />
+                    <Line type="monotone" dataKey="count" name="Total Donors" stroke="#0ea5e9" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

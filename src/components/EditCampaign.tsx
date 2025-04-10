@@ -390,6 +390,7 @@ const EditCampaign = () => {
               onChange={handleInputChange}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
               required
+              min={new Date(Date.now()).toISOString().split("T")[0]}
             />
           </div>
           <div className="space-y-2">
@@ -403,6 +404,7 @@ const EditCampaign = () => {
               onChange={handleInputChange}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
               required
+              min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
             />
           </div>
         </div>

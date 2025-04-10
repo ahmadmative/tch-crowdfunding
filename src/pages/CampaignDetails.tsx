@@ -91,12 +91,12 @@ const CampaignDetails = () => {
     );
 
   return (
-    <div className="max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[100px] overflow-x-hidden font-sans">
+    <div className="max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[40px] overflow-x-hidden font-sans">
       {/* upper section */}
       <div className="flex justify-between md:w-[75%] w-full">
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-white p-4 border border-gray-400 rounded-xl">
           {/* image section */}
-          <div className="relative flex items-center gap-2 rounded-xl overflow-hidden">
+          <div className="relative flex items-center border border-b-gray-400 mb-4 gap-2 rounded-xl overflow-hidden">
             <img
               src={campaign?.image}
               alt="arrow-left"
@@ -132,7 +132,7 @@ const CampaignDetails = () => {
           </div>
 
           {/* basic details section */}
-          <div className="flex md:flex-row flex-col items-center justify-between gap-2">
+          <div className="flex md:flex-row bg-white p-4 border border-gray-200 rounded-xl flex-col items-center justify-between gap-2">
             {/* avatar and location section */}
 
             <div className="flex items-center gap-2 h-[50px]">
@@ -168,16 +168,7 @@ const CampaignDetails = () => {
               </p>
             </div>
 
-            {/* donate btn */}
-
-            {/* <button className="bg-gray-900 flex items-center justify-center text-white px-4 py-1 md:py-2 rounded-full text-sm font-bold h-[50px] shadow-md hover:bg-gray-900/80 transition-all duration-300">
-              Donate Now
-              <img
-                src="/arrow-black.png"
-                alt="arrow-right"
-                className="w-4 h-4 ml-2"
-              />
-            </button> */}
+            
           </div>
 
           {/* campaign details section */}
@@ -256,60 +247,9 @@ const CampaignDetails = () => {
             </>
           )}
 
-          {campaigner && (
-            <>
-              <div className="flex gap-2">
-                <p className="text-sm font-bold text-black py-2 font-onest">
-                  Start Date:
-                </p>
-                <p className="text-sm text-black py-2 font-onest">
-                  {dayjs(campaign?.startDate).format("DD-MM-YYYY")}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-sm font-bold text-black py-2 font-onest">
-                  End Date:
-                </p>
-                <p className="text-sm text-black py-2 font-onest">
-                  {dayjs(campaign?.endDate).format("DD-MM-YYYY")}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-sm font-bold text-black py-2 font-onest">
-                  Posted on:
-                </p>
-                <p className="text-sm text-black py-2 font-onest">
-                  {dayjs(campaign?.createdAt).format("DD-MM-YYYY")}
-                </p>
-                <p className="text-sm font-bold text-black py-2 font-onest">
-                  at
-                </p>
-                <p className="text-sm text-black py-2 font-onest">
-                  {dayjs(campaign?.createdAt).format("HH:mm")}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <p className="text-sm font-bold text-black py-2 font-onest">
-                  Status:
-                </p>
-                <p
-                  className={`text-sm font-bold py-2 font-onest rounded-lg p-2 ${
-                    status === "active"
-                      ? "bg-[#c6f365] text-black"
-                      : status === "cancelled"
-                      ? "bg-red-500 text-white"
-                      : status === "pending"
-                      ? "bg-yellow-500 text-black"
-                      : "bg-gray-300 text-black"
-                  }`}
-                >
-                  {status}
-                </p>
-              </div>
-            </>
-          )}
+          
 
-          {admin && (
+          
             <div className="w-full p-4">
               <p className="text-sm font-bold text-black py-2 font-onest">
                 Admin Actions:
@@ -351,11 +291,11 @@ const CampaignDetails = () => {
                 </Link>
               </div>
             </div>
-          )}
+        
 
           
 
-          {!admin && !campaigner && <DonationForm id={id as string} campaigner={campaign?.userDetails[0]?._id} />}
+         
 
           
         </div>

@@ -117,6 +117,7 @@ export default function FAQsUpdate() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-2xl font-bold text-center mb-2">FAQs Management</h2>

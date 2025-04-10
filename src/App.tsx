@@ -46,6 +46,9 @@ import ChooseUsUpdate from './components/ChooseUsUpdate';
 import FeatureSectionUpdate from './components/FeatureSectionUpdate';
 import TestimonialUpdate from './components/TestimonialUpdate';
 import PayoutUpdate from './components/PayoutSection';
+import EmailBuilder from './components/testing-grapesjs/EmailBuilder';
+import EditEmailTemplateEditor from './components/testing-grapesjs/EditEmailTemplate';
+import CoreContent from './components/CoreContent';
 
 
 function App() {
@@ -142,6 +145,11 @@ function App() {
               <Route path='testimonial' element={<TestimonialUpdate/>} />
               <Route path="payouts" element={<PayoutUpdate/>} />
             </Route>
+
+
+            <Route path={"/builder"} element={<EmailBuilder />} />
+            <Route path={"/builder/:id"} element={<EditEmailTemplateEditor />} />
+            <Route path={"/content" } element={<CoreContent />} />
 
             
 
