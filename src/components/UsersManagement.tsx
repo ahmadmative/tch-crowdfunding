@@ -195,7 +195,7 @@ const UsersManagement: React.FC = () => {
           >
             User List
           </button>
-          <button
+          {/* <button
             onClick={() => setSelectedTab('admins')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'admins'
                 ? 'border-primary-500 text-primary-600'
@@ -212,7 +212,7 @@ const UsersManagement: React.FC = () => {
               }`}
           >
             Role-Based Access Control
-          </button>
+          </button> */}
         </nav>
       </div>
 

@@ -90,7 +90,7 @@ const AdminSignIn = () => {
                 required
                 value={data.email}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#BEE36E] focus:border-transparent"
+                className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 placeholder="Enter your email"
               />
             </div>
@@ -101,9 +101,9 @@ const AdminSignIn = () => {
                 Password
               </label>
               <div className="text-sm">
-                <Link to="/forgetpassword" className="font-medium text-gray-900 hover:text-gray-600">
+                {/* <Link to="/forgetpassword" className="font-medium text-gray-900 hover:text-gray-600">
                   Forgot password?
-                </Link>
+                </Link> */}
               </div>
 
               </div>

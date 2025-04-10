@@ -188,7 +188,7 @@ const DonationsManagement: React.FC = () => {
           >
             Transaction List
           </button>
-          <button
+          {/* <button
             onClick={() => setSelectedTab('payments')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'payments'
               ? 'border-primary-500 text-primary-600'
@@ -196,7 +196,7 @@ const DonationsManagement: React.FC = () => {
               }`}
           >
             Payment Settings
-          </button>
+          </button> */}
           <button
             onClick={() => setSelectedTab('logs')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'logs'

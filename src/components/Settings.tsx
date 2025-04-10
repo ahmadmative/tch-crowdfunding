@@ -121,7 +121,7 @@ const Settings: React.FC = () => {
             <ShieldCheckIcon className="h-5 w-5 mr-2" />
             Security
           </button>
-          <button
+          {/* <button
             onClick={() => setSelectedTab('integrations')}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
               selectedTab === 'integrations'
@@ -131,7 +131,7 @@ const Settings: React.FC = () => {
           >
             <PuzzlePieceIcon className="h-5 w-5 mr-2" />
             Integrations
-          </button>
+          </button> */}
         </nav>
       </div>
 
@@ -162,7 +162,7 @@ const Settings: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Default Currency
@@ -183,7 +183,7 @@ const Settings: React.FC = () => {
                     <option value="PST">Pacific Time</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

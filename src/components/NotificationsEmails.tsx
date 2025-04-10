@@ -178,7 +178,7 @@ const NotificationsEmails: React.FC = () => {
             Statistics
           </button>
 
-          <button
+          {/* <button
             onClick={() => setSelectedTab('center')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'center'
                 ? 'border-primary-500 text-primary-600'
@@ -186,7 +186,7 @@ const NotificationsEmails: React.FC = () => {
               }`}
           >
             Notification Center
-          </button>
+          </button> */}
          
           <button
             onClick={() => setSelectedTab('templates')}
