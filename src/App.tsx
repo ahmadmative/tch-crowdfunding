@@ -49,6 +49,9 @@ import PayoutUpdate from './components/PayoutSection';
 import EmailBuilder from './components/testing-grapesjs/EmailBuilder';
 import EditEmailTemplateEditor from './components/testing-grapesjs/EditEmailTemplate';
 import CoreContent from './components/CoreContent';
+import FaqsCategories from './components/FaqsCategories';
+import SupportMails from './components/SupportMails';
+import SupportDetails from './components/SupportDetails';
 
 
 function App() {
@@ -139,6 +142,7 @@ function App() {
 
             <Route path='/content'>
               <Route path="faqs" element={<FAQsUpdate />} />
+              <Route path="faqs/categories" element={<FaqsCategories />} />
               <Route path="about" element={<AboutUsSectionUpdate />} />
               <Route path="choose-us" element={<ChooseUsUpdate />} />
               <Route path='features' element={<FeatureSectionUpdate/>} />
@@ -150,6 +154,9 @@ function App() {
             <Route path={"/builder"} element={<EmailBuilder />} />
             <Route path={"/builder/:id"} element={<EditEmailTemplateEditor />} />
             <Route path={"/content" } element={<CoreContent />} />
+
+            <Route path="/support" element={<SupportMails />} />
+            <Route path="/support/:id" element={<SupportDetails />} />
 
             
 

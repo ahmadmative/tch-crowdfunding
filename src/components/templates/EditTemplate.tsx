@@ -11,6 +11,7 @@ interface EmailTemplateEditorModalProps {
 }
 
 const EditTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTemplateEditorModalProps) => {
+  console.log("new template");
   const [template, setTemplate] = useState({
     name: '',
     subject: '',

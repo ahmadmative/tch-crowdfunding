@@ -10,23 +10,7 @@ import dayjs from 'dayjs';
 import TemplatesComponent from './templates/Templates';
 import { Link } from 'react-router-dom';
 
-// Mock data for the charts
-const emailEngagementData = [
-  { name: 'Opened', value: 65, color: '#22c55e' },
-  { name: 'Clicked', value: 20, color: '#0ea5e9' },
-  { name: 'Ignored', value: 15, color: '#6b7280' },
-];
 
-const emailOpenRatesData = [
-  { month: 'Jan', rate: 68 },
-  { month: 'Feb', rate: 72 },
-  { month: 'Mar', rate: 65 },
-  { month: 'Apr', rate: 75 },
-  { month: 'May', rate: 70 },
-  { month: 'Jun', rate: 78 },
-];
-
-// Mock data for notifications
 const notificationsData = [
   {
     id: 1,
@@ -54,48 +38,7 @@ const notificationsData = [
   },
 ];
 
-// Mock data for email templates
-const emailTemplatesData = [
-  {
-    id: 1,
-    name: 'Campaign Update',
-    subject: 'Updates on {campaign_name}',
-    description: 'Keep donors informed about campaign progress',
-    lastUsed: '2024-02-27',
-  },
-  {
-    id: 2,
-    name: 'Thank You Message',
-    subject: 'Thank you for your donation, {donor_name}!',
-    description: 'Express gratitude to donors',
-    lastUsed: '2024-02-26',
-  },
-  {
-    id: 3,
-    name: 'Payment Confirmation',
-    subject: 'Donation Confirmation - {campaign_name}',
-    description: 'Confirm donation receipt',
-    lastUsed: '2024-02-25',
-  },
-];
 
-// Mock data for scheduled emails
-const scheduledEmailsData = [
-  {
-    id: 1,
-    subject: 'Monthly Campaign Update - March 2024',
-    recipients: 'All Donors',
-    scheduledFor: '2024-03-01 09:00',
-    status: 'scheduled',
-  },
-  {
-    id: 2,
-    subject: 'Weekly Newsletter',
-    recipients: 'Subscribers',
-    scheduledFor: '2024-02-29 10:00',
-    status: 'scheduled',
-  },
-];
 
 const NotificationsEmails: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('stats');
@@ -128,14 +71,6 @@ const NotificationsEmails: React.FC = () => {
 
   }, [])
 
-  // useEffect(() => {
-  //   const urlRole = pathname.split('/').pop();
-  //   if (urlRole && roles.includes(urlRole)) {
-  //     setSelectedTab(urlRole);
-  //   }
-  // }, [pathname]);
-
-
 
 
   if (loading) {
@@ -165,7 +100,7 @@ const NotificationsEmails: React.FC = () => {
     <div className="space-y-6">
 
 
-      {/* Tab Navigation */}
+      
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
@@ -177,16 +112,6 @@ const NotificationsEmails: React.FC = () => {
           >
             Statistics
           </button>
-
-          {/* <button
-            onClick={() => setSelectedTab('center')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'center'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-          >
-            Notification Center
-          </button> */}
          
           <button
             onClick={() => setSelectedTab('templates')}

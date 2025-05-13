@@ -10,6 +10,7 @@ interface EmailTemplateEditorModalProps {
 }
 
 const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTemplateEditorModalProps) => {
+  console.log("Editor");
   const [template, setTemplate] = useState({
     name: '',
     subject: '',

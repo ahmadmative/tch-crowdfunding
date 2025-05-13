@@ -56,11 +56,11 @@ const menuItems: MenuItem[] = [
     icon: CurrencyDollarIcon,
     path: '/requests'
   },
-  // {
-  //   name: 'Email Builder',
-  //   icon: DocumentTextIcon,
-  //   path: '/builder'
-  // },
+  {
+    name: 'Support',
+    icon: DocumentTextIcon,
+    path: '/Support'
+  },
   {
     name: 'Core Content',
     icon: DocumentTextIcon,

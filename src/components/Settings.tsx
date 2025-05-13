@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Cog6ToothIcon,
   ShieldCheckIcon,
@@ -8,31 +8,35 @@ import {
   KeyIcon,
   BanknotesIcon,
   EnvelopeIcon,
-} from '@heroicons/react/24/outline';
-import { useLocation } from 'react-router-dom';
+} from "@heroicons/react/24/outline";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../config/url";
+import upload from "../utils/upload";
+import SocialLinks from "./settings/SocialLinks";
 
 // Mock data for access logs
 const accessLogsData = [
   {
     id: 1,
-    user: 'Admin User',
-    action: 'Updated Payment Gateway Settings',
-    timestamp: '2024-02-27 14:30:00',
-    ip: '192.168.1.100',
+    user: "Admin User",
+    action: "Updated Payment Gateway Settings",
+    timestamp: "2024-02-27 14:30:00",
+    ip: "192.168.1.100",
   },
   {
     id: 2,
-    user: 'System',
-    action: 'Automated Backup Created',
-    timestamp: '2024-02-27 12:00:00',
-    ip: 'System',
+    user: "System",
+    action: "Automated Backup Created",
+    timestamp: "2024-02-27 12:00:00",
+    ip: "System",
   },
   {
     id: 3,
-    user: 'Admin User',
-    action: 'Changed Password Policy',
-    timestamp: '2024-02-27 10:15:00',
-    ip: '192.168.1.100',
+    user: "Admin User",
+    action: "Changed Password Policy",
+    timestamp: "2024-02-27 10:15:00",
+    ip: "192.168.1.100",
   },
 ];
 
@@ -40,43 +44,79 @@ const accessLogsData = [
 const integrationsData = [
   {
     id: 1,
-    name: 'Stripe',
-    type: 'Payment Gateway',
-    status: 'Connected',
-    lastSync: '2024-02-27 14:00:00',
+    name: "Stripe",
+    type: "Payment Gateway",
+    status: "Connected",
+    lastSync: "2024-02-27 14:00:00",
     icon: BanknotesIcon,
   },
   {
     id: 2,
-    name: 'PayPal',
-    type: 'Payment Gateway',
-    status: 'Connected',
-    lastSync: '2024-02-27 13:45:00',
+    name: "PayPal",
+    type: "Payment Gateway",
+    status: "Connected",
+    lastSync: "2024-02-27 13:45:00",
     icon: BanknotesIcon,
   },
   {
     id: 3,
-    name: 'SendGrid',
-    type: 'Email Provider',
-    status: 'Connected',
-    lastSync: '2024-02-27 13:30:00',
+    name: "SendGrid",
+    type: "Email Provider",
+    status: "Connected",
+    lastSync: "2024-02-27 13:30:00",
     icon: EnvelopeIcon,
   },
 ];
 
 const Settings: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState('general');
+  const [selectedTab, setSelectedTab] = useState("general");
   const [isBackupInProgress, setIsBackupInProgress] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
-  const roles=  ["general", "security", "integrations"]
+  const roles = ["general", "security", "integrations", "links"];
+  const [appData, setAppData] = useState<any>(null);
+  const [appName, setAppName] = useState("");
+  const [logo, setLogo] = useState<File | null>(null);
 
   useEffect(() => {
-    const urlRole = pathname.split('/').pop();
+    const urlRole = pathname.split("/").pop();
     if (urlRole && roles.includes(urlRole)) {
       setSelectedTab(urlRole);
     }
   }, [pathname]);
+
+  const fetch = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/brand`);
+      setAppData(res.data);
+      setAppName(res.data.name);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    let logoUrl = appData?.logo || "";
+    if (logo) {
+      logoUrl = await upload(logo); // Assuming `upload()` returns URL of uploaded logo
+    }
+
+    try {
+      const res = await axios.post(`${BASE_URL}/brand`, {
+        name: appName,
+        logo: logoUrl,
+      });
+      setAppData(res.data);
+    } catch (error) {
+      console.error("Failed to update branding:", error);
+    }
+  };
 
   const handleBackup = () => {
     setIsBackupInProgress(true);
@@ -100,27 +140,39 @@ const Settings: React.FC = () => {
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setSelectedTab('general')}
+            onClick={() => setSelectedTab("general")}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
-              selectedTab === 'general'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              selectedTab === "general"
+                ? "border-primary-500 text-primary-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
             <Cog6ToothIcon className="h-5 w-5 mr-2" />
             General Settings
           </button>
           <button
-            onClick={() => setSelectedTab('security')}
+            onClick={() => setSelectedTab("security")}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
-              selectedTab === 'security'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              selectedTab === "security"
+                ? "border-primary-500 text-primary-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
             <ShieldCheckIcon className="h-5 w-5 mr-2" />
             Security
           </button>
+          <button
+            onClick={() => setSelectedTab('links')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
+              selectedTab === 'links'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <PuzzlePieceIcon className="h-5 w-5 mr-2" />
+            Social Media Links
+          </button>
+
           {/* <button
             onClick={() => setSelectedTab('integrations')}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
@@ -136,32 +188,58 @@ const Settings: React.FC = () => {
       </div>
 
       {/* General Settings Tab */}
-      {selectedTab === 'general' && (
+      {selectedTab === "general" && (
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Platform Configuration</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              Platform Configuration
+            </h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Platform Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  defaultValue="TCH Crowdfunding"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Platform Logo
-                </label>
-                <div className="flex items-center space-x-4">
-                  <div className="h-16 w-16 bg-gray-100 rounded-lg"></div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    Change Logo
-                  </button>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Platform Name
+                  </label>
+                  <input
+                    type="text"
+                    value={appName}
+                    onChange={(e) => setAppName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
                 </div>
-              </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Platform Logo
+                  </label>
+                  <div className="flex items-center space-x-4">
+                    {appData?.logo && (
+                      <img
+                        src={appData.logo}
+                        alt="Logo"
+                        className="h-16 w-16 object-contain bg-gray-100 rounded-lg"
+                      />
+                    )}
+                    <label className="cursor-pointer text-primary-600 hover:text-primary-800">
+                      Change Logo
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setLogo(e.target.files?.[0] || null)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  Save
+                </button>
+              </form>
+
               {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -193,7 +271,9 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Automated Backups</p>
-                  <p className="text-sm text-gray-600">Daily backups at midnight UTC</p>
+                  <p className="text-sm text-gray-600">
+                    Daily backups at midnight UTC
+                  </p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" checked />
@@ -211,7 +291,7 @@ const Settings: React.FC = () => {
                   ) : (
                     <CloudArrowUpIcon className="h-5 w-5 mr-2" />
                   )}
-                  {isBackupInProgress ? 'Backing up...' : 'Create Backup'}
+                  {isBackupInProgress ? "Backing up..." : "Create Backup"}
                 </button>
                 <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                   Restore from Backup
@@ -223,12 +303,13 @@ const Settings: React.FC = () => {
       )}
 
       {/* Security Settings Tab */}
-      {selectedTab === 'security' && (
+      {selectedTab === "security" && (
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Authentication Settings</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              Authentication Settings
+            </h2>
             <div className="space-y-4">
-              
               <div>
                 <p className="font-medium mb-2">Password Policy</p>
                 <div className="space-y-2">
@@ -282,7 +363,7 @@ const Settings: React.FC = () => {
       )}
 
       {/* Integrations Tab */}
-      {selectedTab === 'integrations' && (
+      {selectedTab === "integrations" && (
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Connected Services</h2>
@@ -294,7 +375,9 @@ const Settings: React.FC = () => {
                       <integration.icon className="h-8 w-8 text-gray-600 mr-3" />
                       <div>
                         <h3 className="font-semibold">{integration.name}</h3>
-                        <p className="text-sm text-gray-600">{integration.type}</p>
+                        <p className="text-sm text-gray-600">
+                          {integration.type}
+                        </p>
                       </div>
                     </div>
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
@@ -302,7 +385,9 @@ const Settings: React.FC = () => {
                     </span>
                   </div>
                   <div className="mt-4">
-                    <p className="text-xs text-gray-500">Last synced: {integration.lastSync}</p>
+                    <p className="text-xs text-gray-500">
+                      Last synced: {integration.lastSync}
+                    </p>
                   </div>
                   <div className="mt-4 flex justify-end space-x-2">
                     <button className="text-primary-600 hover:text-primary-800 text-sm">
@@ -355,7 +440,9 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">API Rate Limiting</p>
-                  <p className="text-sm text-gray-600">Limit API requests per minute</p>
+                  <p className="text-sm text-gray-600">
+                    Limit API requests per minute
+                  </p>
                 </div>
                 <select className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="60">60 requests/min</option>
@@ -367,8 +454,25 @@ const Settings: React.FC = () => {
           </div>
         </div>
       )}
+
+
+      {/* social media links */}
+
+      {selectedTab === "links" && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-lg font-semibold mb-4">Social Media Links</h2>
+            <SocialLinks/>
+          </div>
+
+          
+        </div>
+      )}
+
+
+      
     </div>
   );
 };
 
-export default Settings; 
+export default Settings;
