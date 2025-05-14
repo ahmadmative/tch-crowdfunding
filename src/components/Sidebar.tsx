@@ -62,6 +62,16 @@ const menuItems: MenuItem[] = [
     path: '/Support'
   },
   {
+    name: 'Blogs',
+    icon: DocumentTextIcon,
+    path: '/blogs'
+  },
+  {
+    name: 'Help Guide',
+    icon: DocumentTextIcon,
+    path: '/guide',
+  },
+  {
     name: 'Core Content',
     icon: DocumentTextIcon,
     path: '#', 
@@ -95,6 +105,11 @@ const menuItems: MenuItem[] = [
         name: 'Fees & Payouts Section',
         path: '/content/payouts',
         icon: CurrencyDollarIcon
+      },
+      {
+        name: 'Social Media Links',
+        path: '/content/social',
+        icon: DocumentTextIcon
       }
     ]
   }

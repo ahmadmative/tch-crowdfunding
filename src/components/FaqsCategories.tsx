@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../config/url";
 import { toast } from "react-toastify";
 import FaqCategoryModal from "./faqs/FaqCategoryModal";
+import { ArrowBigLeft, MoveLeft } from "lucide-react";
 
 interface Category {
   _id: string;
@@ -71,6 +72,7 @@ const FaqsCategories = () => {
   return (
     <div className="max-w-5xl mx-auto p-4">
       <div className="space-y-6">
+        <MoveLeft className="w-10 h-10 p-2 hover:bg-gray-300 rounded-full cursor-pointer" onClick={() => window.history.back()}/>
         {/* Heading Section */}
         <div className="bg-white p-6 rounded shadow">
           <h2 className="text-2xl font-bold mb-2">FAQs Categories</h2>

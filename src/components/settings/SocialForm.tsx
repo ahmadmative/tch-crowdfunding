@@ -1,10 +1,11 @@
 import React from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import upload from '../../utils/upload';
 
 interface SocialLink {
   _id?: string;
   name: string;
-  icon: string;
+  icon: string | File;
   link: string;
 }
 
@@ -29,11 +30,17 @@ const SocialForm: React.FC<SocialFormProps> = ({
     link: '',
   });
 
+  const [preview, setPreview] = React.useState<string | null>(null);
+
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
+      if (typeof initialData.icon === 'string') {
+        setPreview(initialData.icon);
+      }
     } else {
       setFormData({ name: '', icon: '', link: '' });
+      setPreview(null);
     }
   }, [initialData]);
 
@@ -42,9 +49,26 @@ const SocialForm: React.FC<SocialFormProps> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData(prev => ({ ...prev, icon: file }));
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    let iconUrl = typeof formData.icon === 'string' ? formData.icon : '';
+
+    if (formData.icon instanceof File) {
+      iconUrl = await upload(formData.icon);
+    }
+
+    onSubmit({
+      ...formData,
+      icon: iconUrl,
+    });
   };
 
   if (!isOpen) return null;
@@ -78,19 +102,23 @@ const SocialForm: React.FC<SocialFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Icon Class/URL *</label>
+            <label className="block text-sm font-medium mb-1">Upload Icon *</label>
             <input
-              type="text"
-              name="icon"
-              value={formData.icon}
-              onChange={handleChange}
-              required
-              placeholder="e.g. fab fa-facebook or image URL"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
               className="w-full border border-gray-300 rounded-md p-2"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Use Font Awesome classes or paste icon URL
-            </p>
+            {preview && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-600 mb-1">Preview:</p>
+                <img
+                  src={preview}
+                  alt="Icon Preview"
+                  className="w-16 h-16 object-cover rounded border"
+                />
+              </div>
+            )}
           </div>
 
           <div>

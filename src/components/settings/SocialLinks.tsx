@@ -120,7 +120,7 @@ const SocialLinks = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     {link.icon.startsWith('http') ? (
-                      <img src={link.icon} alt={link.name} className="h-8 w-8" />
+                      <img src={link.icon} alt={link.name} className="h-10 w-10 bg-blue-500 p-2 rounded-md" />
                     ) : (
                       <i className={`${link.icon} text-xl`} />
                     )}

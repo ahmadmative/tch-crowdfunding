@@ -52,6 +52,12 @@ import CoreContent from './components/CoreContent';
 import FaqsCategories from './components/FaqsCategories';
 import SupportMails from './components/SupportMails';
 import SupportDetails from './components/SupportDetails';
+import SocialLinks from './components/settings/SocialLinks';
+import WriteBlog from './components/Blogs/Write';
+import Blogs from './components/Blogs/Blogs';
+import Blog from './components/Blogs/Blog';
+import GuideEditor from './components/helpGuides/GuideEditor';
+import GuideCategory from './components/helpGuides/GuideCategory';
 
 
 function App() {
@@ -148,6 +154,7 @@ function App() {
               <Route path='features' element={<FeatureSectionUpdate/>} />
               <Route path='testimonial' element={<TestimonialUpdate/>} />
               <Route path="payouts" element={<PayoutUpdate/>} />
+              <Route path="social" element={<SocialLinks/>} />
             </Route>
 
 
@@ -157,6 +164,15 @@ function App() {
 
             <Route path="/support" element={<SupportMails />} />
             <Route path="/support/:id" element={<SupportDetails />} />
+
+            <Route path='/blog/write' element={<WriteBlog />} />
+            <Route path='/blogs' element={<Blogs />} />
+            <Route path='/blog/:id' element={<Blog />} />
+
+
+            <Route path='/guide/write' element={<GuideEditor />} />
+            <Route path='/guide' element={<GuideCategory />} />
+
 
             
 
