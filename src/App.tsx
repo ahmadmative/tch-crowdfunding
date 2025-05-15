@@ -58,6 +58,7 @@ import Blogs from './components/Blogs/Blogs';
 import Blog from './components/Blogs/Blog';
 import GuideEditor from './components/helpGuides/GuideEditor';
 import GuideCategory from './components/helpGuides/GuideCategory';
+import GuideMain from './components/helpGuides/GuideMain';
 
 
 function App() {
@@ -171,7 +172,8 @@ function App() {
 
 
             <Route path='/guide/write' element={<GuideEditor />} />
-            <Route path='/guide' element={<GuideCategory />} />
+            {/* <Route path='/guide' element={<GuideCategory />} /> */}
+            <Route path='/guide' element={<GuideMain />} />
 
 
             

@@ -25,7 +25,7 @@ const EmailTemplateEditorModal = ({ isOpen, onClose, refreshTemplates }: EmailTe
     const variable = `{${activeVariable}}`;
     setTemplate({
       ...template,
-      body: template.body + variable // Append variable at cursor position or end
+      body: template.body + variable 
     });
     setActiveVariable('');
   };

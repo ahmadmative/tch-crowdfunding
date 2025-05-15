@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 // @ts-ignore
@@ -8,6 +8,8 @@ import ImageResize from "quill-image-resize-module-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config/url";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // Register modules
 Quill.register("modules/imageUploader", ImageUploader);
@@ -49,9 +51,9 @@ const modules = {
     },
   },
   imageResize: {
-    parchment: Quill.import('parchment'),
-    modules: ['Resize', 'DisplaySize']
-  }
+    parchment: Quill.import("parchment"),
+    modules: ["Resize", "DisplaySize"],
+  },
 };
 
 const formats = [
@@ -68,11 +70,22 @@ const formats = [
   "align",
 ];
 
+const options: Record<string, string[]> = {
+  "OTP Code Email": ["{{otp_code}}"],
+  "Campaign Creation Email": ["{{campaigner_name}}", "{{amount}}", "{{starting_date}}"],
+  "Donation Receipt to Donors": ["{{donor_name}}", "{{amount}}"],
+  "Donation Receipt to Campaigner": ["{{campaigner_name}}", "{{amount}}"],
+  "Campaign Status Update to Campaigner": ["{{campaigner_name}}", "{{campaign_title}}", "{{status}}"],
+  "To Campaigner on Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}"],
+  "Money WithDrawal Request Accept Email": ["{{name}}", "{{amount}}"],
+};
+
 const EmailTemplateEditor = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const quillRef = useRef<any>(null);
 
   const handleContentChange = (value: string) => setContent(value);
 
@@ -87,28 +100,47 @@ const EmailTemplateEditor = () => {
     };
 
     try {
-      const response = await axios.post(`${BASE_URL}/template/create`, formData);
+      const response = await axios.post(
+        `${BASE_URL}/template/create`,
+        formData
+      );
       console.log(response.data);
       toast.success("Email template sent successfully!");
       setTitle("");
       setDescription("");
       setContent("");
     } catch (error: any) {
-      toast.error("Error, please try again.", error);
+      toast.error("Error, please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Insert selected code at current cursor position
+  const insertCode = (code: string) => {
+    const editor = quillRef.current?.getEditor();
+    const range = editor?.getSelection();
+    if (range) {
+      editor.insertText(range.index, code);
+    }
+  };
+
   return (
-    <div className="w-full px-4 py-28 bg-gray-50 min-h-screen">
-      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div className="w-full px-4 min-h-screen">
+      <div className="max-w-6xl  mx-auto bg-white rounded-lg shadow-md p-6">
+        <Link
+          to="/notifications"
+          className="flex items-center w-[40px] h-[40px]  justify-center hover:bg-gray-200 rounded-full mb-4"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </Link>
+
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Write New Email Template
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title (Dropdown) */}
+          {/* Title Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Title
@@ -119,11 +151,11 @@ const EmailTemplateEditor = () => {
               className="w-full p-2 mt-1 border border-gray-300 rounded-md"
             >
               <option value="">Select an event</option>
-              <option value="Donation Receipt to Donors">Donation Receipt to Donors</option>
-              <option value="Donation Receipt to Campaigner">Donation Receipt to Campaigner</option>
-              <option value="Campaign Status Update to Campaigner">Campaign Status Update to Campaigner by Admin</option>
-              {/* <option value="To Admin on New Campaign Creation">To Admin on New Campaign Creation</option> */}
-              <option value="To Campaigner on Campaign Completion">To Campaigner on Campaign Completion</option>
+              {Object.keys(options).map((key) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -140,13 +172,33 @@ const EmailTemplateEditor = () => {
             />
           </div>
 
-          {/* Content Editor */}
+          {/* Code Buttons */}
+          {title && options[title]?.length > 0 && (
+            <div className="flex flex-wrap gap-2 bg-gray-100 p-2 rounded-md">
+              <span className="text-sm font-medium text-gray-700">
+                Available Codes:
+              </span>
+              {options[title].map((code) => (
+                <button
+                  type="button"
+                  key={code}
+                  onClick={() => insertCode(code)}
+                  className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition"
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Quill Editor */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               Content
             </label>
             <div className="bg-white rounded-md">
               <ReactQuill
+                ref={quillRef}
                 value={content}
                 onChange={handleContentChange}
                 className="h-96"
@@ -158,7 +210,7 @@ const EmailTemplateEditor = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="flex justify-end">
             <button
               type="submit"

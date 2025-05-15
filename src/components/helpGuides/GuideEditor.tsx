@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageUploader from "quill-image-uploader";
@@ -8,24 +8,17 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BASE_URL } from "../../config/url";
-import upload from "../../utils/upload";
-import { ArrowLeft } from "lucide-react";
+import upload, { uploadMedia } from "../../utils/upload";
 import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
-
-// Register ImageUploader module for Quill
 Quill.register("modules/imageUploader", ImageUploader);
 
 const modules = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
+    [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
     ["link", "image"],
     ["clean"],
   ],
@@ -36,15 +29,12 @@ const modules = {
         const formData = new FormData();
         formData.append("image", file);
 
-        fetch(
-          "https://api.imgbb.com/1/upload?key=055aee72cc2132ca184d425fba12b72a",
-          {
-            method: "POST",
-            body: formData,
-          }
-        )
-          .then((response) => response.json())
-          .then((result) => resolve(result.data.url))
+        fetch("https://api.imgbb.com/1/upload?key=055aee72cc2132ca184d425fba12b72a", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => resolve(data.data.url))
           .catch(() => reject("Upload failed"));
       });
     },
@@ -52,44 +42,66 @@ const modules = {
 };
 
 const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "indent",
-  "link",
-  "image",
+  "header", "bold", "italic", "underline", "strike", "blockquote",
+  "list", "indent", "link", "image"
 ];
 
 const GuideEditor: React.FC = () => {
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [category, setCategory] = useState("");
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [videoProgress, setVideoProgress] = useState<number>(0);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const handleContentChange = (value: string) => setContent(value);
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/guide-category?active=true`);
+      setCategories(res.data);
+    } catch {
+      toast.error("Failed to fetch categories");
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return toast.error("No file selected!");
-
-    const formData = new FormData();
-    formData.append("image", file);
-
     toast.info("Uploading cover image...");
-    
     const url = await upload(file);
     setCoverImage(url);
-    toast.success("Cover image uploaded successfully!");
+    toast.success("Cover image uploaded!");
+  };
+
+  const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setVideoFile(file);
+    setVideoProgress(0);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    let videoLink = videoUrl;
+    if (videoFile) {
+      toast.info("Uploading video...");
+      const uploadRes = await uploadMedia(videoFile, setVideoProgress);
+      // @ts-ignore
+      videoLink = uploadRes.url;
+      toast.success("Video uploaded!");
+    }
+
+    console.log("Video link:", videoLink);
 
     if (!coverImage) {
       toast.error("Please upload a cover image!");
@@ -102,126 +114,94 @@ const GuideEditor: React.FC = () => {
       image: coverImage,
       description,
       content,
+      category,
+      videoUrl: videoLink,
     };
 
-    try {
-      const response = await axios.post(`${BASE_URL}/blog`, formData);
-      console.log(response.data);
-      toast.success("Blog published successfully!");
-      // Reset form
-      setTitle("");
-      setDescription("");
-      setContent("");
-      setCoverImage(null);
-    } catch (error) {
-      toast.error("Error publishing blog. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    await axios.post(`${BASE_URL}/guide`, formData);
+    toast.success("Blog published!");
+
+    // Reset form
+    setCategory("");
+    setTitle("");
+    setDescription("");
+    setContent("");
+    setCoverImage(null);
+    setVideoUrl("");
+    setVideoFile(null);
+    setVideoProgress(0);
+  } catch {
+    toast.error("Error publishing guide. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
-    <div className="w-full px-4 py-2  min-h-screen">
-        {/* <Link to="/blogs" className="flex items-center gap-2 mb-8">
-            <ArrowLeft className="w-6 h-6"/>
-        </Link> */}
-      <ToastContainer 
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+    <div className="w-full px-4 py-2 min-h-screen">
+      <Link className="flex items-center justify-center mb-2 gap-2 hover:bg-gray-200 w-[50px] h-[50px] rounded-full" to="/guide">
+        <ArrowLeft className="w-6 h-6" />
+      </Link>
+      <ToastContainer />
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Write New Blog Post</h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Cover Image Upload */}
+          {/* Cover Image */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Cover Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              id="cover-image"
-              onChange={handleImageUpload}
-            />
+            <input type="file" accept="image/*" className="hidden" id="cover-image" onChange={handleImageUpload} />
             <div className="flex items-center gap-4">
-              <label
-                htmlFor="cover-image"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md shadow cursor-pointer hover:bg-blue-700 transition-colors"
-              >
+              <label htmlFor="cover-image" className="px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700">
                 {coverImage ? "Change Cover Image" : "Upload Cover Image"}
               </label>
-              {coverImage && (
-                <img
-                  src={coverImage}
-                  alt="Cover Preview"
-                  className="max-w-xs h-32 object-cover rounded-md border border-gray-200"
-                />
-              )}
+              {coverImage && <img src={coverImage} alt="Preview" className="max-w-xs h-32 object-cover rounded-md" />}
             </div>
           </div>
 
-          {/* Title Input */}
+          {/* Video Upload */}
           <div className="space-y-2">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter your blog title"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-700">Video Upload</label>
+            <input type="file" accept="video/*" onChange={handleVideoChange} />
+            {videoProgress > 0 && (
+              <div className="w-full bg-gray-200 rounded h-4 overflow-hidden">
+                <div className="bg-blue-500 h-4 transition-all" style={{ width: `${videoProgress}%` }}></div>
+              </div>
+            )}
           </div>
 
-          {/* Description Input */}
+          {/* Category */}
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter a short description"
-              rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+            <select id="category" value={category} onChange={(e) => setCategory(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-md">
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>{cat.name}</option>
+              ))}
+            </select>
           </div>
 
-          {/* Content Editor */}
+          {/* Title */}
+          <div className="space-y-2">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+            <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="description" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-md" />
+          </div>
+
+          {/* Content */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Content</label>
-            <div className="bg-white rounded-md">
-              <ReactQuill
-                value={content}
-                onChange={handleContentChange}
-                className="h-96"
-                theme="snow"
-                placeholder="Write your blog content here..."
-                modules={modules}
-                formats={formats}
-              />
-            </div>
+            <ReactQuill value={content} onChange={setContent} modules={modules} formats={formats} className="h-96" />
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-6 mt-[70px] py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50">
               {isSubmitting ? "Publishing..." : "Publish Blog"}
             </button>
           </div>

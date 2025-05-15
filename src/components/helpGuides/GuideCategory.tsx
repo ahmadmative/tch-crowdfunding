@@ -72,7 +72,7 @@ const GuideCategory = () => {
               <td className="py-2 px-4 border-b">
                 {cat.isActive ? 'Active' : 'Inactive'}
               </td>
-              <td className="py-2 px-4 border-b flex gap-2">
+              <td className="py-5 px-4 border-b flex gap-2">
                 <button
                   onClick={() => handleEdit(cat)}
                   className="text-blue-600 hover:text-blue-800"
