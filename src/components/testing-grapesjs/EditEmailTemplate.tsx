@@ -73,10 +73,10 @@ const options: Record<string, string[]> = {
   "OTP Code Email": ["{{otp_code}}"],
   "Campaign Creation Email": ["{{campaigner_name}}", "{{amount}}", "{{starting_date}}"],
   "Donation Receipt to Donors": ["{{donor_name}}", "{{amount}}"],
-  "Donation Receipt to Campaigner": ["{{campaigner_name}}", "{{amount}}"],
+  "Donation Receipt to Campaigner": ["{{campaigner_name}}", "{{amount}}", "{{campaign_name}}"],
   "Campaign Status Update to Campaigner": ["{{campaigner_name}}", "{{campaign_title}}", "{{status}}"],
   "To Campaigner on Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}"],
-  "Money WithDrawal Request Accept Email": ["{{name}}", "{{amount}}"],
+  "Money WithDrawal Request Email": ["{{admin_name}}", "{{amount}}"],
 };
 
 const EditEmailTemplateEditor = () => {
