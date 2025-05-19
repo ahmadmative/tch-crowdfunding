@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { ArrowLeft, User } from "lucide-react";
 
 const CampaignDetails = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const CampaignDetails = () => {
     }
   }, [location]);
 
-  const handleStatusChange = async () =>{
+  const handleStatusChange = async () => {
     console.log(status);
     const token = localStorage.getItem("token");
 
@@ -61,9 +62,7 @@ const CampaignDetails = () => {
         toast.error("Failed to update campaign status");
       }
     });
-  }
-
-  
+  };
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -81,8 +80,6 @@ const CampaignDetails = () => {
     fetchCampaign();
   }, [id]);
 
-
-
   if (!campaign)
     return (
       <div className="flex items-center justify-center h-screen">
@@ -92,7 +89,10 @@ const CampaignDetails = () => {
 
   return (
     <div className="max-w-[1200px] mx-auto p-4 flex md:flex-row flex-col gap-5 justify-between pt-[40px] overflow-x-hidden font-sans">
-      {/* upper section */}
+      <Link to={"/campaigns"}>
+        <ArrowLeft className="w-6 h-6 text-black" />
+      </Link>
+      {/* top section */}
       <div className="flex justify-between md:w-[75%] w-full">
         <div className="flex flex-col bg-white p-4 border border-gray-400 rounded-xl">
           {/* image section */}
@@ -136,15 +136,16 @@ const CampaignDetails = () => {
             {/* avatar and location section */}
 
             <div className="flex items-center gap-2 h-[50px]">
-              <img
-                src={
-                  campaign?.userDetails[0].profilePicture
-                    ? "/campaign.userId.profilePicture"
-                    : "/user.png"
-                }
-                alt="location"
-                className="w-[50px] h-full rounded-md"
-              />
+              {campaign?.userDetails?.[0]?.profilePicture ? (
+                <img
+                  src={campaign.userDetails[0].profilePicture}
+                  alt="UP"
+                  className="w-[50px] h-full rounded-md"
+                />
+              ) : (
+                <User className="w-[50px] h-full rounded-md" />
+              )}
+
 
               <div className="flex flex-col h-full justify-between">
                 <p className="text-normal font-bold text-black font-onest">
@@ -167,8 +168,6 @@ const CampaignDetails = () => {
                 R{campaign?.amount}
               </p>
             </div>
-
-            
           </div>
 
           {/* campaign details section */}
@@ -231,14 +230,14 @@ const CampaignDetails = () => {
                   Status:
                 </p>
                 <p
-                  className={`text-sm font-bold py-2 font-onest rounded-lg p-2 ${
+                  className={`flex items-center justify-center text-sm font-bold py-1 font-onest rounded-full px-4 ${
                     status === "active"
-                      ? "bg-[#bcef4e] text-black"
+                      ? "bg-green-400 text-green-800"
                       : status === "cancelled"
-                      ? "bg-red-500 text-white"
+                      ? "bg-red-500 text-red-800"
                       : status === "pending"
-                      ? "bg-yellow-500 text-black"
-                      : "bg-gray-300 text-black"
+                      ? "bg-yellow-500 text-yellow-900"
+                      : "bg-gray-300 text-gray-700"
                   }`}
                 >
                   {status}
@@ -247,57 +246,49 @@ const CampaignDetails = () => {
             </>
           )}
 
-          
+          <div className="w-full p-4">
+            <p className="text-sm font-bold text-black py-2 font-onest">
+              Admin Actions:
+            </p>
 
-          
-            <div className="w-full p-4">
-              <p className="text-sm font-bold text-black py-2 font-onest">
-                Admin Actions:
-              </p>
-
-              <div className="flex  items-center justify-between gap-3">
-                {/* Dropdown */}
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="action"
-                    className="text-sm font-medium text-gray-700"
-                  >
-                    Select Action
-                  </label>
-
-                  <select
-                    id="action"
-                    name="action"
-                    onChange={(e) => setDropDownStatus(e.target.value)}
-                    className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
-                  >
-                    <option value="">Select Action</option>
-                    <option value="active">Approve</option>
-                    <option value="cancelled">Reject</option>
-                    <option value="inactive">Pause</option>
-                  </select>
-                  <button 
-                    className="bg-gray-900  mt-4 flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
-                    onClick={handleStatusChange}
-                  >Apply Changes</button>
-                </div>
-
-                {/* Edit Button */}
-                <Link
-                  to={`/admin/campaigns/${id}/edit`}
-                  className="bg-gray-900 w-[100px] flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
+            <div className="flex  items-center justify-between gap-3">
+              {/* Dropdown */}
+              <div className="flex flex-col gap-1">
+                <label
+                  htmlFor="action"
+                  className="text-sm font-medium text-gray-700"
                 >
-                  Edit
-                </Link>
+                  Select Action
+                </label>
+
+                <select
+                  id="action"
+                  name="action"
+                  onChange={(e) => setDropDownStatus(e.target.value)}
+                  className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+                >
+                  <option value="">Select Action</option>
+                  <option value="active">Approve</option>
+                  <option value="cancelled">Reject</option>
+                  <option value="inactive">Pause</option>
+                </select>
+                <button
+                  className="bg-gray-900  mt-4 flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
+                  onClick={handleStatusChange}
+                >
+                  Apply Changes
+                </button>
               </div>
+
+              {/* Edit Button */}
+              <Link
+                to={`/admin/campaigns/${id}/edit`}
+                className="bg-gray-900 w-[100px] flex items-center justify-center text-white px-4 py-2 rounded-full text-sm font-bold h-[40px] shadow-md hover:scale-105 transition-transform  duration-300"
+              >
+                Edit
+              </Link>
             </div>
-        
-
-          
-
-         
-
-          
+          </div>
         </div>
       </div>
 
