@@ -7,6 +7,7 @@ import { AuthContext } from '../context/userContext';
 import Notification from '../components/notification/Notification';
 import GoogleLoginButton from '../components/home/GoogleButton';
 import MicrosoftLoginButton from '../components/home/MicrosoftButton';
+import { useAppConfig } from '../context/AppConfigContext';
 
 const AdminSignIn = () => {
     const [hide, setHide] = useState(true);
@@ -27,6 +28,7 @@ const AdminSignIn = () => {
       isAdmin: false,
       profilePicture: ""
     });
+    const { config } = useAppConfig();
 
     const handleChange = (e : any) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -72,7 +74,7 @@ const AdminSignIn = () => {
       {error && <Notification isOpen={true} title="Error" message={error} type="error" onClose={() => setError('')} />}
       <div className="w-full max-w-md space-y-8 bg-white px-8 py-12 rounded-xl shadow-lg">
         <div className='flex items-center justify-center'>
-          <img src="/nav-logo.png" alt="logo" className='w-[150px] h-[50px]'/>
+          <img src={config?.logo} alt="logo" className='w-[150px] h-[50px]'/>
         </div>
 
         

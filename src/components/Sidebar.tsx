@@ -4,7 +4,8 @@ import {
   HomeIcon, ChartBarIcon, UsersIcon, FolderIcon, 
   CreditCardIcon, ChartPieIcon, BellIcon, CogIcon,
   DocumentTextIcon, QuestionMarkCircleIcon, InformationCircleIcon,
-  CurrencyDollarIcon
+  CurrencyDollarIcon,
+  BuildingOffice2Icon
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../context/userContext';
 
@@ -25,6 +26,11 @@ const menuItems: MenuItem[] = [
     name: 'Users & Roles',
     icon: UsersIcon,
     path: '/users'
+  },
+  {
+    name: 'Organizations',
+    icon: BuildingOffice2Icon,
+    path: '/organizations'
   },
   {
     name: 'Campaigns',

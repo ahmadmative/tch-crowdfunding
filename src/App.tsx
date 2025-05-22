@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -59,9 +59,21 @@ import Blog from './components/Blogs/Blog';
 import GuideEditor from './components/helpGuides/GuideEditor';
 import GuideCategory from './components/helpGuides/GuideCategory';
 import GuideMain from './components/helpGuides/GuideMain';
+import { useAppConfig } from './context/AppConfigContext';
+import OrganizationManagement from './components/OrganizationManagement';
+import OrganizationDetails from './components/organization/OrganizationDetails';
 
 
 function App() {
+
+  const { config } = useAppConfig();
+
+  useEffect(() => {
+    if (config?.name) {
+      document.title = config.name;
+    }
+  }, [config]);
+
 
   return (
     <AuthProvider>
@@ -119,6 +131,15 @@ function App() {
               <Route path="performance" element={<CampaignsManagement />} />
               
             </Route>
+
+            <Route path="organizations">
+              <Route index element={<OrganizationManagement />} />
+              <Route path=":id" element={<OrganizationDetails/>} />
+
+            </Route>
+
+
+
             <Route path="donations">
               <Route index element={<DonationsManagement />} />
               <Route path="settings" element={<DonationsManagement />} />
@@ -133,6 +154,8 @@ function App() {
               <Route path="donor" element={<ReportsAnalytics />} />
               <Route path="custom" element={<ReportsAnalytics />} />
             </Route>
+
+
             <Route path="notifications">
               <Route index element={<NotificationsEmails />} />
               <Route path="center" element={<NotificationsEmails />} />

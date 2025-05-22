@@ -121,7 +121,7 @@ const CampaignCard: React.FC<{
         />
       </div>
 
-      {!admin && !campaigner && (
+      {/* {!admin && !campaigner && (
         <div className="flex items-center justify-center">
           <Link
             to={`/home/campaigns/${campaign._id}`}
@@ -130,7 +130,7 @@ const CampaignCard: React.FC<{
             Donate Now
           </Link>
         </div>
-      )}
+      )} */}
 
       {admin && (
         <div className="flex items-center justify-center gap-2">
