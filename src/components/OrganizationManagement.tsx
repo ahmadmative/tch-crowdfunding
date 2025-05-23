@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import OrganizationList from './organization/OrganizationList';
 import OrganizationStats from './organization/OrganizationStats'; 
+import OrganizationRequests from './organization/OrganizationRequests';
+import OrganizationSuspended from './organization/OrganizationSuspended';
 
 const OrganizationManagement = () => {
-  const [activeTab, setActiveTab] = useState('statistics');
+  const [activeTab, setActiveTab] = useState('list');
 
   return (
     <div className="p-4">
       <div className="flex border-b mb-4">
-        <button
+        {/* <button
           className={`px-4 py-2 font-medium ${
             activeTab === 'statistics'
               ? 'border-b-2 border-blue-500 text-blue-500'
@@ -17,7 +19,7 @@ const OrganizationManagement = () => {
           onClick={() => setActiveTab('statistics')}
         >
           Organization Statistics
-        </button>
+        </button> */}
         <button
           className={`px-4 py-2 font-medium ml-4 ${
             activeTab === 'list'
@@ -28,10 +30,39 @@ const OrganizationManagement = () => {
         >
           Organization List
         </button>
+
+        <button
+          className={`px-4 py-2 font-medium ml-4 ${
+            activeTab === 'requests'
+              ? 'border-b-2 border-blue-500 text-blue-500'
+              : 'text-gray-600'
+          }`}
+          onClick={() => setActiveTab('requests')}
+        >
+          Organization Requests
+        </button>
+
+        <button
+          className={`px-4 py-2 font-medium ml-4 ${
+            activeTab === 'suspended'
+              ? 'border-b-2 border-blue-500 text-blue-500'
+              : 'text-gray-600'
+          }`}
+          onClick={() => setActiveTab('suspended')}
+        >
+          Organization Suspended
+        </button>
+
+
       </div>
+
+
 
       {activeTab === 'statistics' && <OrganizationStats />}
       {activeTab === 'list' && <OrganizationList />}
+      {activeTab === 'requests' && <OrganizationRequests />}
+      {activeTab === 'suspended' && <OrganizationSuspended />}
+
     </div>
   );
 };

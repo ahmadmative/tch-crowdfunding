@@ -1,42 +1,31 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { BASE_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 
-interface Member {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-}
-
 interface Organization {
   _id: string;
   name: string;
   logo: string;
-  totalDonations: number;
   city: string;
   country: string;
-  members: Member[];
+  members?: any[];
+  totalDonations?: number;
 }
 
-const ITEMS_PER_PAGE = 5;
-
-const OrganizationList: React.FC = () => {
+const OrganizationRequests: React.FC = () => {
   const [data, setData] = useState<Organization[]>([]);
-  const [filteredData, setFilteredData] = useState<Organization[]>([]);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 5;
 
   const fetchOrganizations = async () => {
     try {
-      const res = await axios.get<Organization[]>(`${BASE_URL}/organization?status=active`);
+      const res = await axios.get(`${BASE_URL}/organization?status=pending`);
       setData(res.data);
-      setFilteredData(res.data);
     } catch (error) {
       toast.error('Error fetching organizations');
     } finally {
@@ -48,8 +37,12 @@ const OrganizationList: React.FC = () => {
     fetchOrganizations();
   }, []);
 
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value.toLowerCase());
+    setCurrentPage(1);
+  };
 
-  const handleStatus = async (id: string, status: 'suspended' ) => {
+  const handleStatus = async (id: string, status: 'approved' | 'rejected') => {
     try {
       await axios.patch(`${BASE_URL}/organization/status/${id}`, { status });
       toast.success(`Organization ${status}`);
@@ -59,32 +52,22 @@ const OrganizationList: React.FC = () => {
     }
   };
 
-
-
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearch(value);
-    const filtered = data.filter((org) =>
-      org.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredData(filtered);
-    setCurrentPage(1);
-  };
-
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+  const filteredData = data.filter((org) =>
+    org.name.toLowerCase().includes(search)
   );
 
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
-      <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-2xl font-semibold">Organizations</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">Pending Organizations</h2>
         <input
           type="text"
           value={search}
@@ -95,13 +78,11 @@ const OrganizationList: React.FC = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full">
+        <table className="min-w-full text-sm">
           <thead>
             <tr className="border-b">
               <th className="text-left py-3 px-4">Logo</th>
-              <th className="text-left py-3 px-4">Title</th>
-              <th className="text-left py-3 px-4">Total Members</th>
-              <th className="text-left py-3 px-4">Donation Collected</th>
+              <th className="text-left py-3 px-4">Name</th>
               <th className="text-left py-3 px-4">City</th>
               <th className="text-left py-3 px-4">Country</th>
               <th className="text-left py-3 px-4">Action</th>
@@ -118,30 +99,34 @@ const OrganizationList: React.FC = () => {
                   />
                 </td>
                 <td className="py-3 px-4">{org.name}</td>
-                <td className="py-3 px-4">{org.members?.length || 0}</td>
-                <td className="py-3 px-4">{org.totalDonations || 0}</td>
                 <td className="py-3 px-4">{org.city}</td>
                 <td className="py-3 px-4">{org.country}</td>
-                <td className="py-3 px-4 ">
-                  <div className='flex gap-2 items-center  justify-end py-1 px-2 rounded-md'>
-                    <Link
+                <td className="py-3 px-4 flex gap-2">
+                  <Link
                     to={`/organizations/${org._id}`}
                     className="text-blue-600 hover:text-blue-800 underline"
+                    title="View"
                   >
-                    <Eye/>
+                    <Eye size={18} />
                   </Link>
-
-                  <p className='text-red-600 hover:text-red-800 underline ml-2 cursor-pointer' onClick={() => handleStatus(org._id, 'suspended')}>Suspend</p>
-                
-
-                  </div>
-                  
+                  <button
+                    onClick={() => handleStatus(org._id, 'approved')}
+                    className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleStatus(org._id, 'rejected')}
+                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Cancel
+                  </button>
                 </td>
               </tr>
             ))}
             {paginatedData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-4 text-gray-500">
+                <td colSpan={5} className="text-center py-4 text-gray-500">
                   No results found.
                 </td>
               </tr>
@@ -150,7 +135,6 @@ const OrganizationList: React.FC = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 space-x-2">
           <button
@@ -184,4 +168,4 @@ const OrganizationList: React.FC = () => {
   );
 };
 
-export default OrganizationList;
+export default OrganizationRequests;

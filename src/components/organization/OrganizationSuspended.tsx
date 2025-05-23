@@ -25,7 +25,7 @@ interface Organization {
 
 const ITEMS_PER_PAGE = 5;
 
-const OrganizationList: React.FC = () => {
+const OrganizationSuspended: React.FC = () => {
   const [data, setData] = useState<Organization[]>([]);
   const [filteredData, setFilteredData] = useState<Organization[]>([]);
   const [search, setSearch] = useState<string>('');
@@ -34,7 +34,7 @@ const OrganizationList: React.FC = () => {
 
   const fetchOrganizations = async () => {
     try {
-      const res = await axios.get<Organization[]>(`${BASE_URL}/organization?status=active`);
+      const res = await axios.get<Organization[]>(`${BASE_URL}/organization?status=suspended`);
       setData(res.data);
       setFilteredData(res.data);
     } catch (error) {
@@ -48,8 +48,7 @@ const OrganizationList: React.FC = () => {
     fetchOrganizations();
   }, []);
 
-
-  const handleStatus = async (id: string, status: 'suspended' ) => {
+  const handleStatus = async (id: string, status: 'active' ) => {
     try {
       await axios.patch(`${BASE_URL}/organization/status/${id}`, { status });
       toast.success(`Organization ${status}`);
@@ -58,9 +57,6 @@ const OrganizationList: React.FC = () => {
       toast.error(`Failed to ${status} organization`);
     }
   };
-
-
-
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -122,20 +118,18 @@ const OrganizationList: React.FC = () => {
                 <td className="py-3 px-4">{org.totalDonations || 0}</td>
                 <td className="py-3 px-4">{org.city}</td>
                 <td className="py-3 px-4">{org.country}</td>
-                <td className="py-3 px-4 ">
-                  <div className='flex gap-2 items-center  justify-end py-1 px-2 rounded-md'>
+                <td className="py-3 px-4">
+                  <div className='flex gap-2'>
                     <Link
                     to={`/organizations/${org._id}`}
                     className="text-blue-600 hover:text-blue-800 underline"
                   >
                     <Eye/>
                   </Link>
-
-                  <p className='text-red-600 hover:text-red-800 underline ml-2 cursor-pointer' onClick={() => handleStatus(org._id, 'suspended')}>Suspend</p>
+                  <p onClick={() => handleStatus(org._id, 'active')} className="text-blue-600 hover:text-blue-800 underline cursor-pointer">Active</p>
+  
+                  </div>                
                 
-
-                  </div>
-                  
                 </td>
               </tr>
             ))}
@@ -184,4 +178,4 @@ const OrganizationList: React.FC = () => {
   );
 };
 
-export default OrganizationList;
+export default OrganizationSuspended;
