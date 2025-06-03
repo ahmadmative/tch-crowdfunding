@@ -5,7 +5,8 @@ import {
   CreditCardIcon, ChartPieIcon, BellIcon, CogIcon,
   DocumentTextIcon, QuestionMarkCircleIcon, InformationCircleIcon,
   CurrencyDollarIcon,
-  BuildingOffice2Icon
+  BuildingOffice2Icon,
+  StarIcon
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../context/userContext';
 
@@ -48,7 +49,7 @@ const menuItems: MenuItem[] = [
     path: '/reports'
   },
   {
-    name: 'Email Notifications',
+    name: 'Notifications',
     icon: BellIcon,
     path: '/notifications'
   },

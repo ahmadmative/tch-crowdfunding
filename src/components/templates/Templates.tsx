@@ -40,7 +40,7 @@ const TemplatesComponent = ({ templates }: TemplatesComponentProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         {filteredTemplates.map((template: Template) => (
           <div key={template._id} className="border rounded-lg p-4">
             <div className="flex justify-between items-start">

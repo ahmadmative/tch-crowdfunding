@@ -242,7 +242,7 @@ const NotificationsEmails: React.FC = () => {
           />
 
           <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex  justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Email Templates</h3>
               <Link
                 to={"/builder"}

@@ -14,6 +14,8 @@ import axios from "axios";
 import { BASE_URL } from "../config/url";
 import upload from "../utils/upload";
 import SocialLinks from "./settings/SocialLinks";
+import { toast } from "react-toastify";
+import Integrations from "./settings/Integrations";
 
 // Mock data for access logs
 const accessLogsData = [
@@ -77,6 +79,7 @@ const Settings: React.FC = () => {
   const [appData, setAppData] = useState<any>(null);
   const [appName, setAppName] = useState("");
   const [logo, setLogo] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const urlRole = pathname.split("/").pop();
@@ -101,10 +104,12 @@ const Settings: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     let logoUrl = appData?.logo || "";
     if (logo) {
-      logoUrl = await upload(logo); // Assuming `upload()` returns URL of uploaded logo
+      toast.info("Uploading logo...");
+      logoUrl = await upload(logo); 
     }
 
     try {
@@ -112,9 +117,12 @@ const Settings: React.FC = () => {
         name: appName,
         logo: logoUrl,
       });
-      setAppData(res.data);
+      toast.success("Branding updated successfully");
+      fetch();
     } catch (error) {
       console.error("Failed to update branding:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,7 +181,7 @@ const Settings: React.FC = () => {
             Social Media Links
           </button>
 
-          {/* <button
+          <button
             onClick={() => setSelectedTab('integrations')}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
               selectedTab === 'integrations'
@@ -183,7 +191,7 @@ const Settings: React.FC = () => {
           >
             <PuzzlePieceIcon className="h-5 w-5 mr-2" />
             Integrations
-          </button> */}
+          </button>
         </nav>
       </div>
 
@@ -234,6 +242,7 @@ const Settings: React.FC = () => {
 
                 <button
                   type="submit"
+                  disabled={loading}
                   className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
                 >
                   Save
@@ -363,7 +372,7 @@ const Settings: React.FC = () => {
       )}
 
       {/* Integrations Tab */}
-      {selectedTab === "integrations" && (
+      {/* {selectedTab === "integrations" && (
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Connected Services</h2>
@@ -453,7 +462,7 @@ const Settings: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
 
       {/* social media links */}
@@ -463,6 +472,18 @@ const Settings: React.FC = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Social Media Links</h2>
             <SocialLinks/>
+          </div>
+
+          
+        </div>
+      )}
+
+
+      {selectedTab === "integrations" && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-lg font-semibold mb-4">Integration Key</h2>
+            <Integrations/>
           </div>
 
           

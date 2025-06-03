@@ -6,8 +6,23 @@ import axios from 'axios';
 import { BASE_URL } from '../config/url';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import { HeartIcon } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 
+const fetchWithAuth = (endpoint: string) => {
+  return axios.get(`${BASE_URL}${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+};
+
+const fetchCampaignStats = () => fetchWithAuth('/analytics/campaign/stats');
+const fetchCampaignStatus = () => fetchWithAuth('/analytics/campaign/status');
+const fetchFundsRaised = () => fetchWithAuth('/analytics/campaign/funds-raised');
+const fetchTopCampaigns = () => fetchWithAuth('/analytics/campaign/top-campaigns');
+const fetchAllCampaigns = () => fetchWithAuth('/analytics/campaign/all-campaigns')
 
 const CampaignsManagement: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('stats');
@@ -52,59 +67,45 @@ const CampaignsManagement: React.FC = () => {
 
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchAllData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/analytics/campaign/stats`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          }
-        })
-        setCardData(res.data)
-        console.log(res.data)
+        const [
+          statsRes,
+          statusRes,
+          fundsRes,
+          topRes,
+          allRes
+        ] = await Promise.all([
+          fetchCampaignStats(),
+          fetchCampaignStatus(),
+          fetchFundsRaised(),
+          fetchTopCampaigns(),
+          fetchAllCampaigns()
+        ]);
 
-        const res2 = await axios.get(`${BASE_URL}/analytics/campaign/status`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          }
-        })
-        setCampaignStatusData(res2.data)
-        console.log(res2.data)
+        setCardData(statsRes.data);
+        setCampaignStatusData(statusRes.data);
+        setFundsOverTimeData(fundsRes.data);
+        setTopCampaignsData(topRes.data);
+        setOriginalCampaignsData(allRes.data);
+        setCampaignsData(allRes.data);
 
-        const res3 = await axios.get(`${BASE_URL}/analytics/campaign/funds-raised`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          }
-        })
-        setFundsOverTimeData(res3.data)
-        console.log(res3.data)
-
-        const res4 = await axios.get(`${BASE_URL}/analytics/campaign/top-campaigns`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          }
-        })
-        setTopCampaignsData(res4.data)
-        console.log(res4.data)
-
-        const res5 = await axios.get(`${BASE_URL}/analytics/campaign/all-campaigns`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          }
-        })
-        setOriginalCampaignsData(res5.data);
-        setCampaignsData(res5.data)
-        console.log(res5.data)
-
+        console.log('Stats:', statsRes.data);
+        console.log('Status:', statusRes.data);
+        console.log('Funds:', fundsRes.data);
+        console.log('Top:', topRes.data);
+        console.log('All:', allRes.data);
 
       } catch (err: any) {
-        console.log(err)
-        setError(err.message)
+        console.error(err);
+        setError(err.message || 'Something went wrong');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetch()
-  }, [])
+    };
+
+    fetchAllData();
+  }, []);
 
 
   // filter 
@@ -135,6 +136,23 @@ const CampaignsManagement: React.FC = () => {
 
     setCampaignsData(filtered);
   }, [search, status, selectedTab, originalCampaignsData]);
+
+
+  const handleFavourite=async(id:number)=>{
+    try {
+      const res = await axios.patch(`${BASE_URL}/campaigns/favourite/${id}`)
+      
+      toast.success("Favourite Status Updated");
+
+      const allRes = await fetchAllCampaigns()
+      setCampaignsData(allRes.data);
+
+      
+    } catch (error: any) {
+      toast.error("something went wrong");
+    }
+  }
+   
 
 
 
@@ -321,12 +339,13 @@ const CampaignsManagement: React.FC = () => {
                   <th className="text-left py-3 px-4">Progress</th>
                   <th className="text-left py-3 px-4">Start Date</th>
                   <th className="text-left py-3 px-4">End Date</th>
+                  <th className="text-left py-3 px-4">Favourite</th>
                   <th className="text-left py-3 px-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {campaignsData.map((campaign: any) => (
-                  <tr key={campaign.id} className="border-b">
+                  <tr key={campaign._id} className="border-b">
                     <td className="py-3 px-4">{campaign.title}</td>
                     <td className="py-3 px-4">{campaign.userDetails.name}</td>
                     <td className="py-3 px-4">
@@ -348,6 +367,7 @@ const CampaignsManagement: React.FC = () => {
                     </td>
                     <td className="py-3 px-4">{dayjs(campaign.startDate).format('DD-MM-YYYY')}</td>
                     <td className="py-3 px-4">{dayjs(campaign.endDate).format('DD-MM-YYYY')}</td>
+                    <td className="py-3 px-4">{campaign.isFavourite? <HeartIcon className="w-5 h-5 text-red-500" onClick={() => handleFavourite(campaign._id)}/>  : <HeartIcon className="w-5 h-5 text-gray-500" onClick={() => handleFavourite(campaign._id)}/>}</td>
                     <td className="py-3 px-4">
                       <div className="flex space-x-2">
                         <Link
@@ -356,7 +376,7 @@ const CampaignsManagement: React.FC = () => {
                         >
                           <EyeIcon className="h-5 w-5" />
                         </Link>
-                        {campaign.status === 'Pending' && (
+                        {campaign.status === 'pending' && (
                           <>
                             <button className="text-green-600 hover:text-green-800">
                               <CheckIcon className="h-5 w-5" />
