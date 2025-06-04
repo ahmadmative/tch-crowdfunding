@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FaqModal from "./faqs/FaqModal";
 import { Link } from "react-router-dom";
+import { EditIcon, TrashIcon } from "lucide-react";
 
 interface FAQ {
   category: any; // Category will be an ObjectId (string) of the category
@@ -90,17 +91,16 @@ export default function FAQsUpdate() {
       return;
     }
 
-    fetchFaqs()
+    
 
     const updatedQuestions = [...faqs.questions];
 
     if (editIndex !== null) {
-      updatedQuestions[editIndex] = {
-        category: selectedCategory,
-        question,
-        answer,
-      };
+      updatedQuestions[editIndex] = { category: selectedCategory, question, answer };
+      // fetchFaqs()
+      
       toast.success("Question updated");
+      
     } else {
       updatedQuestions.push({ category: selectedCategory, question, answer });
       toast.success("Question added");
@@ -251,13 +251,13 @@ export default function FAQsUpdate() {
                           onClick={() => handleEdit(index)}
                           className="text-blue-600 hover:underline"
                         >
-                          Edit
+                          <EditIcon />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(index)}
                           className="text-red-600 hover:underline"
                         >
-                          Delete
+                          <TrashIcon />
                         </button>
                       </td>
                     </tr>

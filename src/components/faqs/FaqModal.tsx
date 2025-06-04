@@ -1,7 +1,15 @@
 import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
 import { BASE_URL } from "../../config/url"
+
+interface Category {
+  _id: string
+  title: string  
+  icon?: string
+  active?: boolean
+  __v?: number
+}
 
 interface Props {
   open: boolean
@@ -9,19 +17,11 @@ interface Props {
   onSave: () => void
   question: string
   answer: string
-  selectedCategory: string | null
+  selectedCategory: string | Category | null
   onQuestionChange: (value: string) => void
   onAnswerChange: (value: string) => void
   onCategoryChange: (value: string) => void
   isEditing: boolean
-}
-
-interface Category {
-  _id: string
-  title: string  // Changed from 'name' to 'title' to match API response
-  icon?: string
-  active?: boolean
-  __v?: number
 }
 
 const FaqModal: React.FC<Props> = ({
@@ -38,6 +38,24 @@ const FaqModal: React.FC<Props> = ({
 }) => {
   const [categories, setCategories] = useState<Category[]>([])
   const [loadingCategories, setLoadingCategories] = useState(false)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside)
+      fetchFaqsCategories()
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [open])
 
   const fetchFaqsCategories = async () => {
     setLoadingCategories(true)
@@ -53,17 +71,21 @@ const FaqModal: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    if (open) {
-      fetchFaqsCategories()
-    }
-  }, [open])
+  const getSelectedCategoryId = () => {
+    if (!selectedCategory) return ""
+    return typeof selectedCategory === "string"
+      ? selectedCategory
+      : selectedCategory._id
+  }
 
   if (!open) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg p-6 w-full max-w-lg"
+      >
         <h3 className="text-xl font-bold mb-4">{isEditing ? "Edit FAQ" : "Add FAQ"}</h3>
 
         <div className="mb-4">
@@ -87,11 +109,10 @@ const FaqModal: React.FC<Props> = ({
           />
         </div>
 
-        {/* Category Dropdown */}
         <div className="mb-4">
           <label className="block font-medium mb-1">Category</label>
           <select
-            value={selectedCategory || ""}
+            value={getSelectedCategoryId()}
             onChange={(e) => onCategoryChange(e.target.value)}
             className="w-full p-2 border rounded"
             disabled={loadingCategories}
@@ -99,7 +120,7 @@ const FaqModal: React.FC<Props> = ({
             <option value="">Select Category</option>
             {categories.map((category) => (
               <option key={category._id} value={category._id}>
-                {category.title}  
+                {category.title}
               </option>
             ))}
           </select>
@@ -116,7 +137,7 @@ const FaqModal: React.FC<Props> = ({
           <button
             onClick={onSave}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
-            disabled={!question.trim() || !answer.trim() || !selectedCategory}
+            disabled={!question.trim() || !answer.trim() || !getSelectedCategoryId()}
           >
             {isEditing ? "Update" : "Add"}
           </button>
