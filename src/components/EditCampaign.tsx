@@ -139,14 +139,14 @@ const EditCampaign = () => {
           return;
         }
 
-        if (
-          startDate.toISOString().split("T")[0] <
-          new Date().toISOString().split("T")[0]
-        ) {
-          toast.error("Start date cannot be in the past");
-          setIsSubmitting(false);
-          return;
-        }
+        // if (
+        //   startDate.toISOString().split("T")[0] <
+        //   new Date().toISOString().split("T")[0]
+        // ) {
+        //   toast.error("Start date cannot be in the past");
+        //   setIsSubmitting(false);
+        //   return;
+        // }
 
         if (endDate < new Date()) {
           toast.error("End date cannot be in the past");

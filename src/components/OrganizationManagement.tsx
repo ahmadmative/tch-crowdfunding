@@ -31,7 +31,7 @@ const OrganizationManagement = () => {
           Organization List
         </button>
 
-        <button
+        {/* <button
           className={`px-4 py-2 font-medium ml-4 ${
             activeTab === 'requests'
               ? 'border-b-2 border-blue-500 text-blue-500'
@@ -40,7 +40,7 @@ const OrganizationManagement = () => {
           onClick={() => setActiveTab('requests')}
         >
           Organization Requests
-        </button>
+        </button> */}
 
         <button
           className={`px-4 py-2 font-medium ml-4 ${

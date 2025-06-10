@@ -232,17 +232,17 @@ const UsersManagement: React.FC = () => {
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold mb-2">Total Users</h3>
               <p className="text-3xl font-bold text-primary-600">{quickStats.totalUsers}</p>
-              <p className="text-sm text-gray-600 mt-2">+{quickStats.monthlyGrowth}% from last month</p>
+              <p className="text-sm text-gray-600 mt-2">{quickStats.monthlyGrowth}% from last month</p>
             </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold mb-2">Active Users</h3>
               <p className="text-3xl font-bold text-green-600">{quickStats.activeUsers}</p>
-              <p className="text-sm text-gray-600 mt-2">+{quickStats.activeUsersPercentage}% of total users</p>
+              <p className="text-sm text-gray-600 mt-2">{quickStats.activeUsersPercentage}% of total users</p>
             </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold mb-2">New Sign-ups</h3>
               <p className="text-3xl font-bold text-blue-600">{quickStats.newSignups}</p>
-              <p className="text-sm text-gray-600 mt-2">+{quickStats.monthlyGrowth}% from last month</p>
+              <p className="text-sm text-gray-600 mt-2">{quickStats.monthlyGrowth}% from last month</p>
             </div>
           </div>
 
