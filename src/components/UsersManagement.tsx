@@ -21,6 +21,16 @@ const UsersManagement: React.FC = () => {
   const [role, setRole] = useState<any>("")
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [originalUsers, setOriginalUsers] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+const [usersPerPage] = useState(10); // Adjust as needed
+
+// Get current users
+const indexOfLastUser = currentPage * usersPerPage;
+const indexOfFirstUser = indexOfLastUser - usersPerPage;
+const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+// Change page
+const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const roles = ["users", "admins", "permissions"]
 
@@ -172,7 +182,6 @@ const UsersManagement: React.FC = () => {
   return (
     <div className="space-y-6">
 
-
       {/* Tab Navigation */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
@@ -195,7 +204,7 @@ const UsersManagement: React.FC = () => {
           >
             User List
           </button>
-          {/* <button
+          {/*  <button
             onClick={() => setSelectedTab('admins')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'admins'
                 ? 'border-primary-500 text-primary-600'
@@ -250,7 +259,7 @@ const UsersManagement: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold mb-4">User Distribution by Role</h3>
-              <div className="h-64">
+              <div className="h-[310px]">
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -276,7 +285,7 @@ const UsersManagement: React.FC = () => {
 
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold mb-4">New Users Over Time</h3>
-              <div className="h-64">
+              <div className="has-[310px]">
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={newUsers}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -295,137 +304,159 @@ const UsersManagement: React.FC = () => {
 
       {/* Users Table */}
       {selectedTab === 'users' && (
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">User List</h2>
-              <div className="flex space-x-4">
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <select onChange={(e) => setRole(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                  <option value="">All Roles</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">Users</option>
-                  {/* <option value="donor">Donor</option> */}
-                </select>
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4">Name</th>
-                    <th className="text-left py-3 px-4">Email</th>
-                    <th className="text-left py-3 px-4">Role</th>
-                    <th className="text-left py-3 px-4">Status</th>
-                    <th className="text-left py-3 px-4">Last Active</th>
-                    <th className="text-left py-3 px-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users?.map((user: any) => (
-                    <tr key={user.id} className="border-b">
-                      <td className="py-3 px-4">{user.name}</td>
-                      <td className="py-3 px-4">{user.email}</td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-sm ${user.status === 'Active'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                            }`}
-                        >
-                          {user.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">{dayjs(user.createdAt).format('DD-MM-YYYY')}</td>
-                      <td className="relative py-3 px-4 flex items-center space-x-2">
-                        <div className="flex space-x-2">
-                          <Link
-                            to={`/users/edit/${user._id}`}
-                            className="text-primary-600 hover:text-primary-800"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            className="text-red-600 hover:text-red-800"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(user._id);
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleDropdown(user._id);
-                          }}
-                          className='p-2 hover:bg-slate-200 rounded-full cursor-pointer'
-                        >
-                          ...
-                        </div>
-                        {openDropdownId === user._id && (
-                          <div
-                            className='absolute right-0 top-10 w-40 bg-white shadow-lg rounded-lg p-2 z-10 border border-gray-200'
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <button
-                              className='w-full text-left p-2 hover:bg-gray-100 rounded'
-                              onClick={() => {
-                                // Handle status change to Active
-                                //active
-                                handleChangeStatus(user._id, 'active')
-
-                                closeAllDropdowns();
-                              }}
-                            >
-                              Active
-                            </button>
-                            <button
-                              className='w-full text-left p-2 hover:bg-gray-100 rounded'
-                              onClick={() => {
-                                // Handle status change to Inactive
-                                // suspended
-                                handleChangeStatus(user._id, 'suspended')
-                                closeAllDropdowns();
-                              }}
-                            >
-                              Suspend
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-4 flex justify-between items-center">
-              <div className="text-sm text-gray-600">
-                Showing 1 to 10 of 100 entries
-              </div>
-              <div className="flex space-x-2">
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">Previous</button>
-                <button className="px-3 py-1 border rounded bg-primary-600 text-white">1</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">2</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">3</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">Next</button>
-              </div>
-            </div>
-          </div>
+  <div className="bg-white rounded-lg shadow">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">User List</h2>
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            placeholder="Search users..."
+            onChange={(e) => setSearch(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+          <select 
+            onChange={(e) => setRole(e.target.value)} 
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="user">Users</option>
+          </select>
         </div>
-      )}
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-3 px-4">Name</th>
+              <th className="text-left py-3 px-4">Email</th>
+              <th className="text-left py-3 px-4">Role</th>
+              <th className="text-left py-3 px-4">Status</th>
+              <th className="text-left py-3 px-4">Last Active</th>
+              <th className="text-left py-3 px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentUsers.map((user: any) => (
+              <tr key={user.id} className="border-b hover:bg-gray-50">
+                <td className="py-3 px-4">{user.name}</td>
+                <td className="py-3 px-4">{user.email}</td>
+                <td className="py-3 px-4">
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
+                    {user.role}
+                  </span>
+                </td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`px-2 py-1 rounded-full text-sm ${
+                      user.status === 'Active'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </td>
+                <td className="py-3 px-4">{dayjs(user.createdAt).format('DD-MM-YYYY')}</td>
+                <td className="relative py-3 px-4 flex items-center space-x-2">
+                  <div className="flex space-x-2">
+                    <Link
+                      to={`/users/edit/${user._id}`}
+                      className="text-primary-600 hover:text-primary-800"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="text-red-600 hover:text-red-800"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(user._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleDropdown(user._id);
+                    }}
+                    className='p-2 hover:bg-slate-200 rounded-full cursor-pointer'
+                  >
+                    ...
+                  </div>
+                  {openDropdownId === user._id && (
+                    <div
+                      className='absolute right-0 top-10 w-40 bg-white shadow-lg rounded-lg p-2 z-10 border border-gray-200'
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        className='w-full text-left p-2 hover:bg-gray-100 rounded'
+                        onClick={() => {
+                          handleChangeStatus(user._id, 'active');
+                          closeAllDropdowns();
+                        }}
+                      >
+                        Active
+                      </button>
+                      <button
+                        className='w-full text-left p-2 hover:bg-gray-100 rounded'
+                        onClick={() => {
+                          handleChangeStatus(user._id, 'suspended');
+                          closeAllDropdowns();
+                        }}
+                      >
+                        Suspend
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 flex justify-between items-center">
+        <div className="text-sm text-gray-600">
+          Showing {indexOfFirstUser + 1} to {Math.min(indexOfLastUser, users.length)} of {users.length} entries
+        </div>
+        <div className="flex space-x-2">
+          <button 
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 border rounded ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : 'hover:bg-gray-100'}`}
+          >
+            Previous
+          </button>
+          
+          {Array.from({ length: Math.ceil(users.length / usersPerPage) }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => paginate(i + 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === i + 1 ? 'bg-primary-600 text-white' : 'hover:bg-gray-100'
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          
+          <button 
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === Math.ceil(users.length / usersPerPage)}
+            className={`px-3 py-1 border rounded ${
+              currentPage === Math.ceil(users.length / usersPerPage) ? 'cursor-not-allowed opacity-50' : 'hover:bg-gray-100'
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Admin Management Section */}
       {selectedTab === 'admins' && (

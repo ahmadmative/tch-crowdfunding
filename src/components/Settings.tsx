@@ -16,6 +16,7 @@ import upload from "../utils/upload";
 import SocialLinks from "./settings/SocialLinks";
 import { toast } from "react-toastify";
 import Integrations from "./settings/Integrations";
+import PasswordPolicy from "./policy/PasswordPolicy";
 
 // Mock data for access logs
 const accessLogsData = [
@@ -314,34 +315,7 @@ const Settings: React.FC = () => {
       {/* Security Settings Tab */}
       {selectedTab === "security" && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Authentication Settings
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <p className="font-medium mb-2">Password Policy</p>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <input type="checkbox" className="mr-2" checked />
-                    <span className="text-sm">Minimum 8 characters</span>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="checkbox" className="mr-2" checked />
-                    <span className="text-sm">Require uppercase letters</span>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="checkbox" className="mr-2" checked />
-                    <span className="text-sm">Require numbers</span>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="checkbox" className="mr-2" checked />
-                    <span className="text-sm">Require special characters</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <PasswordPolicy />
 
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Access Logs</h2>
