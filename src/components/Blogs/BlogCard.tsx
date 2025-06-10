@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Trash } from 'lucide-react';
+import { Trash, Edit } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from '../../config/url';
@@ -44,8 +44,16 @@ const BlogCard: React.FC<BlogCardProps> = ({ data, onDelete }) => {
           {data.description}
         </p>
 
-        <div onClick={() => handleDelete(data._id)} className='p-2 hover:bg-gray-200 cursor-pointer w-[50px] h-[50px] rounded-full flex items-center justify-center'>
-          <Trash className="w-6 h-6" />
+        <div className="flex gap-2">
+          <Link
+            to={`/blog/edit/${data._id}`}
+            className='p-2 hover:bg-gray-200 cursor-pointer w-[50px] h-[50px] rounded-full flex items-center justify-center'
+          >
+            <Edit className="w-6 h-6" />
+          </Link>
+          <div onClick={() => handleDelete(data._id)} className='p-2 hover:bg-gray-200 cursor-pointer w-[50px] h-[50px] rounded-full flex items-center justify-center'>
+            <Trash className="w-6 h-6" />
+          </div>
         </div>
 
         <div className="mt-auto">
