@@ -63,6 +63,7 @@ import { useAppConfig } from './context/AppConfigContext';
 import OrganizationManagement from './components/OrganizationManagement';
 import OrganizationDetails from './components/organization/OrganizationDetails';
 import EditBlog from './components/Blogs/Edit';
+import EditGuide from './components/helpGuides/EditGuide';
 
 
 function App() {
@@ -199,6 +200,7 @@ function App() {
             <Route path='/guide/write' element={<GuideEditor />} />
             {/* <Route path='/guide' element={<GuideCategory />} /> */}
             <Route path='/guide' element={<GuideMain />} />
+            < Route path='/guide/edit/:id' element={<EditGuide />} /> 
 
 
             

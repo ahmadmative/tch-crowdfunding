@@ -103,7 +103,7 @@ const GuideCategoryModal = ({ onClose, onSuccess, initialData }: any) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+              className="px-4 py-2 rounded bg-gray-900 text-white hover:scale-105 transition-transform duration-300"
               disabled={loading}
             >
               {loading ? 'Saving...' : 'Save'}

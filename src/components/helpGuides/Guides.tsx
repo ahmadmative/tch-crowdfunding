@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { BASE_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { Pen, Trash } from 'lucide-react';
 
 const Guides = () => {
   const [guides, setGuides] = React.useState([]);
@@ -43,21 +44,20 @@ const Guides = () => {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     )
-      
   }
 
   return (
     <div className='flex flex-col gap-4 w-full'>
       <div className='flex justify-between items-center'>
         <h2 className='text-xl font-semibold'>Guides</h2>
-        <Link to='/guide/write' className='bg-gray-900 text-white py-2 px-4 rounded-md'>
+        <Link to='/guide/write' className='bg-gray-900 text-white py-2 px-4 rounded-md hover:scale-105 transition-transform duration-300'>
           Add New Guide
         </Link>
       </div>
 
       <div className='overflow-x-auto bg-white'>
         <table className='min-w-full border bg-white border-gray-200'>
-          <thead className='bg-gray-100'>
+          <thead className='bg-white'>
             <tr>
               <th className='text-left p-2 border'>#</th>
               <th className='text-left p-2 border'>Title</th>
@@ -81,12 +81,18 @@ const Guides = () => {
                     View Video
                   </a>
                 </td>
-                <td className='p-2 border'>
+                <td className='px-2 py-4 border h-full flex md:flex-row items-center justify-center'>
+                  <Link
+                    to={`/guide/edit/${guide._id}`}
+                    className='bg-blue-600 text-white px-3 py-1 rounded mr-2 hover:bg-blue-700'
+                  >
+                    <Pen size={20} />
+                  </Link>
                   <button
                     onClick={() => handleDelete(guide._id)}
                     className='bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700'
                   >
-                    Delete
+                    <Trash size={20} />
                   </button>
                 </td>
               </tr>

@@ -9,6 +9,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../context/userContext';
+import { Clipboard, HelpingHand, Newspaper } from 'lucide-react';
 
 interface MenuItem {
   name: string;
@@ -70,17 +71,17 @@ const menuItems: MenuItem[] = [
   },
   {
     name: 'Blogs',
-    icon: DocumentTextIcon,
+    icon: Newspaper,
     path: '/blogs'
   },
   {
     name: 'Help Guide',
-    icon: DocumentTextIcon,
+    icon: HelpingHand,
     path: '/guide',
   },
   {
     name: 'Core Content',
-    icon: DocumentTextIcon,
+    icon:  Clipboard,
     path: '#', 
     subItems: [
       { 

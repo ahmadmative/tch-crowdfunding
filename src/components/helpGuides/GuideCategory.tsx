@@ -39,15 +39,21 @@ const GuideCategory = () => {
     setOpenModal(true);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
 
   return (
-    <div className="p-4">
+    <div className="py-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Guide Categories</h2>
         <button
           onClick={handleAdd}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-gray-900 text-white rounded hover:scale-105 transition-transform duration-300"
         >
           Add Category
         </button>
@@ -56,10 +62,10 @@ const GuideCategory = () => {
       <table className="min-w-full bg-white border rounded shadow">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Icon</th>
-            <th className="py-2 px-4 border-b">Status</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-2 px-4 border-b text-left">Name</th>
+            <th className="py-2 px-4 border-b text-left">Icon</th>
+            <th className="py-2 px-4 border-b text-left">Status</th>
+            <th className="py-2 px-4 border-b text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -72,7 +78,7 @@ const GuideCategory = () => {
               <td className="py-2 px-4 border-b">
                 {cat.isActive ? 'Active' : 'Inactive'}
               </td>
-              <td className="py-5 px-4 border-b flex gap-2">
+              <td className="py-5 px-4 border-b flex gap-2 justify-end">
                 <button
                   onClick={() => handleEdit(cat)}
                   className="text-blue-600 hover:text-blue-800"
@@ -89,7 +95,7 @@ const GuideCategory = () => {
                       toast.error('Error deleting');
                     }
                   }}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-red-600 hover:text-red-800 "
                 >
                   <Trash2 size={18} />
                 </button>

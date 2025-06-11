@@ -140,7 +140,7 @@ const AboutUsSectionUpdate = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     )
@@ -266,7 +266,7 @@ const AboutUsSectionUpdate = () => {
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Features List</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {aboutData.features.map((feature, index) => (
               <div key={index} className="flex items-center gap-2">
                 <input
