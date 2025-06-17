@@ -3,6 +3,7 @@ import OrganizationList from './organization/OrganizationList';
 import OrganizationStats from './organization/OrganizationStats'; 
 import OrganizationRequests from './organization/OrganizationRequests';
 import OrganizationSuspended from './organization/OrganizationSuspended';
+import OrganizationRegected from './organization/OrganizationRejected';
 
 const OrganizationManagement = () => {
   const [activeTab, setActiveTab] = useState('list');
@@ -31,7 +32,7 @@ const OrganizationManagement = () => {
           Organization List
         </button>
 
-        {/* <button
+        <button
           className={`px-4 py-2 font-medium ml-4 ${
             activeTab === 'requests'
               ? 'border-b-2 border-blue-500 text-blue-500'
@@ -40,7 +41,18 @@ const OrganizationManagement = () => {
           onClick={() => setActiveTab('requests')}
         >
           Organization Requests
-        </button> */}
+        </button>
+
+        <button
+          className={`px-4 py-2 font-medium ml-4 ${
+            activeTab === 'regected'
+              ? 'border-b-2 border-blue-500 text-blue-500'
+              : 'text-gray-600'
+          }`}
+          onClick={() => setActiveTab('regected')}
+        >
+          Organization Requests Regected
+        </button>
 
         <button
           className={`px-4 py-2 font-medium ml-4 ${
@@ -54,6 +66,7 @@ const OrganizationManagement = () => {
         </button>
 
 
+
       </div>
 
 
@@ -62,6 +75,7 @@ const OrganizationManagement = () => {
       {activeTab === 'list' && <OrganizationList />}
       {activeTab === 'requests' && <OrganizationRequests />}
       {activeTab === 'suspended' && <OrganizationSuspended />}
+      {activeTab === 'regected' && <OrganizationRegected/>}
 
     </div>
   );
