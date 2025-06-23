@@ -34,6 +34,11 @@ const menuItems: MenuItem[] = [
     icon: BuildingOffice2Icon,
     path: '/organizations'
   },
+  // {
+  //   name: "verifications",
+  //   icon: StarIcon,
+  //   path: '/verification'
+  // },
   {
     name: 'Campaigns',
     icon: FolderIcon,
