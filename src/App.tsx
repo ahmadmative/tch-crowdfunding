@@ -64,7 +64,7 @@ import OrganizationManagement from './components/OrganizationManagement';
 import OrganizationDetails from './components/organization/OrganizationDetails';
 import EditBlog from './components/Blogs/Edit';
 import EditGuide from './components/helpGuides/EditGuide';
-import VerificationMain from './components/verifications/VerificationMain';
+
 
 
 function App() {
@@ -203,7 +203,7 @@ function App() {
             <Route path='/guide' element={<GuideMain />} />
             <Route path='/guide/edit/:id' element={<EditGuide />} /> 
 
-            <Route path='/verification' element={<VerificationMain />} />
+            
             
 
 

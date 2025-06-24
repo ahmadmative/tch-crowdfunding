@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { BASE_URL } from '../../config/url';
+import { BASE_URL, SOCKET_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
@@ -31,6 +31,10 @@ const OrganizationList: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+
+  const getFullUrl = (filePath: string) =>
+    filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
 
   const fetchOrganizations = async () => {
     try {
@@ -112,7 +116,7 @@ const OrganizationList: React.FC = () => {
               <tr key={org._id} className="border-b">
                 <td className="py-3 px-4">
                   <img
-                    src={org.logo}
+                    src={getFullUrl(org.logo)}
                     alt={org.name}
                     className="w-10 h-10 object-cover rounded"
                   />

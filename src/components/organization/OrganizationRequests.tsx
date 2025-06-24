@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState, ChangeEvent } from 'react';
-import { BASE_URL } from '../../config/url';
+import { BASE_URL, SOCKET_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
@@ -14,6 +14,9 @@ interface Organization {
   members?: any[];
   totalDonations?: number;
 }
+
+const getFullUrl = (filePath: string) =>
+  filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
 
 const OrganizationRequests: React.FC = () => {
   const [data, setData] = useState<Organization[]>([]);
@@ -93,7 +96,7 @@ const OrganizationRequests: React.FC = () => {
               <tr key={org._id} className="border-b">
                 <td className="py-3 px-4">
                   <img
-                    src={org.logo}
+                    src={getFullUrl(org.logo)}
                     alt={org.name}
                     className="w-10 h-10 object-cover rounded"
                   />
