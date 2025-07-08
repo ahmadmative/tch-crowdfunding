@@ -3,21 +3,21 @@ import { Link } from "react-router-dom";
 
 const HeroSection: React.FC = () => {
   return (
-    <div className="max-w-[1200px] w-full mx-auto p-4 max-h-[800px] flex flex-col md:flex-row justify-between items-center mt-[77px] font-onest">
+    <div className="w-full mx-auto p-4 flex flex-col md:flex-row justify-between items-center mt-[77px] font-onest">
       {/* Rest of the hero section content stays the same */}
-      <div className="w-full max-h-[560px] relative rounded-[60px] overflow-hidden">
+      <div className="w-full max-h-[560px] relative overflow-hidden">
         <img
           src={"/hero-img.png"}
           alt="hero-image"
           className="w-full h-full object-cover "
         />
-        <div className="absolute top-0 left-0 w-full h-full rounded-lg">
+        <div className="absolute top-0 left-0 w-full h-full">
           <img
             src={"/hero-upper.png"}
             alt="hero-image"
             className="w-full h-full object-cover"
           />
-          <div className="absolute bottom-6 md:bottom-10 left-6 md:left-10 w-[90%] flex flex-col justify-end">
+          <div className="absolute bottom-6 md:bottom-10 left-6 md:left-10 w-full flex flex-col justify-end">
             <div className="flex flex-col gap-2 text-white mb-4 w-full">
               <div className="flex text-white w-full">
                 <p className="text-2xl md:text-4xl font-bold">Make.</p>

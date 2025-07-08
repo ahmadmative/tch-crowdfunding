@@ -70,13 +70,21 @@ const formats = [
 ];
 
 const options: Record<string, string[]> = {
+  "Welcome Email": ["{{name}}"],
   "OTP Code Email": ["{{otp_code}}"],
-  "Campaign Creation Email": ["{{campaigner_name}}", "{{amount}}", "{{starting_date}}"],
-  "Donation Receipt to Donors": ["{{donor_name}}", "{{amount}}"],
-  "Donation Receipt to Campaigner": ["{{campaigner_name}}", "{{amount}}", "{{campaign_name}}"],
+  "Password Reset": ["{{name}}", "{{otp_code}}"],
+  // "Campaign Creation Email": ["{{campaigner_name}}", "{{amount}}", "{{starting_date}}"],
+  "Donation Receipt (Donor)": ["{{donor_name}}", "{{amount}}", "{{campaign_name}}"],
+  "New Donation Alert (Campaign Owner)": ["{{campaigner_name}}", "{{amount}}", "{{campaign_name}}", "{{donor_name}}"],
   "Campaign Status Update to Campaigner": ["{{campaigner_name}}", "{{campaign_title}}", "{{status}}"],
-  "To Campaigner on Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}"],
+  "Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}", "{{amount}}", "{{total_donos}}", "start_date", "end_date"],
+  "Campaign Rejection": ["{{campaigner_name}}", "{{campaign_title}}", "{{reasons}}"],
+  "Campaign Approval" : ["{{campaigner_name}}", "{{campaign_title}}"],
   "Money WithDrawal Request Email": ["{{admin_name}}", "{{amount}}"],
+  "Organisation Registration Approved": ["{{organization_admin_name}}", "{{organization_name}}"],
+  "Organisation Verification Required": ["{{organization_admin_name}}", "{{organization_name}}"],
+  "Automatic Certificate Issuance (Donor)": ["{{donor_name}}", "{{organization_name}}", "{{amount}}"],
+  "Monthly Summary Certificate": ["{{donor_name}}"],
 };
 
 const EditEmailTemplateEditor = () => {
