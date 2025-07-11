@@ -19,7 +19,6 @@ import Settings from './components/Settings';
 // import NewPassword from './pages/NewPassword';
 // import Campaigns from './pages/Campaigns';
 import CampaignDetails from './pages/CampaignDetails';
-import CreateCampaignForm from './pages/CampaignCreate';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './context/userContext';
 import AdminCampaigns from './components/AdminCampaigns';
@@ -64,6 +63,9 @@ import OrganizationManagement from './components/OrganizationManagement';
 import OrganizationDetails from './components/organization/OrganizationDetails';
 import EditBlog from './components/Blogs/Edit';
 import EditGuide from './components/helpGuides/EditGuide';
+import TermsCondition from './components/dynamicPages/TermsCondition';
+import PrivacyPolicy from './components/dynamicPages/PrivacyPolicy';
+import PaymentSettings from './pages/PaymentSettings';
 
 
 
@@ -108,7 +110,7 @@ function App() {
             
             <Route path="/admin/campaigns">
               <Route index element={<AdminCampaigns />} />
-              <Route path="create" element={<CreateCampaignForm />} />
+              
               <Route path=":id" element={<CampaignDetails />} />
               <Route path=":id/edit" element={<EditCampaign />} />
 
@@ -174,6 +176,8 @@ function App() {
             <Route path="/requests" element={<WithDrawRequests />} />
 
             <Route path='/content'>
+              <Route path="terms" element={<TermsCondition />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
               <Route path="faqs" element={<FAQsUpdate />} />
               <Route path="faqs/categories" element={<FaqsCategories />} />
               <Route path="about" element={<AboutUsSectionUpdate />} />
@@ -208,7 +212,7 @@ function App() {
 
 
             
-
+            <Route path='/payment-settings' element={<PaymentSettings/>}/>
             
 
             {/* Catch all unmatched routes */}

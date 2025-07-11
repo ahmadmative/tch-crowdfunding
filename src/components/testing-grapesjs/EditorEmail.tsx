@@ -81,11 +81,13 @@ const options: Record<string, string[]> = {
   "Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}", "{{amount}}", "{{total_donors}}", "{{start_date}}", "{{end_date}}"],
   "Campaign Rejection": ["{{campaigner_name}}", "{{campaign_title}}", "{{reasons}}"],
   "Campaign Approval" : ["{{campaigner_name}}", "{{campaign_title}}"],
-  "Money WithDrawal Request Email": ["{{admin_name}}", "{{amount}}"],
+  
   "Organisation Registration Approved": ["{{organization_admin_name}}", "{{organization_name}}"],
   "Organisation Verification Required": ["{{organization_admin_name}}", "{{organization_name}}"],
   "Automatic Certificate Issuance (Donor)": ["{{donor_name}}", "{{organization_name}}", "{{amount}}"],
   "Monthly Summary Certificate": ["{{donor_name}}"],
+
+  "Money WithDrawal Request Email": ["{{admin_name}}", "{{amount}}"],
 };
 
 const EmailTemplateEditor = () => {

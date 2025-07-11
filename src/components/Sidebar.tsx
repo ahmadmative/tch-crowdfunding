@@ -85,10 +85,25 @@ const menuItems: MenuItem[] = [
     path: '/guide',
   },
   {
+    name: 'Payment Settings',
+    icon: HelpingHand,
+    path: "/payment-settings"
+  },
+  {
     name: 'Core Content',
     icon:  Clipboard,
     path: '#', 
     subItems: [
+      { 
+        name: 'Terms & Conditions', 
+        path: '/content/terms',
+        icon: QuestionMarkCircleIcon 
+      },
+      { 
+        name: 'Privacy Policy', 
+        path: '/content/privacy',
+        icon: QuestionMarkCircleIcon 
+      },
       { 
         name: 'FAQs Section', 
         path: '/content/faqs',

@@ -30,10 +30,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
     if (storedToken) {
-        const decodedUser: User = jwtDecode(storedToken);
+        // const decodedUser: User = jwtDecode(storedToken);
+
+
+        let decodedUser: any;
+
+
+        try {
+          decodedUser = jwtDecode(storedToken);
+           
+        } catch (error) {
+          console.error("Invalid token:", error);
+          localStorage.removeItem("token"); 
+        }
+
         const fetchedUser = async () => {
           try {
-            const response = await fetch(`${BASE_URL}/auth/profile?id=${decodedUser.userId}`);
+            const response = await fetch(`${BASE_URL}/auth/profile?id=${decodedUser?.userId}`);
             const userData = await response.json();
             
             console.log("context user",userData);
