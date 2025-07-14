@@ -28,16 +28,20 @@ const CardsSettings: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get<{ data?: PaymentSettings }>(`${BASE_URL}/payment-settings`);
+      const res = await axios.get<{ data?: PaymentSettings }>(`${BASE_URL}/payment-settings?type=card`);
       if (res.data.data) {
         setData(res.data.data);
-      } else {
-        // If no data, keep defaults
-        setData({
-          paymentType: "card",
-          platformFee: { percent: "", total: "" },
-          transactionFee: { percent: "", total: "" },
-        });
+        // Determine which mode was previously used
+        if (res.data.data.platformFee.percent !== "") {
+          setPlatformMode("percent");
+        } else if (res.data.data.platformFee.total !== "") {
+          setPlatformMode("total");
+        }
+        if (res.data.data.transactionFee.percent !== "") {
+          setTransactionMode("percent");
+        } else if (res.data.data.transactionFee.total !== "") {
+          setTransactionMode("total");
+        }
       }
     } catch (error) {
       toast.error("Failed to fetch payment settings");
@@ -73,7 +77,6 @@ const CardsSettings: React.FC = () => {
       toast.error("Failed to update payment settings");
     }
   };
-  
 
   if (loading) return <p>Loading...</p>;
 
@@ -92,139 +95,83 @@ const CardsSettings: React.FC = () => {
       {/* Platform Fee */}
       <div className="mb-6">
         <p className="font-medium mb-2">Platform Fee</p>
-        {isEdit && (
-          <div className="flex gap-4 mb-2">
-            <label>
+        {isEdit ? (
+          <div className="flex gap-4 items-center mb-2">
+            <select
+              value={platformMode}
+              onChange={(e) => setPlatformMode(e.target.value as "percent" | "total")}
+              className="border px-2 py-1 rounded"
+            >
+              <option value="percent">Percentage</option>
+              <option value="total">Fixed Amount</option>
+            </select>
+            <div className="flex-1">
               <input
-                type="radio"
-                checked={platformMode === "percent"}
-                onChange={() => setPlatformMode("percent")}
-              />{" "}
-              Percent
-            </label>
-            <label>
-              <input
-                type="radio"
-                checked={platformMode === "total"}
-                onChange={() => setPlatformMode("total")}
-              />{" "}
-              Total
-            </label>
+                type="number"
+                className="border px-2 py-1 w-full"
+                placeholder={platformMode === "percent" ? "Enter percentage" : "Enter amount"}
+                value={platformMode === "percent" ? data.platformFee.percent : data.platformFee.total}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    platformFee: {
+                      percent: platformMode === "percent" ? +e.target.value : "",
+                      total: platformMode === "total" ? +e.target.value : "",
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-between">
+            <p>{platformMode === "percent" 
+              ? `Percentage: ${data.platformFee.percent || 0}%` 
+              : `Fixed Amount: $${data.platformFee.total || 0}`}
+            </p>
           </div>
         )}
-
-        <div className="flex justify-between">
-          {isEdit ? (
-            <>
-              <input
-                type="number"
-                className="border px-2 py-1 w-20"
-                disabled={platformMode !== "percent"}
-                value={data.platformFee.percent}
-                onChange={(e) =>
-                  setData({
-                    ...data,
-                    platformFee: {
-                      ...data.platformFee,
-                      percent: +e.target.value,
-                      total: platformMode === "total" ? "" : data.platformFee.total,
-                    },
-                  })
-                }
-              />
-              <input
-                type="number"
-                className="border px-2 py-1 w-20"
-                disabled={platformMode !== "total"}
-                value={data.platformFee.total}
-                onChange={(e) =>
-                  setData({
-                    ...data,
-                    platformFee: {
-                      ...data.platformFee,
-                      total: +e.target.value,
-                      percent: platformMode === "percent" ? "" : data.platformFee.percent,
-                    },
-                  })
-                }
-              />
-            </>
-          ) : (
-            <>
-              <p>Percent: {data.platformFee.percent || 0}%</p>
-              <p>Total: ${data.platformFee.total || 0}</p>
-            </>
-          )}
-        </div>
       </div>
 
       {/* Transaction Fee */}
       <div className="mb-6">
         <p className="font-medium mb-2">Transaction Fee</p>
-        {isEdit && (
-          <div className="flex gap-4 mb-2">
-            <label>
+        {isEdit ? (
+          <div className="flex gap-4 items-center mb-2">
+            <select
+              value={transactionMode}
+              onChange={(e) => setTransactionMode(e.target.value as "percent" | "total")}
+              className="border px-2 py-1 rounded"
+            >
+              <option value="percent">Percentage</option>
+              <option value="total">Fixed Amount</option>
+            </select>
+            <div className="flex-1">
               <input
-                type="radio"
-                checked={transactionMode === "percent"}
-                onChange={() => setTransactionMode("percent")}
-              />{" "}
-              Percent
-            </label>
-            <label>
-              <input
-                type="radio"
-                checked={transactionMode === "total"}
-                onChange={() => setTransactionMode("total")}
-              />{" "}
-              Total
-            </label>
+                type="number"
+                className="border px-2 py-1 w-full"
+                placeholder={transactionMode === "percent" ? "Enter percentage" : "Enter amount"}
+                value={transactionMode === "percent" ? data.transactionFee.percent : data.transactionFee.total}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    transactionFee: {
+                      percent: transactionMode === "percent" ? +e.target.value : "",
+                      total: transactionMode === "total" ? +e.target.value : "",
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-between">
+            <p>{transactionMode === "percent" 
+              ? `Percentage: ${data.transactionFee.percent || 0}%` 
+              : `Fixed Amount: $${data.transactionFee.total || 0}`}
+            </p>
           </div>
         )}
-
-        <div className="flex justify-between">
-          {isEdit ? (
-            <>
-              <input
-                type="number"
-                className="border px-2 py-1 w-20"
-                disabled={transactionMode !== "percent"}
-                value={data.transactionFee.percent}
-                onChange={(e) =>
-                  setData({
-                    ...data,
-                    transactionFee: {
-                      ...data.transactionFee,
-                      percent: +e.target.value,
-                      total: transactionMode === "total" ? "" : data.transactionFee.total,
-                    },
-                  })
-                }
-              />
-              <input
-                type="number"
-                className="border px-2 py-1 w-20"
-                disabled={transactionMode !== "total"}
-                value={data.transactionFee.total}
-                onChange={(e) =>
-                  setData({
-                    ...data,
-                    transactionFee: {
-                      ...data.transactionFee,
-                      total: +e.target.value,
-                      percent: transactionMode === "percent" ? "" : data.transactionFee.percent,
-                    },
-                  })
-                }
-              />
-            </>
-          ) : (
-            <>
-              <p>Percent: {data.transactionFee.percent || 0}%</p>
-              <p>Total: ${data.transactionFee.total || 0}</p>
-            </>
-          )}
-        </div>
       </div>
 
       {isEdit && (
