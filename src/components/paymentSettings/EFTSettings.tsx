@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 
 // Types
 interface Fee {
-  percent: number | string;
-  total: number | string;
+  percent?: number | string;
+  total?: number | string;
 }
 
 interface PaymentSettings {
+  _id?: string;
   paymentType: string;
   platformFee: Fee;
   transactionFee: Fee;
@@ -28,18 +29,39 @@ const EFTSettings: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get<{ data?: PaymentSettings }>(`${BASE_URL}/payment-settings?type=eft`);
-      if (res.data.data) {
-        setData(res.data.data);
+      const res = await axios.get(`${BASE_URL}/payment-settings?type=eft`);
+      if (res.data) {
+        const apiData = res.data;
+        
+        // Initialize platformFee with proper values
+        const platformFee = {
+          percent: apiData.platformFee?.percent ?? "",
+          total: apiData.platformFee?.total ?? "",
+        };
+        
+        // Initialize transactionFee with proper values
+        const transactionFee = {
+          percent: apiData.transactionFee?.percent ?? "",
+          total: apiData.transactionFee?.total ?? "",
+        };
+        
+        setData({
+          _id: apiData._id,
+          paymentType: apiData.paymentType,
+          platformFee,
+          transactionFee,
+        });
+        
         // Determine which mode was previously used
-        if (res.data.data.platformFee.percent !== "") {
+        if (apiData.platformFee?.percent !== undefined && apiData.platformFee?.percent !== null) {
           setPlatformMode("percent");
-        } else if (res.data.data.platformFee.total !== "") {
+        } else {
           setPlatformMode("total");
         }
-        if (res.data.data.transactionFee.percent !== "") {
+        
+        if (apiData.transactionFee?.percent !== undefined && apiData.transactionFee?.percent !== null) {
           setTransactionMode("percent");
-        } else if (res.data.data.transactionFee.total !== "") {
+        } else {
           setTransactionMode("total");
         }
       }
@@ -70,9 +92,18 @@ const EFTSettings: React.FC = () => {
         },
       };
 
-      await axios.post(`${BASE_URL}/payment-settings`, payload);
-      toast.success("EFT settings updated");
+      if (data._id) {
+        // Update existing record
+        await axios.put(`${BASE_URL}/payment-settings/${data._id}`, payload);
+        toast.success("EFT settings updated");
+      } else {
+        // Create new record
+        await axios.post(`${BASE_URL}/payment-settings`, payload);
+        toast.success("EFT settings created");
+      }
+
       setEdit(false);
+      fetchData(); // Refresh data after update
     } catch (error) {
       toast.error("Failed to update EFT settings");
     }
@@ -99,7 +130,17 @@ const EFTSettings: React.FC = () => {
           <div className="flex gap-4 items-center mb-2">
             <select
               value={platformMode}
-              onChange={(e) => setPlatformMode(e.target.value as "percent" | "total")}
+              onChange={(e) => {
+                const mode = e.target.value as "percent" | "total";
+                setPlatformMode(mode);
+                setData((prev) => ({
+                  ...prev,
+                  platformFee: {
+                    percent: mode === "percent" ? prev.platformFee.percent : "",
+                    total: mode === "total" ? prev.platformFee.total : "",
+                  },
+                }));
+              }}
               className="border px-2 py-1 rounded"
             >
               <option value="percent">Percentage</option>
@@ -115,8 +156,8 @@ const EFTSettings: React.FC = () => {
                   setData({
                     ...data,
                     platformFee: {
-                      percent: platformMode === "percent" ? +e.target.value : "",
-                      total: platformMode === "total" ? +e.target.value : "",
+                      percent: platformMode === "percent" ? e.target.value : "",
+                      total: platformMode === "total" ? e.target.value : "",
                     },
                   })
                 }
@@ -125,9 +166,10 @@ const EFTSettings: React.FC = () => {
           </div>
         ) : (
           <div className="flex justify-between">
-            <p>{platformMode === "percent" 
-              ? `Percentage: ${data.platformFee.percent || 0}%` 
-              : `Fixed Amount: $${data.platformFee.total || 0}`}
+            <p>
+              {platformMode === "percent" 
+                ? `Percentage: ${data.platformFee.percent || 0}%` 
+                : `Fixed Amount: $${data.platformFee.total || 0}`}
             </p>
           </div>
         )}
@@ -140,7 +182,17 @@ const EFTSettings: React.FC = () => {
           <div className="flex gap-4 items-center mb-2">
             <select
               value={transactionMode}
-              onChange={(e) => setTransactionMode(e.target.value as "percent" | "total")}
+              onChange={(e) => {
+                const mode = e.target.value as "percent" | "total";
+                setTransactionMode(mode);
+                setData((prev) => ({
+                  ...prev,
+                  transactionFee: {
+                    percent: mode === "percent" ? prev.transactionFee.percent : "",
+                    total: mode === "total" ? prev.transactionFee.total : "",
+                  },
+                }));
+              }}
               className="border px-2 py-1 rounded"
             >
               <option value="percent">Percentage</option>
@@ -156,8 +208,8 @@ const EFTSettings: React.FC = () => {
                   setData({
                     ...data,
                     transactionFee: {
-                      percent: transactionMode === "percent" ? +e.target.value : "",
-                      total: transactionMode === "total" ? +e.target.value : "",
+                      percent: transactionMode === "percent" ? e.target.value : "",
+                      total: transactionMode === "total" ? e.target.value : "",
                     },
                   })
                 }
@@ -166,9 +218,10 @@ const EFTSettings: React.FC = () => {
           </div>
         ) : (
           <div className="flex justify-between">
-            <p>{transactionMode === "percent" 
-              ? `Percentage: ${data.transactionFee.percent || 0}%` 
-              : `Fixed Amount: $${data.transactionFee.total || 0}`}
+            <p>
+              {transactionMode === "percent" 
+                ? `Percentage: ${data.transactionFee.percent || 0}%` 
+                : `Fixed Amount: $${data.transactionFee.total || 0}`}
             </p>
           </div>
         )}
@@ -177,7 +230,7 @@ const EFTSettings: React.FC = () => {
       {isEdit && (
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
         >
           Save
         </button>
