@@ -376,7 +376,7 @@ const DonationsManagement: React.FC = () => {
                     <tr key={transaction.id} className="border-b">
                       <td className="py-3 px-4">{transaction?.donorId?.name}</td>
                       <td className="py-3 px-4">R{transaction?.amount}</td>
-                      <td className="py-3 px-4">{transaction?.campaignId.title}</td>
+                      <td className="py-3 px-4">{transaction?.campaignId?.title || "Organization Donation"}</td>
                       <td className="py-3 px-4">{transaction?.paymentMethod}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction?.status)}`}>
