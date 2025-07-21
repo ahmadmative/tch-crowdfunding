@@ -4,7 +4,8 @@ import axios from "axios";
 import { BASE_URL } from "../config/url";
 import { toast } from "react-toastify";
 import Notification from "../components/notification/Notification";
-import { link } from "fs";
+import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css';
 
 const AddUsers = () => {
   const [hide, setHide] = useState(true);
@@ -15,6 +16,7 @@ const AddUsers = () => {
     name: "",
     email: "",
     role: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -40,6 +42,7 @@ const AddUsers = () => {
             name: res.data.user.name,
             email: res.data.user.email,
             role: res.data.user.role,
+            phoneNumber: res.data.user.phoneNumber,
             password: "",
             confirmPassword: "",
           });
@@ -254,6 +257,23 @@ const AddUsers = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 placeholder="Enter your email"
+              />
+            </div>
+
+
+            <div>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number
+              </label>
+              <PhoneInput
+                id="phoneNumber"
+                name="phoneNumber"
+                required
+                value={data.phoneNumber}
+                onChange={(e: any) => handleChange({target: {id: "phoneNumber", value: e}})}
               />
             </div>
 

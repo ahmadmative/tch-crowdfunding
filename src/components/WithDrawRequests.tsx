@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { ArrowUpIcon, EllipsisVerticalIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowUpIcon } from '@heroicons/react/24/outline';
 import { BASE_URL } from '../config/url';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { FaEye } from 'react-icons/fa';
 
 interface User {
   _id: string;
@@ -23,7 +25,6 @@ const WithDrawRequests = () => {
   const [requests, setRequests] = useState<WithdrawalRequest[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentDropdown, setCurrentDropdown] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
 
   useEffect(() => {
@@ -42,34 +43,7 @@ const WithDrawRequests = () => {
     fetchData();
   }, []);
 
-  const handleStatusUpdate = async (id: string, userId: string, amount: number, status: 'approved' | 'rejected') => {
-    try {
-      setLoading(true);
-      
-      if (status === 'approved') {
-        await axios.post(`${BASE_URL}/account/withdraw/${userId}`, {
-          amount,
-        });
-      }
-      
-      await axios.patch(`${BASE_URL}/requests/${id}`, { status });
-      
-      setRequests(prev =>
-        prev.map(item =>
-          item._id === id ? { ...item, status } : item
-        )
-      );
-      setCurrentDropdown(null);
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to update status');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const toggleDropdown = (id: string) => {
-    setCurrentDropdown(prev => (prev === id ? null : id));
-  };
 
   const filteredRequests = requests.filter(request => 
     filter === 'all' || request.status === filter
@@ -99,7 +73,7 @@ const WithDrawRequests = () => {
           onClick={() => setError(null)}
           className="absolute top-0 right-0 px-2 py-1"
         >
-          <XMarkIcon className="h-5 w-5" />
+          ✕
         </button>
       </div>
     );
@@ -180,37 +154,9 @@ const WithDrawRequests = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    {request.status === 'pending' && (
-                      <div className="relative inline-block text-left">
-                        <button
-                          onClick={() => toggleDropdown(request._id)}
-                          className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        >
-                          <EllipsisVerticalIcon className="h-5 w-5" />
-                        </button>
-
-                        {currentDropdown === request._id && (
-                          <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                            <div className="py-1">
-                              <button
-                                onClick={() => handleStatusUpdate(request._id, request.userId._id, request.amount, 'approved')}
-                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                              >
-                                <CheckIcon className="h-4 w-4 mr-2 text-green-500" />
-                                Approve
-                              </button>
-                              <button
-                                onClick={() => handleStatusUpdate(request._id, request.userId._id, request.amount, 'rejected')}
-                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                              >
-                                <XMarkIcon className="h-4 w-4 mr-2 text-red-500" />
-                                Reject
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <Link to={`/requests/${request._id}`}>
+                      <FaEye className='h-5 w-5 text-gray-500 hover:text-gray-700'/>
+                    </Link>
                   </td>
                 </tr>
               ))}

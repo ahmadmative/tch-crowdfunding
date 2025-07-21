@@ -32,13 +32,31 @@ const menuItems: MenuItem[] = [
   {
     name: 'Organizations',
     icon: BuildingOffice2Icon,
-    path: '/organizations'
+    path: "#",
+    subItems: [
+      {
+        name: 'Organization Management',
+        path: '/organizations',
+        icon: BuildingOffice2Icon
+      },
+      {
+        name: 'Bank Details',
+        path: '/organizations/bank-details',
+        icon: BuildingOffice2Icon
+      },
+      {
+        name: 'S18A Document',
+        path: '/organizations/s18a-document',
+        icon: DocumentTextIcon
+      },
+      // {
+      //   name: 'Verification',
+      //   path: '/organizations/verification',
+      //   icon: StarIcon
+      // }
+    ]
   },
-  {
-    name: "Verifications",
-    icon: StarIcon,
-    path: '/verification'
-  },
+  
   {
     name: 'Campaigns',
     icon: FolderIcon,

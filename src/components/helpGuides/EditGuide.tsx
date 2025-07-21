@@ -107,6 +107,13 @@ const EditGuide: React.FC = () => {
     setVideoProgress(0);
   };
 
+  const handleRemoveVideo = () => {
+    setVideoFile(null);
+    setVideoUrl("");
+    setVideoProgress(0);
+    toast.success("Video removed!");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -172,17 +179,36 @@ const EditGuide: React.FC = () => {
 
           {/* Video Upload */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">Video Upload</label>
-            <input type="file" accept="video/*" onChange={handleVideoChange} />
+            <label className="block text-sm font-medium text-gray-700">Video Upload (Optional)</label>
+            <div className="flex items-center gap-4">
+              <input type="file" accept="video/*" onChange={handleVideoChange} />
+              {(videoUrl || videoFile) && (
+                <button
+                  type="button"
+                  onClick={handleRemoveVideo}
+                  className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                >
+                  Remove Video
+                </button>
+              )}
+            </div>
             {videoProgress > 0 && (
               <div className="w-full bg-gray-200 rounded h-4 overflow-hidden">
                 <div className="bg-blue-500 h-4 transition-all" style={{ width: `${videoProgress}%` }}></div>
               </div>
             )}
             {videoUrl && !videoFile && (
-              <video controls className="mt-2 w-full max-w-md rounded-md">
-                <source src={videoUrl} type="video/mp4" />
-              </video>
+              <div className="mt-2">
+                <video controls className="w-full max-w-md rounded-md">
+                  <source src={videoUrl} type="video/mp4" />
+                </video>
+                <p className="text-sm text-gray-500 mt-1">Current video</p>
+              </div>
+            )}
+            {videoFile && (
+              <div className="mt-2">
+                <p className="text-sm text-blue-600">New video selected: {videoFile.name}</p>
+              </div>
             )}
           </div>
 

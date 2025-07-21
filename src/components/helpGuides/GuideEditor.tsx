@@ -87,55 +87,60 @@ const GuideEditor: React.FC = () => {
     setVideoProgress(0);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-
-  try {
-    let videoLink = videoUrl;
-    if (videoFile) {
-      toast.info("Uploading video...");
-      const uploadRes = await uploadMedia(videoFile, setVideoProgress);
-      // @ts-ignore
-      videoLink = uploadRes.url;
-      toast.success("Video uploaded!");
-    }
-
-    console.log("Video link:", videoLink);
-
-    if (!coverImage) {
-      toast.error("Please upload a cover image!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    const formData = {
-      title,
-      image: coverImage,
-      description,
-      content,
-      category,
-      videoUrl: videoLink,
-    };
-
-    await axios.post(`${BASE_URL}/guide`, formData);
-    toast.success("Blog published!");
-
-    // Reset form
-    setCategory("");
-    setTitle("");
-    setDescription("");
-    setContent("");
-    setCoverImage(null);
-    setVideoUrl("");
+  const handleRemoveVideo = () => {
     setVideoFile(null);
+    setVideoUrl("");
     setVideoProgress(0);
-  } catch {
-    toast.error("Error publishing guide. Please try again.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    toast.success("Video removed!");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      let videoLink = videoUrl;
+      if (videoFile) {
+        toast.info("Uploading video...");
+        const uploadRes = await uploadMedia(videoFile, setVideoProgress);
+        // @ts-ignore
+        videoLink = uploadRes.url;
+        toast.success("Video uploaded!");
+      }
+
+      if (!coverImage) {
+        toast.error("Please upload a cover image!");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const formData = {
+        title,
+        image: coverImage,
+        description,
+        content,
+        category,
+        videoUrl: videoLink,
+      };
+
+      await axios.post(`${BASE_URL}/guide`, formData);
+      toast.success("Blog published!");
+
+      // Reset form
+      setCategory("");
+      setTitle("");
+      setDescription("");
+      setContent("");
+      setCoverImage(null);
+      setVideoUrl("");
+      setVideoFile(null);
+      setVideoProgress(0);
+    } catch {
+      toast.error("Error publishing guide. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   return (
@@ -162,11 +167,27 @@ const GuideEditor: React.FC = () => {
 
           {/* Video Upload */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">Video Upload</label>
-            <input type="file" accept="video/*" onChange={handleVideoChange} />
+            <label className="block text-sm font-medium text-gray-700">Video Upload (Optional)</label>
+            <div className="flex items-center gap-4">
+              <input type="file" accept="video/*" onChange={handleVideoChange} />
+              {(videoUrl || videoFile) && (
+                <button
+                  type="button"
+                  onClick={handleRemoveVideo}
+                  className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                >
+                  Remove Video
+                </button>
+              )}
+            </div>
             {videoProgress > 0 && (
               <div className="w-full bg-gray-200 rounded h-4 overflow-hidden">
                 <div className="bg-blue-500 h-4 transition-all" style={{ width: `${videoProgress}%` }}></div>
+              </div>
+            )}
+            {videoFile && (
+              <div className="mt-2">
+                <p className="text-sm text-blue-600">Video selected: {videoFile.name}</p>
               </div>
             )}
           </div>
@@ -200,7 +221,7 @@ const GuideEditor: React.FC = () => {
             <ReactQuill value={content} onChange={setContent} modules={modules} formats={formats} className="h-96" />
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-10">
             <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50">
               {isSubmitting ? "Publishing..." : "Publish Blog"}
             </button>

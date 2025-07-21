@@ -11,16 +11,6 @@ const OrganizationManagement = () => {
   return (
     <div className="p-4">
       <div className="flex border-b mb-4">
-        {/* <button
-          className={`px-4 py-2 font-medium ${
-            activeTab === 'statistics'
-              ? 'border-b-2 border-blue-500 text-blue-500'
-              : 'text-gray-600'
-          }`}
-          onClick={() => setActiveTab('statistics')}
-        >
-          Organization Statistics
-        </button> */}
         <button
           className={`px-4 py-2 font-medium ml-4 ${
             activeTab === 'list'

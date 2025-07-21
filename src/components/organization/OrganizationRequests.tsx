@@ -86,8 +86,8 @@ const OrganizationRequests: React.FC = () => {
             <tr className="border-b">
               <th className="text-left py-3 px-4">Logo</th>
               <th className="text-left py-3 px-4">Name</th>
-              <th className="text-left py-3 px-4">City</th>
-              <th className="text-left py-3 px-4">Country</th>
+              {/* <th className="text-left py-3 px-4">City</th>
+              <th className="text-left py-3 px-4">Country</th> */}
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
@@ -102,17 +102,17 @@ const OrganizationRequests: React.FC = () => {
                   />
                 </td>
                 <td className="py-3 px-4">{org.name}</td>
-                <td className="py-3 px-4">{org.city}</td>
-                <td className="py-3 px-4">{org.country}</td>
+                {/* <td className="py-3 px-4">{org.city}</td>
+                <td className="py-3 px-4">{org.country}</td> */}
                 <td className="py-3 px-4 flex gap-2">
                   <Link
                     to={`/organizations/${org._id}`}
-                    className="text-blue-600 hover:text-blue-800 underline"
+                    className="text-blue-600 mt-4 hover:text-blue-800 underline"
                     title="View"
                   >
                     <Eye size={18} />
                   </Link>
-                  <button
+                  {/* <button
                     onClick={() => handleStatus(org._id, 'active')}
                     className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
                   >
@@ -123,7 +123,7 @@ const OrganizationRequests: React.FC = () => {
                     className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Rejected
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

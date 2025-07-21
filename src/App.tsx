@@ -10,14 +10,6 @@ import DonationsManagement from './components/DonationsManagement';
 import ReportsAnalytics from './components/ReportsAnalytics';
 import NotificationsEmails from './components/NotificationsEmails';
 import Settings from './components/Settings';
-// import Home from './pages/Home';
-// import SignUp from './pages/SignUp';
-// import SignIn from './pages/SignIn';
-// import NavLayout from './layouts/NavLayout';
-// import Verification from './pages/Verification';
-// import ForgetPassword from './pages/ForgetPassword';
-// import NewPassword from './pages/NewPassword';
-// import Campaigns from './pages/Campaigns';
 import CampaignDetails from './pages/CampaignDetails';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './context/userContext';
@@ -25,17 +17,8 @@ import AdminCampaigns from './components/AdminCampaigns';
 import EditCampaign from './components/EditCampaign';
 import AddUsers from './components/AddUsers';
 import DonationDetail from './components/DonationDetail';
-// import MainDashboard from './pages/dashboard/main';
-// import CampaignerDashboardLayout from './layouts/DashboardLayout';
-// import MyCampaigns from './pages/dashboard/MyCampaigns';
-// import Donations from './pages/dashboard/Donations';
-// import Profile from './pages/dashboard/Profile';
-// import EditProfile from './pages/dashboard/EditProfile';
-// import CreateCampaign from './pages/dashboard/CreateCampaign';
 import ProtectedRoute from './protectedRoutes/ProtectedRoutes';
 import Unauthorized from './pages/Unauthorized';
-// import EditCampaignPage from './pages/dashboard/EditCampaignPage';
-// import EmailVerification from './pages/EmailVerification';
 import AdminSignIn from './pages/AdminLogin';
 import { TemplateProvider } from './context/TemplateContext';
 import WithDrawRequests from './components/WithDrawRequests';
@@ -66,6 +49,10 @@ import EditGuide from './components/helpGuides/EditGuide';
 import TermsCondition from './components/dynamicPages/TermsCondition';
 import PrivacyPolicy from './components/dynamicPages/PrivacyPolicy';
 import PaymentSettings from './pages/PaymentSettings';
+import VerificationMain from './pages/organization/verification/VerificationMain';
+import S18ADocumentMain from './pages/organization/s18aDocument/S18ADocumentMain';
+import BankDetailsMain from './pages/organization/bankDetails/BankDetailsMain';
+import WithDrawRequestsDetail from './components/WithDrawRequestsDetail';
 
 
 
@@ -140,6 +127,9 @@ function App() {
             <Route path="organizations">
               <Route index element={<OrganizationManagement />} />
               <Route path=":id" element={<OrganizationDetails/>} />
+              <Route path="bank-details" element={<BankDetailsMain/>} />
+              <Route path="s18a-document" element={<S18ADocumentMain/>} />
+              <Route path="verification" element={<VerificationMain/>} />
 
             </Route>
 
@@ -174,6 +164,7 @@ function App() {
               <Route path="integrations" element={<Settings />} />
             </Route>
             <Route path="/requests" element={<WithDrawRequests />} />
+            <Route path="/requests/:id" element={<WithDrawRequestsDetail />} />
 
             <Route path='/content'>
               <Route path="terms" element={<TermsCondition />} />
