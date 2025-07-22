@@ -4,7 +4,7 @@ import { ArrowUpIcon } from '@heroicons/react/24/outline';
 import { BASE_URL } from '../config/url';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaEye } from 'react-icons/fa';
+import { Eye } from 'lucide-react';
 
 interface User {
   _id: string;
@@ -155,7 +155,7 @@ const WithDrawRequests = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link to={`/requests/${request._id}`}>
-                      <FaEye className='h-5 w-5 text-gray-500 hover:text-gray-700'/>
+                      <Eye className='h-5 w-5 text-gray-500 hover:text-gray-700'/>
                     </Link>
                   </td>
                 </tr>

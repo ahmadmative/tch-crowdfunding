@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEye, FaUser } from 'react-icons/fa';
+import { Eye, User } from 'lucide-react';
 
 interface S18ADocument {
     _id: string;
@@ -68,7 +68,7 @@ const S18ATable = ({
                                                 className="w-8 h-8 rounded-full object-cover"
                                             />
                                         ) : (
-                                            <FaUser className="text-gray-500" />
+                                            <User className="text-gray-500" />
                                         )}
                                     </div>
                                     <div>
@@ -102,7 +102,7 @@ const S18ATable = ({
                                     onClick={() => onViewDetails(document)}
                                     className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
                                 >
-                                    <FaEye className="w-5 h-5" />
+                                    <Eye className="w-5 h-5" />
                                 </button>
                             </td>
                         </tr>

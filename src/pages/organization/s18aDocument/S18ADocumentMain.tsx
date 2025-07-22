@@ -3,7 +3,7 @@ import Loading from '../../../components/Loading';
 import { BASE_URL } from '../../../config/url';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaEye, FaCheckCircle, FaTimesCircle, FaClock, FaUser } from 'react-icons/fa';
+import { Eye, CheckCircle, XCircle, Clock, User } from 'lucide-react';
 import S18ATable from './S18ATable';
 
 interface S18ADocument {
@@ -67,11 +67,11 @@ const S18ADocumentMain = () => {
     const getStatusIcon = (status: string) => {
         switch (status) {
             case 'approved':
-                return <FaCheckCircle className="inline-block ml-1" />;
+                return <CheckCircle className="inline-block ml-1" />;
             case 'rejected':
-                return <FaTimesCircle className="inline-block ml-1" />;
+                return <XCircle className="inline-block ml-1" />;
             case 'pending':
-                return <FaClock className="inline-block ml-1" />;
+                return <Clock className="inline-block ml-1" />;
             default:
                 return null;
         }
