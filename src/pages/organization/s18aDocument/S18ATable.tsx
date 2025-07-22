@@ -23,7 +23,7 @@ interface S18ATableProps {
     s18ADocuments: S18ADocument[];
     onViewDetails: (document: S18ADocument) => void;
     getStatusColor: (status: string) => string;
-    getStatusIcon: (status: string) => React.ReactElement | null;
+    getStatusIcon: (status: string) => any;
     formatDate: (dateString: string) => string;
 }
 

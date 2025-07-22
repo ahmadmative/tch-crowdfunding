@@ -269,9 +269,6 @@ const AddUsers = () => {
                 Phone Number
               </label>
               <PhoneInput
-                id="phoneNumber"
-                name="phoneNumber"
-                required
                 value={data.phoneNumber}
                 onChange={(e: any) => handleChange({target: {id: "phoneNumber", value: e}})}
               />
