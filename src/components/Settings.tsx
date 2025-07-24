@@ -182,7 +182,7 @@ const Settings: React.FC = () => {
             Social Media Links
           </button>
 
-          <button
+          {/* <button
             onClick={() => setSelectedTab('integrations')}
             className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
               selectedTab === 'integrations'
@@ -192,7 +192,7 @@ const Settings: React.FC = () => {
           >
             <PuzzlePieceIcon className="h-5 w-5 mr-2" />
             Integrations
-          </button>
+          </button> */}
         </nav>
       </div>
 
@@ -317,7 +317,7 @@ const Settings: React.FC = () => {
         <div className="space-y-6">
           <PasswordPolicy />
 
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Access Logs</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full">
@@ -341,7 +341,7 @@ const Settings: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
 

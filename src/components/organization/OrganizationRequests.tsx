@@ -13,6 +13,13 @@ interface Organization {
   country: string;
   members?: any[];
   totalDonations?: number;
+  overallStatus: 'pending' | 'approved' | 'rejected';
+  pendingSteps: string;
+  componentStatuses: {
+    organization: string;
+    bankDetails: string;
+    s18ADocument: string;
+  };
 }
 
 const getFullUrl = (filePath: string) =>
@@ -27,7 +34,7 @@ const OrganizationRequests: React.FC = () => {
 
   const fetchOrganizations = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/organization?status=pending`);
+      const res = await axios.get(`${BASE_URL}/organization/with-status?statusFilter=pending`);
       setData(res.data);
     } catch (error) {
       toast.error('Error fetching organizations');
@@ -70,7 +77,7 @@ const OrganizationRequests: React.FC = () => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Pending Organizations</h2>
+        <h2 className="text-2xl font-semibold">Pending Organisations</h2>
         <input
           type="text"
           value={search}
@@ -88,6 +95,7 @@ const OrganizationRequests: React.FC = () => {
               <th className="text-left py-3 px-4">Name</th>
               {/* <th className="text-left py-3 px-4">City</th>
               <th className="text-left py-3 px-4">Country</th> */}
+              <th className="text-left py-3 px-4">Pending Steps</th>
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
@@ -104,6 +112,17 @@ const OrganizationRequests: React.FC = () => {
                 <td className="py-3 px-4">{org.name}</td>
                 {/* <td className="py-3 px-4">{org.city}</td>
                 <td className="py-3 px-4">{org.country}</td> */}
+                <td className="py-3 px-4">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    org.overallStatus === 'pending' 
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : org.overallStatus === 'rejected'
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {org.pendingSteps}
+                  </span>
+                </td>
                 <td className="py-3 px-4 flex gap-2">
                   <Link
                     to={`/organizations/${org._id}`}
@@ -129,7 +148,7 @@ const OrganizationRequests: React.FC = () => {
             ))}
             {paginatedData.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-4 text-gray-500">
+                <td colSpan={4} className="text-center py-4 text-gray-500">
                   No results found.
                 </td>
               </tr>

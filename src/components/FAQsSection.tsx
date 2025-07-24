@@ -34,11 +34,31 @@ export default function FAQsUpdate() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [categories, setCategories] = useState<{ _id: string; title: string }[]>(
-    []
-  ); // Array of categories with id and name
+  const [categories, setCategories] = useState<{ _id: string; title: string }[]>([]); // Array of categories with id and name
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [allQuestions, setAllQuestions] = useState<FAQ[]>([]);
+
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setSearch(searchValue);
+    
+    if (searchValue.trim() === "") {
+      // Show all questions when search is empty
+      setFaqs({ ...faqs, questions: allQuestions });
+    } else {
+      // Filter questions based on search
+      const filteredFaqs = allQuestions.filter((faq) =>
+        faq.question.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFaqs({ ...faqs, questions: filteredFaqs });
+    }
+  }
+
+  
+
 
   const fetchFaqs = async () => {
     setLoading(true);
@@ -46,6 +66,7 @@ export default function FAQsUpdate() {
       const res = await axios.get(`${BASE_URL}/faqs`);
       if (res.data) {
         setFaqs(res.data);
+        setAllQuestions(res.data.questions); // Store all questions for search functionality
       }
     } catch (error) {
       toast.error("Failed to fetch FAQs");
@@ -108,6 +129,7 @@ export default function FAQsUpdate() {
 
     const updatedFaqs = { ...faqs, questions: updatedQuestions };
     setFaqs(updatedFaqs);
+    setAllQuestions(updatedQuestions); // Update the stored questions for search
 
     setQuestion("");
     setAnswer("");
@@ -139,6 +161,7 @@ export default function FAQsUpdate() {
       );
       const updatedFaqs = { ...faqs, questions: updatedQuestions };
       setFaqs(updatedFaqs);
+      setAllQuestions(updatedQuestions); // Update the stored questions for search
       setDeleteIndex(null);
       setShowDeleteConfirm(false);
       toast.success("Question deleted");
@@ -197,6 +220,18 @@ export default function FAQsUpdate() {
         >
           Manage Categories
         </Link>
+        </div>
+
+
+        <div className="flex mt-4">
+          {/* search bar */}
+          <input
+            type="text"
+            placeholder="Search by question"
+            className="w-full p-2 border rounded"
+            value={search}
+            onChange={handleSearch}
+          />
         </div>
 
         {/* FAQs Listing */}

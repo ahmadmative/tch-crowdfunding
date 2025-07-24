@@ -19,7 +19,7 @@ const OrganizationManagement = () => {
           }`}
           onClick={() => setActiveTab('list')}
         >
-          Organization List
+          Organisation List
         </button>
 
         <button
@@ -30,7 +30,7 @@ const OrganizationManagement = () => {
           }`}
           onClick={() => setActiveTab('requests')}
         >
-          Organization Requests
+          Organisation Requests
         </button>
 
         <button
@@ -41,7 +41,7 @@ const OrganizationManagement = () => {
           }`}
           onClick={() => setActiveTab('regected')}
         >
-          Organization Requests Regected
+          Organisation Requests Rejected
         </button>
 
         <button
@@ -52,7 +52,7 @@ const OrganizationManagement = () => {
           }`}
           onClick={() => setActiveTab('suspended')}
         >
-          Organization Suspended
+          Organisation Suspended
         </button>
 
 

@@ -30,25 +30,25 @@ const menuItems: MenuItem[] = [
     path: '/users'
   },
   {
-    name: 'Organizations',
+    name: 'Organisations',
     icon: BuildingOffice2Icon,
     path: "#",
     subItems: [
       {
-        name: 'Organization Management',
+        name: 'Organisation Details',
         path: '/organizations',
         icon: BuildingOffice2Icon
       },
-      {
-        name: 'Bank Details',
-        path: '/organizations/bank-details',
-        icon: BuildingOffice2Icon
-      },
-      {
-        name: 'S18A Document',
-        path: '/organizations/s18a-document',
-        icon: DocumentTextIcon
-      },
+      // {
+      //   name: 'Bank Details',
+      //   path: '/organizations/bank-details',
+      //   icon: BuildingOffice2Icon
+      // },
+      // {
+      //   name: 'S18A Document',
+      //   path: '/organizations/s18a-document',
+      //   icon: DocumentTextIcon
+      // },
       // {
       //   name: 'Verification',
       //   path: '/organizations/verification',

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../config/url";
 import { toast } from "react-toastify";
 import FaqCategoryModal from "./faqs/FaqCategoryModal";
-import { ArrowBigLeft, MoveLeft } from "lucide-react";
+import { ArrowBigLeft, MoveLeft, Edit, ToggleLeft, ToggleRight } from "lucide-react";
 
 interface Category {
   _id: string;
@@ -122,17 +122,23 @@ const FaqsCategories = () => {
                       <td className="px-4 py-2 border space-x-2">
                         <button
                           onClick={() => handleEditCategory(category)}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
+                          title="Edit Category"
                         >
-                          Edit
+                          <Edit size={16} />
                         </button>
                         <button
                           onClick={() => {
                             handleDeleteCategory(category._id);
                           }}
-                          className="text-red-600 hover:underline"
+                          className={`p-1 rounded hover:bg-gray-50 ${
+                            category.active 
+                              ? "text-green-600 hover:text-green-800" 
+                              : "text-gray-600 hover:text-gray-800"
+                          }`}
+                          title={category.active ? "Deactivate Category" : "Activate Category"}
                         >
-                          Toggle_Status
+                          {category.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
                         </button>
                       </td>
                     </tr>

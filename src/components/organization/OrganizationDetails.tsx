@@ -7,13 +7,16 @@ import dayjs from 'dayjs';
 import { ArrowLeft } from 'lucide-react';
 import OrganizationCampaigns from './OrganizationCampaigns';
 import MailModal from './MailModal';
+import OrganizationBankDetails from './OrganizationBankDetails';
+import OrganizationS18ADocument from './OrganizationS18ADocument';
 
 const OrganizationDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<string>('pending');
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'organization' | 'bankDetails' | 's18aDocuments'>('organization');
 
   const getFullUrl = (filePath: string) =>
     filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
@@ -30,9 +33,13 @@ const OrganizationDetails = () => {
     }
   };
 
+
+
   useEffect(() => {
     fetch();
   }, []);
+
+
 
   const handleStatus = async (id: string | undefined, status: string, issues?: string) => {
     try {
@@ -40,6 +47,7 @@ const OrganizationDetails = () => {
       if(issues){
         await axios.post(`${BASE_URL}/issue-report`, {
           receiverId: userId._id,
+          type: activeTab,
           issue: issues
         })
       }
@@ -90,11 +98,54 @@ const OrganizationDetails = () => {
     return <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Download {label}</a>;
   };
 
+
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       <Link to="/organizations" className='p-2 cursor-pointer'><ArrowLeft className="w-6 h-6" /></Link>
-      <div className="bg-white shadow-xl rounded-2xl p-6 space-y-6">
-        {/* Header */}
+      
+      {/* Tab Navigation */}
+      <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8 px-6">
+            <button
+              onClick={() => setActiveTab('organization')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'organization'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Organization Details
+            </button>
+            <button
+              onClick={() => setActiveTab('bankDetails')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'bankDetails'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Bank Details
+            </button>
+            <button
+              onClick={() => setActiveTab('s18aDocuments')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 's18aDocuments'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              S18A Documents
+            </button>
+          </nav>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {activeTab === 'organization' ? (
+            <>
+              {/* Organization Details Content */}
+              {/* Header */}
         <div className="flex items-center gap-4">
           {renderFilePreview(logo, 'Logo')}
           <div>
@@ -159,27 +210,40 @@ const OrganizationDetails = () => {
           </div>
         </div>
 
-        {/* Status Update */}
-        <div className="border-t pt-6">
-          <h4 className="font-semibold text-gray-600">Update Status</h4>
-          <div className="flex items-center gap-4 mt-2">
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="border p-2 rounded"
-            >
-              <option value="pending">Pending</option>
-              <option value="active">Approved</option>
-              <option value="rejected">Rejected</option>
-              <option value="suspended">Suspended</option>
-            </select>
-            <button
-              onClick={handleUpdateClick}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Update
-            </button>
-          </div>
+              {/* Status Update */}
+              <div className="border-t pt-6">
+                <h4 className="font-semibold text-gray-600">Update Status</h4>
+                <div className="flex items-center gap-4 mt-2">
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="border p-2 rounded"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="active">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                  <button
+                    onClick={handleUpdateClick}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : activeTab === 'bankDetails' ? (
+            <>
+              {/* Bank Details Content */}
+              <OrganizationBankDetails userId={data.userId?._id} />
+            </>
+          ) : (
+            <>
+              {/* S18A Documents Content */}
+              <OrganizationS18ADocument userId={data.userId?._id} />
+            </>
+          )}
         </div>
       </div>
 
