@@ -22,7 +22,7 @@ interface Organization {
   country: string;
   members: Member[];
   overallStatus: 'pending' | 'approved' | 'rejected';
-  pendingSteps: string;
+  pendingSteps: string[] | string;
   componentStatuses: {
     organization: string;
     bankDetails: string;
@@ -113,9 +113,9 @@ const OrganizationList: React.FC = () => {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Total Members</th>
               <th className="text-left py-3 px-4">Donation Collected</th>
-              <th className="text-left py-3 px-4">City</th>
-              <th className="text-left py-3 px-4">Country</th>
-              <th className="text-left py-3 px-4">Pending Steps</th>
+              {/* <th className="text-left py-3 px-4">City</th>
+              <th className="text-left py-3 px-4">Country</th> */}
+              {/* <th className="text-left py-3 px-4">Pending Steps</th> */}
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
@@ -132,19 +132,50 @@ const OrganizationList: React.FC = () => {
                 <td className="py-3 px-4">{org.name}</td>
                 <td className="py-3 px-4">{org.members?.length || 0}</td>
                 <td className="py-3 px-4">{org.totalDonations || 0}</td>
-                <td className="py-3 px-4">{org.city}</td>
-                <td className="py-3 px-4">{org.country}</td>
-                <td className="py-3 px-4">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    org.overallStatus === 'pending' 
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : org.overallStatus === 'rejected'
-                      ? 'bg-red-100 text-red-800'
-                      : 'bg-green-100 text-green-800'
-                  }`}>
-                    {org.pendingSteps}
-                  </span>
-                </td>
+                {/* <td className="py-3 px-4">{org.city}</td>
+                <td className="py-3 px-4">{org.country}</td> */}
+                {/* <td className="py-3 px-4">
+                  <div className="flex flex-wrap gap-1">
+                    {(() => {
+                      // Handle both string and array cases
+                      let stepsArray: string[] = [];
+                      if (Array.isArray(org.pendingSteps)) {
+                        stepsArray = org.pendingSteps;
+                      } else if (typeof org.pendingSteps === 'string' && org.pendingSteps.trim()) {
+                        // If it's a string, try to split by comma or use as single item
+                        stepsArray = org.pendingSteps.includes(',') 
+                          ? org.pendingSteps.split(',').map(s => s.trim())
+                          : [org.pendingSteps.trim()];
+                      }
+
+                      return stepsArray.length > 0 ? (
+                        <>
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            org.overallStatus === 'pending' 
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : org.overallStatus === 'rejected'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {stepsArray.length} pending
+                          </span>
+                          {stepsArray.map((step, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800"
+                            >
+                              {step}
+                            </span>
+                          ))}
+                        </>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          All complete
+                        </span>
+                      );
+                    })()}
+                  </div>
+                </td> */}
                 <td className="py-3 px-4 ">
                   <div className='flex gap-2 items-center  justify-end py-1 px-2 rounded-md'>
                     <Link

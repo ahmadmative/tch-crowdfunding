@@ -4,7 +4,7 @@ import { BASE_URL } from '../../config/url';
 import { CheckCircle, XCircle, Clock, User } from 'lucide-react';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
-import MailModal from './MailModal';
+import S18AMailModal from './S18AMailModal';
 
 interface S18ADocument {
   _id: string;
@@ -24,7 +24,6 @@ const OrganizationS18ADocument = ({ userId }: { userId: string }) => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [orgData, setOrgData] = useState<any>({});
 
   const fetchS18ADocument = async () => {
     try {
@@ -150,7 +149,7 @@ const OrganizationS18ADocument = ({ userId }: { userId: string }) => {
             </div>
             <div>
               <h5 className="font-semibold text-gray-600">Signature</h5>
-              <img src={`${BASE_URL}/${s18ADocument.signature}`} alt="/" className='h-20 w-20' />
+              <img src={`${s18ADocument.signature}`} alt="/" className='h-20 w-20' />
             </div>
           </div>
         </div>
@@ -199,10 +198,9 @@ const OrganizationS18ADocument = ({ userId }: { userId: string }) => {
         </div>
       </div>
       
-      {showModal && (
-        <MailModal
-          receiverId={userId}
-          orgData={orgData}
+      {showModal && s18ADocument && (
+        <S18AMailModal
+          s18AData={s18ADocument}
           onClose={() => setShowModal(false)}
           onSubmit={async (issues: string) => {
             if (s18ADocument) {

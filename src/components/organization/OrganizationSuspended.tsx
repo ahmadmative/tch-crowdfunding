@@ -102,8 +102,8 @@ const OrganizationSuspended: React.FC = () => {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Total Members</th>
               <th className="text-left py-3 px-4">Donation Collected</th>
-              <th className="text-left py-3 px-4">City</th>
-              <th className="text-left py-3 px-4">Country</th>
+              {/* <th className="text-left py-3 px-4">City</th>
+              <th className="text-left py-3 px-4">Country</th> */}
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
@@ -120,8 +120,8 @@ const OrganizationSuspended: React.FC = () => {
                 <td className="py-3 px-4">{org.name}</td>
                 <td className="py-3 px-4">{org.members?.length || 0}</td>
                 <td className="py-3 px-4">{org.totalDonations || 0}</td>
-                <td className="py-3 px-4">{org.city}</td>
-                <td className="py-3 px-4">{org.country}</td>
+                {/* <td className="py-3 px-4">{org.city}</td>
+                <td className="py-3 px-4">{org.country}</td> */}
                 <td className="py-3 px-4">
                   <div className='flex gap-2'>
                     <Link

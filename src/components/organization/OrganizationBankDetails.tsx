@@ -4,7 +4,7 @@ import { BASE_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
-import MailModal from './MailModal';
+import BankMailModal from './BankMailModal';
 
 interface BankDetail {
   _id: string;
@@ -28,8 +28,7 @@ const OrganizationBankDetails: React.FC<OrganizationBankDetailsProps> = ({ userI
   const [loading, setLoading] = useState<boolean>(false);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedBankId, setSelectedBankId] = useState<string | null>(null);
-  const [orgData, setOrgData] = useState<any>({});
+  const [selectedBank, setSelectedBank] = useState<BankDetail | null>(null);
 
   const fetchBankDetails = async () => {
     try {
@@ -73,8 +72,8 @@ const OrganizationBankDetails: React.FC<OrganizationBankDetailsProps> = ({ userI
     }
   };
 
-  const handleRejectClick = (detailId: string) => {
-    setSelectedBankId(detailId);
+  const handleRejectClick = (bank: BankDetail) => {
+    setSelectedBank(bank);
     setShowModal(true);
   };
 
@@ -187,7 +186,7 @@ const OrganizationBankDetails: React.FC<OrganizationBankDetailsProps> = ({ userI
                   {updatingId === bank._id ? 'Updating...' : 'Approve'}
                 </button>
                 <button
-                  onClick={() => handleRejectClick(bank._id)}
+                  onClick={() => handleRejectClick(bank)}
                   disabled={updatingId === bank._id || bank.status === 'rejected'}
                   className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                     bank.status === 'rejected'
@@ -204,16 +203,18 @@ const OrganizationBankDetails: React.FC<OrganizationBankDetailsProps> = ({ userI
         </div>
       ))}
       
-      {showModal && (
-        <MailModal
-          receiverId={userId}
-          orgData={orgData}
-          onClose={() => setShowModal(false)}
+      {showModal && selectedBank && (
+        <BankMailModal
+          bankData={selectedBank}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedBank(null);
+          }}
           onSubmit={async (issues: string) => {
-            if (selectedBankId) {
-              await handleStatusUpdate(selectedBankId, 'rejected', issues);
+            if (selectedBank) {
+              await handleStatusUpdate(selectedBank._id, 'rejected', issues);
               setShowModal(false);
-              setSelectedBankId(null);
+              setSelectedBank(null);
             }
           }}
         />

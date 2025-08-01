@@ -14,7 +14,7 @@ interface Organization {
   members?: any[];
   totalDonations?: number;
   overallStatus: 'pending' | 'approved' | 'rejected';
-  pendingSteps: string;
+  pendingSteps: string[] | string;
   componentStatuses: {
     organization: string;
     bankDetails: string;
@@ -93,8 +93,8 @@ const OrganizationRequests: React.FC = () => {
             <tr className="border-b">
               <th className="text-left py-3 px-4">Logo</th>
               <th className="text-left py-3 px-4">Name</th>
-              {/* <th className="text-left py-3 px-4">City</th>
-              <th className="text-left py-3 px-4">Country</th> */}
+              {/* <th className="text-left py-3 px-4">City</th> */}
+              <th className="text-left py-3 px-4">Total Steps Pending</th>
               <th className="text-left py-3 px-4">Pending Steps</th>
               <th className="text-left py-3 px-4">Action</th>
             </tr>
@@ -113,15 +113,57 @@ const OrganizationRequests: React.FC = () => {
                 {/* <td className="py-3 px-4">{org.city}</td>
                 <td className="py-3 px-4">{org.country}</td> */}
                 <td className="py-3 px-4">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    org.overallStatus === 'pending' 
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : org.overallStatus === 'rejected'
-                      ? 'bg-red-100 text-red-800'
-                      : 'bg-green-100 text-green-800'
-                  }`}>
-                    {org.pendingSteps}
-                  </span>
+                  {(() => {
+                    // Handle both string and array cases for count
+                    let stepsArray: string[] = [];
+                    if (Array.isArray(org.pendingSteps)) {
+                      stepsArray = org.pendingSteps;
+                    } else if (typeof org.pendingSteps === 'string' && org.pendingSteps.trim()) {
+                      stepsArray = org.pendingSteps.includes(',') 
+                        ? org.pendingSteps.split(',').map(s => s.trim())
+                        : [org.pendingSteps.trim()];
+                    }
+
+                    return (
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        org.overallStatus === 'pending' 
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : org.overallStatus === 'rejected'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {stepsArray.length}
+                      </span>
+                    );
+                  })()}
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex flex-wrap gap-1">
+                    {(() => {
+                      // Handle both string and array cases for individual steps
+                      let stepsArray: string[] = [];
+                      if (Array.isArray(org.pendingSteps)) {
+                        stepsArray = org.pendingSteps;
+                      } else if (typeof org.pendingSteps === 'string' && org.pendingSteps.trim()) {
+                        stepsArray = org.pendingSteps.includes(',') 
+                          ? org.pendingSteps.split(',').map(s => s.trim())
+                          : [org.pendingSteps.trim()];
+                      }
+
+                      return stepsArray.length > 0 ? (
+                        stepsArray.map((step, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800"
+                          >
+                            {step}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-xs">No pending steps</span>
+                      );
+                    })()}
+                  </div>
                 </td>
                 <td className="py-3 px-4 flex gap-2">
                   <Link
@@ -148,7 +190,7 @@ const OrganizationRequests: React.FC = () => {
             ))}
             {paginatedData.length === 0 && (
               <tr>
-                <td colSpan={4} className="text-center py-4 text-gray-500">
+                <td colSpan={5} className="text-center py-4 text-gray-500">
                   No results found.
                 </td>
               </tr>

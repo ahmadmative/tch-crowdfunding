@@ -86,17 +86,7 @@ const OrganizationDetails = () => {
     userId,
   } = data;
 
-  const renderFilePreview = (filePath: string | undefined, label: string) => {
-    if (!filePath) return <span className="text-gray-400">No {label}</span>;
-    const url = getFullUrl(filePath);
-    if (/\.(png|jpg|jpeg|gif|svg)$/i.test(filePath)) {
-      return <img src={url} alt={label} className="h-24 object-contain border rounded-md shadow" />;
-    }
-    if (/\.(pdf|doc|docx)$/i.test(filePath)) {
-      return <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">📄 Download {label}</a>;
-    }
-    return <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Download {label}</a>;
-  };
+  
 
 
 
@@ -147,7 +137,7 @@ const OrganizationDetails = () => {
               {/* Organization Details Content */}
               {/* Header */}
         <div className="flex items-center gap-4">
-          {renderFilePreview(logo, 'Logo')}
+          {logo && <img src={`${logo}`} alt="Logo" className="h-24 object-contain border rounded-md shadow" />}
           <div>
             <h2 className="text-2xl font-bold">{name}</h2>
             <p className="text-sm text-gray-500">{status?.toUpperCase()}</p>
