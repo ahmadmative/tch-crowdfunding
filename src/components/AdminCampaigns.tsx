@@ -14,6 +14,7 @@ interface Campaign {
   createdAt: string;
   totalDonations: number;
   lastDonationDate: string;
+  verified: boolean;
 }
 
 const AdminCampaigns = () => {
@@ -103,6 +104,8 @@ const AdminCampaigns = () => {
     
       <h1 className='text-4xl font-bold font-onest'>All Campaigns</h1>
       {/* <p className='text-gray-700 text-sm font-sans'>Explore our campaigns and support the causes you care about.</p> */}
+
+
 
       {/* Search & Filters Section */}
       <div className='flex flex-col md:flex-row items-center justify-center gap-4 relative'>

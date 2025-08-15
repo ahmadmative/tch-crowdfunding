@@ -19,6 +19,7 @@ interface Campaign {
   amount: number;
   totalDonations: number;
   lastDonationDate: string;
+  verified: boolean;
 }
 
 const CampaignCard: React.FC<{
@@ -28,6 +29,8 @@ const CampaignCard: React.FC<{
 }> = ({ campaign, admin = false, campaigner = false }) => {
   const [isPending, startTransition] = useTransition();
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isVerified, setIsVerified] = useState(campaign.verified);
+  const [isVerifying, setIsVerifying] = useState(false);
   const raised = campaign.totalDonations;
   const goal = campaign.amount;
   const progress = (raised / goal) * 100;
@@ -52,6 +55,29 @@ const CampaignCard: React.FC<{
     });
   };
 
+  const handleVerifyToggle = async () => {
+    if (isVerified) return; // Don't allow un-verification
+    
+    setIsVerifying(true);
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/campaigns/verify/${campaign._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(res);
+      setIsVerified(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   return (
     <div className="font-sans flex flex-col border border-[#020D1914] p-4 gap-4 rounded-lg overflow-hidden max-w-[400px] hover:shadow-lg hover:border-gray-900 transition-all duration-300">
       {isDeleted && (
@@ -72,7 +98,26 @@ const CampaignCard: React.FC<{
 
       {/* Campaign Title */}
       <div className="flex flex-col gap-2">
-        <p className="text-lg font-bold font-onest">{campaign.title}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-lg font-bold font-onest">{campaign.title}</p>
+          {admin && (
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-medium ${isVerified ? 'text-green-600' : 'text-gray-500'}`}>
+                {isVerified ? 'Verified' : 'Unverified'}
+              </span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isVerified}
+                  onChange={handleVerifyToggle}
+                  disabled={isVerified || isVerifying}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"></div>
+              </label>
+            </div>
+          )}
+        </div>
         <p className="text-sm text-gray-500">
           {campaign.description.split(" ").slice(0, 15).join(" ")}
           {campaign.description.split(" ").length > 15 && "..."}
@@ -91,6 +136,7 @@ const CampaignCard: React.FC<{
           <p className="text-xs font-bold">
             {dayjs(campaign.createdAt).fromNow()}
           </p>
+         
         </div>
       </div>
 

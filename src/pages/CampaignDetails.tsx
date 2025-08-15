@@ -23,6 +23,8 @@ const CampaignDetails = () => {
   const [status, setStatus] = useState("");
   const [campaigner, setCampaigner] = useState(false);
   const [dropDownStatus, setDropDownStatus] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   useEffect(() => {
     const path = location.pathname;
@@ -64,6 +66,31 @@ const CampaignDetails = () => {
     });
   };
 
+  const handleVerifyToggle = async () => {
+    if (isVerified) return; // Don't allow un-verification
+    
+    setIsVerifying(true);
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/campaigns/verify/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(res);
+      setIsVerified(true);
+      toast.success("Campaign verified successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to verify campaign");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   useEffect(() => {
     const fetchCampaign = async () => {
       const response = await axios.get(`${BASE_URL}/campaigns/get/${id}`);
@@ -76,6 +103,7 @@ const CampaignDetails = () => {
       console.log(response.data);
       console.log(response.data.totalDonations);
       setStatus(response.data.status);
+      setIsVerified(response.data.verified || false);
     };
     fetchCampaign();
   }, [id]);
@@ -242,6 +270,28 @@ const CampaignDetails = () => {
                 >
                   {status}
                 </p>
+              </div>
+
+              <div className="flex items-center gap-4 py-2">
+                <p className="text-sm font-bold text-black font-onest">
+                  Verification:
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm font-medium ${isVerified ? 'text-green-600' : 'text-gray-500'}`}>
+                    {isVerified ? 'Verified' : 'Unverified'}
+                  </span>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isVerified}
+                      onChange={handleVerifyToggle}
+                      disabled={isVerified || isVerifying}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"></div>
+                  </label>
+                  {isVerifying && <span className="text-xs text-gray-500">Verifying...</span>}
+                </div>
               </div>
             </>
           )}

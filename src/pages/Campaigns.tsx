@@ -14,6 +14,7 @@ interface Campaign {
   createdAt: string;
   totalDonations: number;
   lastDonationDate: string;
+  verified: boolean;
 }
 
 const Campaigns = () => {
