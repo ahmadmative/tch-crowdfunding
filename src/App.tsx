@@ -53,6 +53,7 @@ import VerificationMain from './pages/organization/verification/VerificationMain
 import S18ADocumentMain from './pages/organization/s18aDocument/S18ADocumentMain';
 import BankDetailsMain from './pages/organization/bankDetails/BankDetailsMain';
 import WithDrawRequestsDetail from './components/WithDrawRequestsDetail';
+import WorkSection from './components/dynamicPages/WorkSection';
 
 
 
@@ -169,6 +170,7 @@ function App() {
             <Route path='/content'>
               <Route path="terms" element={<TermsCondition />} />
               <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="work" element={<WorkSection />} />
               <Route path="faqs" element={<FAQsUpdate />} />
               <Route path="faqs/categories" element={<FaqsCategories />} />
               <Route path="about" element={<AboutUsSectionUpdate />} />

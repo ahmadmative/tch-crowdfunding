@@ -156,6 +156,11 @@ const menuItems: MenuItem[] = [
         name: 'Social Media Links',
         path: '/content/social',
         icon: DocumentTextIcon
+      },
+      {
+        name: 'Work Section',
+        path: '/content/work',
+        icon: DocumentTextIcon
       }
     ]
   }
