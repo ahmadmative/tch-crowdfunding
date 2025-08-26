@@ -275,7 +275,7 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Backup & Restore</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -308,7 +308,7 @@ const Settings: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
 

@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/url";
 import { toast } from "react-toastify";
-import Notification from "../components/notification/Notification";
+import Notification from "./notification/Notification";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
 
@@ -291,6 +291,7 @@ const AddUsers = () => {
               >
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
+                <option value="partner">Partner</option>
                 {/* <option value="donor">Donor</option> */}
               </select>
             </div>

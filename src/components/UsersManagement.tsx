@@ -322,6 +322,7 @@ const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
             <option value="">All Roles</option>
             <option value="admin">Admin</option>
             <option value="user">Users</option>
+            <option value="partner">Partner</option>
           </select>
         </div>
       </div>

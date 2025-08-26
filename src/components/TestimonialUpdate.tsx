@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../config/url";
-import Notification from "../components/notification/Notification";
+import Notification from "./notification/Notification";
 import { Trash2, Edit, Plus, Save, X, Star } from "lucide-react";
 import upload from "../utils/upload";
 

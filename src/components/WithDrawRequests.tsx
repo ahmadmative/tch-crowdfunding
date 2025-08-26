@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import dayjs from 'dayjs';
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
 import { BASE_URL } from '../config/url';
@@ -26,6 +26,18 @@ const WithDrawRequests = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [paginatedRequests, setPaginatedRequests] = useState<WithdrawalRequest[]>([]);
+  
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [minAmount, setMinAmount] = useState<string>('');
+  const [maxAmount, setMaxAmount] = useState<string>('');
+  const [filteredRequests, setFilteredRequests] = useState<WithdrawalRequest[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +46,7 @@ const WithDrawRequests = () => {
       try {
         const res = await axios.get<WithdrawalRequest[]>(`${BASE_URL}/requests`);
         setRequests(res.data);
+        setFilteredRequests(res.data); // Initialize filtered data
       } catch (error: any) {
         setError(error.response?.data?.message || 'Failed to fetch withdrawal requests');
       } finally {
@@ -43,11 +56,105 @@ const WithDrawRequests = () => {
     fetchData();
   }, []);
 
+  // Pagination helper functions
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
 
-  const filteredRequests = requests.filter(request => 
-    filter === 'all' || request.status === filter
-  );
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
+  };
+
+  // Filter logic
+  useEffect(() => {
+    if (!requests.length) {
+      setFilteredRequests([]);
+      return;
+    }
+
+    let filtered = [...requests];
+
+    // Status filter
+    if (filter !== 'all') {
+      filtered = filtered.filter(request => request.status === filter);
+    }
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter((request) =>
+        request.userId.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Amount range filters
+    if (minAmount) {
+      filtered = filtered.filter((request) =>
+        request.amount >= parseFloat(minAmount)
+      );
+    }
+
+    if (maxAmount) {
+      filtered = filtered.filter((request) =>
+        request.amount <= parseFloat(maxAmount)
+      );
+    }
+
+    setFilteredRequests(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [requests, filter, searchTerm, minAmount, maxAmount]);
+
+  // Pagination logic
+  useEffect(() => {
+    if (!filteredRequests.length) {
+      setPaginatedRequests([]);
+      setTotalPages(0);
+      return;
+    }
+
+    const total = Math.ceil(filteredRequests.length / itemsPerPage);
+    setTotalPages(total);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginated = filteredRequests.slice(startIndex, endIndex);
+    
+    setPaginatedRequests(paginated);
+  }, [filteredRequests, currentPage, itemsPerPage]);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setMinAmount('');
+    setMaxAmount('');
+    setFilter('all');
+    setCurrentPage(1);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -83,25 +190,88 @@ const WithDrawRequests = () => {
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Withdrawal Requests</h1>
-        
-        <div className="flex items-center gap-4">
-          <div className="relative">
+      </div>
+
+      {/* Filter Controls */}
+      <div className="bg-gray-50 rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold mb-4">Filters</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Search Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search User
+            </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Enter user name..."
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value as any)}
-              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Requests</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-              </svg>
-            </div>
           </div>
+
+          {/* Min Amount */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Min Amount (R)
+            </label>
+            <input
+              type="number"
+              value={minAmount}
+              onChange={(e) => setMinAmount(e.target.value)}
+              placeholder="0"
+              min="0"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Max Amount */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Max Amount (R)
+            </label>
+            <input
+              type="number"
+              value={maxAmount}
+              onChange={(e) => setMaxAmount(e.target.value)}
+              placeholder="No limit"
+              min="0"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        
+        {/* Filter Actions */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-gray-600">
+            Showing {filteredRequests.length} of {requests.length} requests
+            {(searchTerm || filter !== 'all' || minAmount || maxAmount) && (
+              <span className="ml-2 text-blue-600">(filtered)</span>
+            )}
+          </div>
+          <button
+            onClick={clearFilters}
+            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Clear Filters
+          </button>
         </div>
       </div>
 
@@ -114,19 +284,20 @@ const WithDrawRequests = () => {
           <p className="text-gray-500">When users request withdrawals, they'll appear here</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredRequests.map((request) => (
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedRequests.map((request) => (
                 <tr key={request._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -160,9 +331,102 @@ const WithDrawRequests = () => {
                   </td>
                 </tr>
               ))}
+              {paginatedRequests.length === 0 && filteredRequests.length > 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center py-8 text-gray-500">
+                    No requests found on this page.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+          {/* Items per page selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-700">Show:</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+              className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+            <span className="text-sm text-gray-700">entries</span>
+          </div>
+
+          {/* Pagination info */}
+          <div className="text-sm text-gray-700">
+            Showing {filteredRequests.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to{' '}
+            {Math.min(currentPage * itemsPerPage, filteredRequests.length)} of {filteredRequests.length} entries
+            {(searchTerm || filter !== 'all' || minAmount || maxAmount) && (
+              <span className="text-blue-600"> (filtered from {requests.length} total)</span>
+            )}
+          </div>
+
+          {/* Pagination buttons */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                First
+              </button>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+
+              {/* Page numbers */}
+              {getPageNumbers().map((pageNum, index, array) => (
+                <Fragment key={pageNum}>
+                  {index > 0 && array[index - 1] !== pageNum - 1 && (
+                    <span className="px-2 text-gray-500">...</span>
+                  )}
+                  <button
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-1 text-sm border rounded transition-colors ${
+                      currentPage === pageNum
+                        ? 'bg-blue-500 border-blue-500 text-white'
+                        : 'border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                  {index < array.length - 1 && array[index + 1] !== pageNum + 1 && pageNum !== totalPages && (
+                    <span className="px-2 text-gray-500">...</span>
+                  )}
+                </Fragment>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+              <button
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Last
+              </button>
+            </div>
+          )}
+          </div>
+        </>
       )}
     </div>
   );

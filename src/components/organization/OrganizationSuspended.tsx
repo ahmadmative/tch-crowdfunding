@@ -23,9 +23,6 @@ interface Organization {
   members: Member[];
 }
 
-const ITEMS_PER_PAGE = 5;
-
-
 const getFullUrl = (filePath: string) =>
   filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
 
@@ -35,6 +32,9 @@ const OrganizationSuspended: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [paginatedData, setPaginatedData] = useState<Organization[]>([]);
 
   const fetchOrganizations = async () => {
     try {
@@ -62,6 +62,42 @@ const OrganizationSuspended: React.FC = () => {
     }
   };
 
+  // Pagination helper functions
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
+  };
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
@@ -72,12 +108,23 @@ const OrganizationSuspended: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  // Pagination logic
+  React.useEffect(() => {
+    if (!filteredData.length) {
+      setPaginatedData([]);
+      setTotalPages(0);
+      return;
+    }
 
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+    const total = Math.ceil(filteredData.length / itemsPerPage);
+    setTotalPages(total);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginated = filteredData.slice(startIndex, endIndex);
+    
+    setPaginatedData(paginated);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   if (loading) return <div className="p-4">Loading...</div>;
 
@@ -148,36 +195,88 @@ const OrganizationSuspended: React.FC = () => {
         </table>
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 space-x-2">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+      {/* Pagination Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+        {/* Items per page selector */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-700">Show:</span>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+            className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Prev
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 border rounded ${
-                currentPage === i + 1 ? 'bg-blue-500 text-white' : ''
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+          <span className="text-sm text-gray-700">entries</span>
         </div>
-      )}
+
+        {/* Pagination info */}
+        <div className="text-sm text-gray-700">
+          Showing {filteredData.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to{' '}
+          {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries
+          {search && ` (filtered from ${data.length} total entries)`}
+        </div>
+
+        {/* Pagination buttons */}
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              First
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+
+            {/* Page numbers */}
+            {getPageNumbers().map((pageNum, index, array) => (
+              <React.Fragment key={pageNum}>
+                {index > 0 && array[index - 1] !== pageNum - 1 && (
+                  <span className="px-2 text-gray-500">...</span>
+                )}
+                <button
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`px-3 py-1 text-sm border rounded transition-colors ${
+                    currentPage === pageNum
+                      ? 'bg-blue-500 border-blue-500 text-white'
+                      : 'border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+                {index < array.length - 1 && array[index + 1] !== pageNum + 1 && pageNum !== totalPages && (
+                  <span className="px-2 text-gray-500">...</span>
+                )}
+              </React.Fragment>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Last
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

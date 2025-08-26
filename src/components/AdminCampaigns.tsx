@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useTransition } from 'react';
-import CampaignCard from '../components/Campaigns/CampaignCard';
+import CampaignCard from './Campaigns/CampaignCard';
 import axios from 'axios';
 import { BASE_URL } from '../config/url';
 

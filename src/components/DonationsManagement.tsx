@@ -26,6 +26,12 @@ const DonationsManagement: React.FC = () => {
   const [status, setStatus] = useState<string>("");
   const [originalTransactions, setOriginalTransactions] = useState<any>([]);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [paginatedTransactions, setPaginatedTransactions] = useState<any>([]);
+
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -43,6 +49,42 @@ const DonationsManagement: React.FC = () => {
   const pathname = location.pathname;
   const roles = ["transactions", "payments", "logs", "settings"]
   const [donorName, setDonorName] = useState("");
+
+  // Pagination helper functions
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
+  };
 
 
   useEffect(() => {
@@ -80,7 +122,26 @@ const DonationsManagement: React.FC = () => {
     }
 
     setTransactions(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [donorName, paymentMethod, status, originalTransactions]);
+
+  // Pagination logic
+  useEffect(() => {
+    if (!transactions.length) {
+      setPaginatedTransactions([]);
+      setTotalPages(0);
+      return;
+    }
+
+    const total = Math.ceil(transactions.length / itemsPerPage);
+    setTotalPages(total);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginated = transactions.slice(startIndex, endIndex);
+    
+    setPaginatedTransactions(paginated);
+  }, [transactions, currentPage, itemsPerPage]);
 
 
   useEffect(() => {
@@ -189,16 +250,8 @@ const DonationsManagement: React.FC = () => {
           >
             Transaction List
           </button>
+          
           {/* <button
-            onClick={() => setSelectedTab('payments')}
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'payments'
-              ? 'border-primary-500 text-primary-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-          >
-            Payment Settings
-          </button> */}
-          <button
             onClick={() => setSelectedTab('logs')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${selectedTab === 'logs'
               ? 'border-primary-500 text-primary-600'
@@ -206,7 +259,7 @@ const DonationsManagement: React.FC = () => {
               }`}
           >
             Receipt Logs
-          </button>
+          </button> */}
           <button
             onClick={() => setSelectedTab('eft')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${(selectedTab === 'eft')
@@ -234,9 +287,9 @@ const DonationsManagement: React.FC = () => {
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-gray-800">Donations Management</h1>
               <div className="flex space-x-4">
-                <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                {/* <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
                   Download Reports
-                </button>
+                </button> */}
               </div>
             </div>
 
@@ -345,10 +398,9 @@ const DonationsManagement: React.FC = () => {
                 />
                 <select onChange={(e) => setPaymentMethod(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Payment Methods</option>
-                  <option value="credit_card">Credit Card</option>
-                  <option value="paypal">PayPal</option>
                   <option value="bank_transfer">Bank Transfer</option>
-                  <option value="debit_card">Debit Card</option>
+                  <option value="EFT">EFT</option>
+                  
                 </select>
                 <select onChange={(e) => setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
                   <option value="">All Statuses</option>
@@ -372,7 +424,7 @@ const DonationsManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions?.map((transaction: any) => (
+                  {paginatedTransactions?.map((transaction: any) => (
                     <tr key={transaction.id} className="border-b">
                       <td className="py-3 px-4">{transaction?.donorId?.name}</td>
                       <td className="py-3 px-4">R{transaction?.amount}</td>
@@ -389,12 +441,7 @@ const DonationsManagement: React.FC = () => {
                           <Link to={`/donations/${transaction?._id}`} className="text-gray-600 hover:text-gray-800">
                             <EyeIcon className="h-5 w-5" />
                           </Link>
-                          <button className="text-gray-600 hover:text-gray-800">
-                            <ArrowPathIcon className="h-5 w-5" />
-                          </button>
-                          <button className="text-gray-600 hover:text-gray-800">
-                            <DocumentArrowDownIcon className="h-5 w-5" />
-                          </button>
+                          
                         </div>
                       </td>
                     </tr>
@@ -402,17 +449,91 @@ const DonationsManagement: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            <div className="mt-4 flex justify-between items-center">
-              <div className="text-sm text-gray-600">
-                Showing 1 to 10 of {transactions?.length} transactions
+            <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-gray-600">
+                  Showing {transactions.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, transactions.length)} of {transactions.length} transactions
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Items per page:</label>
+                  <select 
+                    value={itemsPerPage} 
+                    onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                    className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
               </div>
-              <div className="flex space-x-2">
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">Previous</button>
-                <button className="px-3 py-1 border rounded bg-primary-600 text-white">1</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">2</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">3</button>
-                <button className="px-3 py-1 border rounded hover:bg-gray-100">Next</button>
-              </div>
+              
+              {totalPages > 1 && (
+                <div className="flex items-center space-x-1">
+                  <button 
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-1 border rounded transition-colors ${
+                      currentPage === 1 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'hover:bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    Previous
+                  </button>
+                  
+                  {currentPage > 3 && (
+                    <>
+                      <button 
+                        onClick={() => handlePageChange(1)}
+                        className="px-3 py-1 border rounded hover:bg-gray-100 text-gray-700"
+                      >
+                        1
+                      </button>
+                      {currentPage > 4 && <span className="text-gray-500">...</span>}
+                    </>
+                  )}
+                  
+                  {getPageNumbers().map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-1 border rounded transition-colors ${
+                        currentPage === page
+                          ? 'bg-primary-600 text-white border-primary-600'
+                          : 'hover:bg-gray-100 text-gray-700'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  
+                  {currentPage < totalPages - 2 && (
+                    <>
+                      {currentPage < totalPages - 3 && <span className="text-gray-500">...</span>}
+                      <button 
+                        onClick={() => handlePageChange(totalPages)}
+                        className="px-3 py-1 border rounded hover:bg-gray-100 text-gray-700"
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                  
+                  <button 
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-1 border rounded transition-colors ${
+                      currentPage === totalPages 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'hover:bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
