@@ -93,6 +93,11 @@ const menuItems: MenuItem[] = [
     path: '/Support'
   },
   {
+    name: 'Support Mail Templates',
+    icon: DocumentTextIcon,
+    path: '/support/templates'
+  },
+  {
     name: 'Blogs',
     icon: Newspaper,
     path: '/blogs'
@@ -107,6 +112,7 @@ const menuItems: MenuItem[] = [
     icon: HelpingHand,
     path: "/payment-settings"
   },
+  
   {
     name: 'Core Content',
     icon:  Clipboard,

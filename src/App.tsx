@@ -54,6 +54,8 @@ import S18ADocumentMain from './pages/organization/s18aDocument/S18ADocumentMain
 import BankDetailsMain from './pages/organization/bankDetails/BankDetailsMain';
 import WithDrawRequestsDetail from './components/WithDrawRequestsDetail';
 import WorkSection from './components/dynamicPages/WorkSection';
+import SupportMailTemplate from './components/SupportMailTemplate';
+import SupportTemplateDetail from './components/SupportTemplateDetail';
 
 
 
@@ -188,6 +190,9 @@ function App() {
 
             <Route path="/support" element={<SupportMails />} />
             <Route path="/support/:id" element={<SupportDetails />} />
+            <Route path="/support/templates" element={<SupportMailTemplate />} />
+            <Route path="/support/template/new" element={<SupportTemplateDetail />} />
+            <Route path="/support/template/:mode/:id" element={<SupportTemplateDetail />} />
 
             <Route path='/blog/write' element={<WriteBlog />} />
             <Route path='/blogs' element={<Blogs />} />
