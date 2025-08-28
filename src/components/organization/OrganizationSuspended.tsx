@@ -21,6 +21,12 @@ interface Organization {
   city: string;
   country: string;
   members: Member[];
+  componentStatuses?: {
+    organization: string;
+    bankDetails: string;
+    s18ADocument: string;
+    verificationDocuments?: string;
+  };
 }
 
 const getFullUrl = (filePath: string) =>
@@ -38,9 +44,20 @@ const OrganizationSuspended: React.FC = () => {
 
   const fetchOrganizations = async () => {
     try {
-      const res = await axios.get<Organization[]>(`${BASE_URL}/organization?status=suspended`);
-      setData(res.data);
-      setFilteredData(res.data);
+      // Fetch all organizations and filter based on component statuses
+      const res = await axios.get<Organization[]>(`${BASE_URL}/organization/with-status`);
+      const allOrgs = res.data;
+      
+      // Filter organizations that have any suspended components
+      const suspendedOrgs = allOrgs.filter((org: Organization) => {
+        if (!org.componentStatuses) return false;
+        
+        const { componentStatuses } = org;
+        return Object.values(componentStatuses).some(status => status === 'suspended');
+      });
+      
+      setData(suspendedOrgs);
+      setFilteredData(suspendedOrgs);
     } catch (error) {
       toast.error('Error fetching organizations');
     } finally {
@@ -60,6 +77,26 @@ const OrganizationSuspended: React.FC = () => {
     } catch (error) {
       toast.error(`Failed to ${status} organization`);
     }
+  };
+
+  const getSuspendedComponents = (componentStatuses: any) => {
+    if (!componentStatuses) return [];
+    
+    const suspendedComponents = [];
+    if (componentStatuses.organization === 'suspended') {
+      suspendedComponents.push('Organization Details');
+    }
+    if (componentStatuses.bankDetails === 'suspended') {
+      suspendedComponents.push('Bank Details');
+    }
+    if (componentStatuses.s18ADocument === 'suspended') {
+      suspendedComponents.push('S18A Documents');
+    }
+    if (componentStatuses.verificationDocuments === 'suspended') {
+      suspendedComponents.push('Verification Documents');
+    }
+    
+    return suspendedComponents;
   };
 
   // Pagination helper functions
@@ -131,7 +168,7 @@ const OrganizationSuspended: React.FC = () => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-2xl font-semibold">Organisations</h2>
+        <h2 className="text-2xl font-semibold">Suspended Organisations</h2>
         <input
           type="text"
           value={search}
@@ -149,45 +186,60 @@ const OrganizationSuspended: React.FC = () => {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Total Members</th>
               <th className="text-left py-3 px-4">Donation Collected</th>
-              {/* <th className="text-left py-3 px-4">City</th>
-              <th className="text-left py-3 px-4">Country</th> */}
+              <th className="text-left py-3 px-4">Suspended Components</th>
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((org) => (
-              <tr key={org._id} className="border-b">
-                <td className="py-3 px-4">
-                  <img
-                    src={getFullUrl(org.logo)}
-                    alt={org.name}
-                    className="w-10 h-10 object-cover rounded"
-                  />
-                </td>
-                <td className="py-3 px-4">{org.name}</td>
-                <td className="py-3 px-4">{org.members?.length || 0}</td>
-                <td className="py-3 px-4">{org.totalDonations || 0}</td>
-                {/* <td className="py-3 px-4">{org.city}</td>
-                <td className="py-3 px-4">{org.country}</td> */}
-                <td className="py-3 px-4">
-                  <div className='flex gap-2'>
-                    <Link
-                    to={`/organizations/${org._id}`}
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  >
-                    <Eye/>
-                  </Link>
-                  <p onClick={() => handleStatus(org._id, 'active')} className="text-blue-600 hover:text-blue-800 underline cursor-pointer">Active</p>
-  
-                  </div>                
-                
-                </td>
-              </tr>
-            ))}
+            {paginatedData.map((org) => {
+              const suspendedComponents = getSuspendedComponents(org.componentStatuses);
+              
+              return (
+                <tr key={org._id} className="border-b">
+                  <td className="py-3 px-4">
+                    <img
+                      src={getFullUrl(org.logo)}
+                      alt={org.name}
+                      className="w-10 h-10 object-cover rounded"
+                    />
+                  </td>
+                  <td className="py-3 px-4">{org.name}</td>
+                  <td className="py-3 px-4">{org.members?.length || 0}</td>
+                  <td className="py-3 px-4">{org.totalDonations || 0}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-wrap gap-1">
+                      {suspendedComponents.length > 0 ? (
+                        suspendedComponents.map((component, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800"
+                          >
+                            {component}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-xs">No suspended components</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className='flex gap-2'>
+                      <Link
+                        to={`/organizations/${org._id}`}
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        <Eye/>
+                      </Link>
+                      <p onClick={() => handleStatus(org._id, 'active')} className="text-blue-600 hover:text-blue-800 underline cursor-pointer">Active</p>
+                    </div>                
+                  </td>
+                </tr>
+              );
+            })}
             {paginatedData.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-4 text-gray-500">
-                  No results found.
+                  No suspended organizations found.
                 </td>
               </tr>
             )}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL, SOCKET_URL } from '../../config/url';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Eye, CheckCircle } from 'lucide-react';
 
 interface Member {
   _id: string;
@@ -32,7 +32,7 @@ interface Organization {
 const getFullUrl = (filePath: string) =>
   filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
 
-const OrganizationRegected: React.FC = () => {
+const OrganizationApproved: React.FC = () => {
   const [data, setData] = useState<Organization[]>([]);
   const [filteredData, setFilteredData] = useState<Organization[]>([]);
   const [search, setSearch] = useState<string>('');
@@ -48,16 +48,24 @@ const OrganizationRegected: React.FC = () => {
       const res = await axios.get<Organization[]>(`${BASE_URL}/organization/with-status`);
       const allOrgs = res.data;
       
-      // Filter organizations that have any rejected components
-      const rejectedOrgs = allOrgs.filter((org: Organization) => {
+      // Filter organizations where ALL components are approved
+      const approvedOrgs = allOrgs.filter((org: Organization) => {
         if (!org.componentStatuses) return false;
         
         const { componentStatuses } = org;
-        return Object.values(componentStatuses).some(status => status === 'rejected');
+        
+        // Check each component individually - all must be explicitly 'approved'
+        const organizationApproved = componentStatuses.organization === 'approved';
+        const bankDetailsApproved = componentStatuses.bankDetails === 'approved';
+        const s18ADocumentApproved = componentStatuses.s18ADocument === 'approved';
+        const verificationDocumentsApproved = componentStatuses.verificationDocuments === 'approved';
+        
+        // All components must be explicitly 'approved' (undefined is not approved)
+        return organizationApproved && bankDetailsApproved && s18ADocumentApproved && verificationDocumentsApproved;
       });
       
-      setData(rejectedOrgs);
-      setFilteredData(rejectedOrgs);
+      setData(approvedOrgs);
+      setFilteredData(approvedOrgs);
     } catch (error) {
       toast.error('Error fetching organizations');
     } finally {
@@ -69,34 +77,24 @@ const OrganizationRegected: React.FC = () => {
     fetchOrganizations();
   }, []);
 
-  const handleStatus = async (id: string, status: 'pending' ) => {
-    try {
-      await axios.patch(`${BASE_URL}/organization/status/${id}`, { status });
-      toast.success(`Organization ${status}`);
-      fetchOrganizations();
-    } catch (error) {
-      toast.error(`Failed to ${status} organization`);
-    }
-  };
-
-  const getRejectedComponents = (componentStatuses: any) => {
+  const getApprovedComponents = (componentStatuses: any) => {
     if (!componentStatuses) return [];
     
-    const rejectedComponents = [];
-    if (componentStatuses.organization === 'rejected') {
-      rejectedComponents.push('Organization Details');
+    const approvedComponents = [];
+    if (componentStatuses.organization === 'approved') {
+      approvedComponents.push('Organization Details');
     }
-    if (componentStatuses.bankDetails === 'rejected') {
-      rejectedComponents.push('Bank Details');
+    if (componentStatuses.bankDetails === 'approved') {
+      approvedComponents.push('Bank Details');
     }
-    if (componentStatuses.s18ADocument === 'rejected') {
-      rejectedComponents.push('S18A Documents');
+    if (componentStatuses.s18ADocument === 'approved') {
+      approvedComponents.push('S18A Documents');
     }
-    if (componentStatuses.verificationDocuments === 'rejected') {
-      rejectedComponents.push('Verification Documents');
+    if (componentStatuses.verificationDocuments && componentStatuses.verificationDocuments === 'approved') {
+      approvedComponents.push('Verification Documents');
     }
     
-    return rejectedComponents;
+    return approvedComponents;
   };
 
   // Pagination helper functions
@@ -168,7 +166,7 @@ const OrganizationRegected: React.FC = () => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-2xl font-semibold">Rejected Organisations</h2>
+        <h2 className="text-2xl font-semibold">Approved Organisations</h2>
         <input
           type="text"
           value={search}
@@ -186,13 +184,13 @@ const OrganizationRegected: React.FC = () => {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Total Members</th>
               <th className="text-left py-3 px-4">Donation Collected</th>
-              <th className="text-left py-3 px-4">Rejected Components</th>
+              <th className="text-left py-3 px-4">Approved Components</th>
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((org) => {
-              const rejectedComponents = getRejectedComponents(org.componentStatuses);
+              const approvedComponents = getApprovedComponents(org.componentStatuses);
               
               return (
                 <tr key={org._id} className="border-b">
@@ -208,17 +206,18 @@ const OrganizationRegected: React.FC = () => {
                   <td className="py-3 px-4">{org.totalDonations || 0}</td>
                   <td className="py-3 px-4">
                     <div className="flex flex-wrap gap-1">
-                      {rejectedComponents.length > 0 ? (
-                        rejectedComponents.map((component, index) => (
+                      {approvedComponents.length > 0 ? (
+                        approvedComponents.map((component, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800"
+                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800"
                           >
+                            <CheckCircle className="w-3 h-3 mr-1" />
                             {component}
                           </span>
                         ))
                       ) : (
-                        <span className="text-gray-500 text-xs">No rejected components</span>
+                        <span className="text-gray-500 text-xs">No approved components</span>
                       )}
                     </div>
                   </td>
@@ -230,7 +229,6 @@ const OrganizationRegected: React.FC = () => {
                       >
                         <Eye/>
                       </Link>
-                      <p onClick={() => handleStatus(org._id, 'pending')} className="text-blue-600 hover:text-blue-800 underline cursor-pointer">Reverse</p>
                     </div>                
                   </td>
                 </tr>
@@ -239,7 +237,7 @@ const OrganizationRegected: React.FC = () => {
             {paginatedData.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-4 text-gray-500">
-                  No rejected organizations found.
+                  No approved organizations found.
                 </td>
               </tr>
             )}
@@ -333,4 +331,4 @@ const OrganizationRegected: React.FC = () => {
   );
 };
 
-export default OrganizationRegected;
+export default OrganizationApproved;

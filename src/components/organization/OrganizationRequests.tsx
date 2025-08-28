@@ -13,12 +13,13 @@ interface Organization {
   country: string;
   members?: any[];
   totalDonations?: number;
-  overallStatus: 'pending' | 'approved' | 'rejected';
+  overallStatus: 'pending' | 'approved' | 'rejected' | 'suspended';
   pendingSteps: string[] | string;
   componentStatuses: {
     organization: string;
     bankDetails: string;
     s18ADocument: string;
+    verificationDocuments?: string;
   };
 }
 
@@ -37,9 +38,33 @@ const OrganizationRequests: React.FC = () => {
 
   const fetchOrganizations = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/organization/with-status?statusFilter=pending`);
-      setData(res.data);
-      setFilteredData(res.data);
+      // Fetch all organizations and filter based on component statuses
+      const res = await axios.get(`${BASE_URL}/organization/with-status`);
+      const allOrgs = res.data;
+      
+      // Filter organizations that should be in the requests tab
+      const requestOrgs = allOrgs.filter((org: Organization) => {
+        const { componentStatuses } = org;
+        
+        // Check if any component is pending, rejected, or suspended
+        const hasPending = Object.values(componentStatuses).some(status => 
+          status === 'pending' || status === undefined
+        ) || !componentStatuses.verificationDocuments; // verificationDocuments not uploaded yet
+        const hasRejected = Object.values(componentStatuses).some(status => 
+          status === 'rejected'
+        );
+        const hasSuspended = Object.values(componentStatuses).some(status => 
+          status === 'suspended'
+        );
+        
+        // Only show in requests if:
+        // 1. Has pending components (not fully approved)
+        // 2. No rejected or suspended components (those go to their respective tabs)
+        return hasPending && !hasRejected && !hasSuspended;
+      });
+      
+      setData(requestOrgs);
+      setFilteredData(requestOrgs);
     } catch (error) {
       toast.error('Error fetching organizations');
     } finally {
@@ -97,14 +122,38 @@ const OrganizationRequests: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const handleStatus = async (id: string, status: 'active' | 'rejected') => {
-    try {
-      await axios.patch(`${BASE_URL}/organization/status/${id}`, { status });
-      toast.success(`Organization ${status}`);
-      fetchOrganizations();
-    } catch (error) {
-      toast.error(`Failed to ${status} organization`);
+  const getComponentStatusSummary = (componentStatuses: any) => {
+    // Use the same logic as getPendingSteps to ensure consistency
+    const pendingSteps = getPendingSteps(componentStatuses);
+    const pending = pendingSteps.length;
+    
+    // Count approved components
+    const approved = Object.values(componentStatuses).filter((status: any) => status === 'approved').length;
+    
+    // Count rejected and suspended components
+    const rejected = Object.values(componentStatuses).filter((status: any) => status === 'rejected').length;
+    const suspended = Object.values(componentStatuses).filter((status: any) => status === 'suspended').length;
+    
+    return { pending, approved, rejected, suspended };
+  };
+
+  const getPendingSteps = (componentStatuses: any) => {
+    const pendingSteps = [];
+    
+    if (componentStatuses.organization !== 'approved') {
+      pendingSteps.push('Organization Details');
     }
+    if (componentStatuses.bankDetails !== 'approved') {
+      pendingSteps.push('Bank Details');
+    }
+    if (componentStatuses.s18ADocument !== 'approved') {
+      pendingSteps.push('S18A Documents');
+    }
+    if (componentStatuses.verificationDocuments !== 'approved') {
+      pendingSteps.push('Verification Documents');
+    }
+    
+    return pendingSteps;
   };
 
   // Pagination logic
@@ -146,65 +195,46 @@ const OrganizationRequests: React.FC = () => {
             <tr className="border-b">
               <th className="text-left py-3 px-4">Logo</th>
               <th className="text-left py-3 px-4">Name</th>
-              {/* <th className="text-left py-3 px-4">City</th> */}
-              <th className="text-left py-3 px-4">Total Steps Pending</th>
+              <th className="text-left py-3 px-4">Status Summary</th>
               <th className="text-left py-3 px-4">Pending Steps</th>
               <th className="text-left py-3 px-4">Action</th>
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((org) => (
-              <tr key={org._id} className="border-b">
-                <td className="py-3 px-4">
-                  <img
-                    src={getFullUrl(org.logo)}
-                    alt={org.name}
-                    className="w-10 h-10 object-cover rounded"
-                  />
-                </td>
-                <td className="py-3 px-4">{org.name}</td>
-                {/* <td className="py-3 px-4">{org.city}</td>
-                <td className="py-3 px-4">{org.country}</td> */}
-                <td className="py-3 px-4">
-                  {(() => {
-                    // Handle both string and array cases for count
-                    let stepsArray: string[] = [];
-                    if (Array.isArray(org.pendingSteps)) {
-                      stepsArray = org.pendingSteps;
-                    } else if (typeof org.pendingSteps === 'string' && org.pendingSteps.trim()) {
-                      stepsArray = org.pendingSteps.includes(',') 
-                        ? org.pendingSteps.split(',').map(s => s.trim())
-                        : [org.pendingSteps.trim()];
-                    }
-
-                    return (
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        org.overallStatus === 'pending' 
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : org.overallStatus === 'rejected'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {stepsArray.length}
-                      </span>
-                    );
-                  })()}
-                </td>
-                <td className="py-3 px-4">
-                  <div className="flex flex-wrap gap-1">
-                    {(() => {
-                      // Handle both string and array cases for individual steps
-                      let stepsArray: string[] = [];
-                      if (Array.isArray(org.pendingSteps)) {
-                        stepsArray = org.pendingSteps;
-                      } else if (typeof org.pendingSteps === 'string' && org.pendingSteps.trim()) {
-                        stepsArray = org.pendingSteps.includes(',') 
-                          ? org.pendingSteps.split(',').map(s => s.trim())
-                          : [org.pendingSteps.trim()];
-                      }
-
-                      return stepsArray.length > 0 ? (
-                        stepsArray.map((step, index) => (
+            {paginatedData.map((org) => {
+              const statusSummary = getComponentStatusSummary(org.componentStatuses);
+              const pendingSteps = getPendingSteps(org.componentStatuses);
+              
+              return (
+                <tr key={org._id} className="border-b">
+                  <td className="py-3 px-4">
+                    <img
+                      src={getFullUrl(org.logo)}
+                      alt={org.name}
+                      className="w-10 h-10 object-cover rounded"
+                    />
+                  </td>
+                  <td className="py-3 px-4">{org.name}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">Pending:</span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          {statusSummary.pending}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">Approved:</span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {statusSummary.approved}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-wrap gap-1">
+                      {pendingSteps.length > 0 ? (
+                        pendingSteps.map((step, index) => (
                           <span
                             key={index}
                             className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800"
@@ -213,38 +243,26 @@ const OrganizationRequests: React.FC = () => {
                           </span>
                         ))
                       ) : (
-                        <span className="text-gray-500 text-xs">No pending steps</span>
-                      );
-                    })()}
-                  </div>
-                </td>
-                <td className="py-3 px-4 flex gap-2">
-                  <Link
-                    to={`/organizations/${org._id}`}
-                    className="text-blue-600 mt-4 hover:text-blue-800 underline"
-                    title="View"
-                  >
-                    <Eye size={18} />
-                  </Link>
-                  {/* <button
-                    onClick={() => handleStatus(org._id, 'active')}
-                    className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleStatus(org._id, 'rejected')}
-                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Rejected
-                  </button> */}
-                </td>
-              </tr>
-            ))}
+                        <span className="text-gray-500 text-xs">All approved</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 flex gap-2">
+                    <Link
+                      to={`/organizations/${org._id}`}
+                      className="text-blue-600 mt-4 hover:text-blue-800 underline"
+                      title="View"
+                    >
+                      <Eye size={18} />
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
             {paginatedData.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-4 text-gray-500">
-                  No results found.
+                  No pending organizations found.
                 </td>
               </tr>
             )}
@@ -327,7 +345,7 @@ const OrganizationRequests: React.FC = () => {
             <button
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:cursor-not-allowed"
             >
               Last
             </button>

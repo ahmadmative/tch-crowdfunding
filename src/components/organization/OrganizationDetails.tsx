@@ -9,6 +9,7 @@ import OrganizationCampaigns from './OrganizationCampaigns';
 import MailModal from './MailModal';
 import OrganizationBankDetails from './OrganizationBankDetails';
 import OrganizationS18ADocument from './OrganizationS18ADocument';
+import OrganizationVerification from './OrganizationVerification';
 
 const OrganizationDetails = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const OrganizationDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<string>('pending');
   const [showModal, setShowModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'organization' | 'bankDetails' | 's18aDocuments'>('organization');
+  const [activeTab, setActiveTab] = useState<'organization' | 'bankDetails' | 's18aDocuments' | 'verificationDocuments'>('organization');
 
   const getFullUrl = (filePath: string) =>
     filePath?.startsWith('http') ? filePath : `${SOCKET_URL}/${filePath}`;
@@ -128,6 +129,16 @@ const OrganizationDetails = () => {
             >
               S18A Documents
             </button>
+            <button
+              onClick={() => setActiveTab('verificationDocuments')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'verificationDocuments'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Verification Documents
+            </button>
           </nav>
         </div>
 
@@ -168,7 +179,7 @@ const OrganizationDetails = () => {
             <h4 className="font-semibold text-gray-600 mt-2">Social Media Links</h4>
             <ul className="list-disc list-inside text-blue-600">
               {socialMediaLinks.length > 0 ? socialMediaLinks.map((link: string, idx: number) => (
-                <li key={idx}><a href={link} target="_blank" rel="noreferrer" className="hover:underline">{link}</a></li>
+                <li key={idx}><a href={link} target="_blank" rel="nooreferrer" className="hover:underline">{link}</a></li>
               )) : <li className="text-gray-400">No links</li>}
             </ul>
           </div>
@@ -228,10 +239,15 @@ const OrganizationDetails = () => {
               {/* Bank Details Content */}
               <OrganizationBankDetails userId={data.userId?._id} />
             </>
-          ) : (
+          ) : activeTab === 's18aDocuments' ? (
             <>
               {/* S18A Documents Content */}
               <OrganizationS18ADocument userId={data.userId?._id} />
+            </>
+          ) : (
+            <>
+              {/* Verification Documents Content */}
+              <OrganizationVerification userId={data.userId?._id} />
             </>
           )}
         </div>

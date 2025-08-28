@@ -87,16 +87,16 @@ const menuItems: MenuItem[] = [
     icon: CurrencyDollarIcon,
     path: '/requests'
   },
-  {
-    name: 'Support',
-    icon: DocumentTextIcon,
-    path: '/Support'
-  },
-  {
-    name: 'Support Mail Templates',
-    icon: DocumentTextIcon,
-    path: '/support/templates'
-  },
+  // {
+  //   name: 'Support',
+  //   icon: DocumentTextIcon,
+  //   path: '/Support'
+  // },
+  // {
+  //   name: 'Support Mail Templates',
+  //   icon: DocumentTextIcon,
+  //   path: '/support/templates'
+  // },
   {
     name: 'Blogs',
     icon: Newspaper,
