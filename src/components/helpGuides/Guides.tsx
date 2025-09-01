@@ -5,9 +5,12 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Pen, Trash } from 'lucide-react';
 
+const PAGE_SIZE = 10;
+
 const Guides = () => {
   const [guides, setGuides] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [page, setPage] = React.useState(1);
 
   const fetch = async () => {
     try {
@@ -37,6 +40,10 @@ const Guides = () => {
   useEffect(() => {
     fetch();
   }, []);
+
+  // Pagination logic
+  const totalPages = Math.ceil(guides.length / PAGE_SIZE);
+  const paginatedGuides = guides.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   if (loading) {
     return (
@@ -91,7 +98,7 @@ const Guides = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {guides.length === 0 ? (
+              {paginatedGuides.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center">
@@ -113,10 +120,10 @@ const Guides = () => {
                   </td>
                 </tr>
               ) : (
-                guides.map((guide: any, index: number) => (
+                paginatedGuides.map((guide: any, index: number) => (
                   <tr key={guide._id} className="hover:bg-gray-50 transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {index + 1}
+                      {(page - 1) * PAGE_SIZE + index + 1}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center">
@@ -189,6 +196,34 @@ const Guides = () => {
             </tbody>
           </table>
         </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 py-4">
+            <button
+              className="px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={`px-3 py-1 rounded ${page === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                onClick={() => setPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              className="px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

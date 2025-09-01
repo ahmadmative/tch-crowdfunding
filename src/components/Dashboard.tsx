@@ -161,7 +161,11 @@ const Dashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Success Rate</h3>
           <p className="text-3xl font-bold text-purple-600">
-            {quickStats?.campaignStats.completionRate.toFixed(1)}%
+            {
+              quickStats?.campaignStats?.completionRate != null && !isNaN(quickStats.campaignStats.completionRate)
+                ? `${quickStats.campaignStats.completionRate.toFixed(1)}%`
+                : "N/A"
+            }
           </p>
           <p className="text-sm text-gray-600 mt-2">Based on campaign goals</p>
         </div>
