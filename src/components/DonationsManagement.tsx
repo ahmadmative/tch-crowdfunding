@@ -3,10 +3,11 @@ import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Cart
 import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { BASE_URL } from '../config/url';
+import { BASE_URL, SOCKET_URL } from '../config/url';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import EFTDonation from './donation/EFTDonation';
+import { toast } from 'react-toastify';
 
 
 
@@ -202,6 +203,43 @@ const DonationsManagement: React.FC = () => {
     }
     fetchDonationStats()
   }, [])
+
+
+
+  const handlePrint = async (donation : any) => {
+    const toastId = toast.loading("Generating S18A Certificate...");
+
+    try {
+      const res = await axios.post(`${BASE_URL}/s18/document`, donation);
+
+      toast.update(toastId, {
+        render: "Certificate generated successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+      // Get the outputPath and convert to browser-accessible URL
+      const outputPath = res.data.outputPath;
+      if (outputPath) {
+        const fileName =
+          outputPath.split("certificates\\").pop() ||
+          outputPath.split("certificates/").pop();
+        const fileUrl = `${SOCKET_URL}/certificates/${fileName}`;
+        window.open(fileUrl, "_blank");
+      }
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Failed to generate S18A Certificate",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      console.error("Error generating S18A Certificate: ", error);
+    }
+  };
+
+
 
   if (loading) {
     return (
@@ -414,33 +452,48 @@ const DonationsManagement: React.FC = () => {
               <table className="min-w-full">
                 <thead>
                   <tr className="border-b">
+                    <th className="text-left py-3 px-4">Date</th>
+                    <th className="text-left py-3 px-4">Reference Id</th>
                     <th className="text-left py-3 px-4">Donor</th>
-                    <th className="text-left py-3 px-4">Amount</th>
                     <th className="text-left py-3 px-4">Campaign</th>
+                    <th className="text-left py-3 px-4">Total Amount</th>
+                    <th className="text-left py-3 px-4">Platform Fee</th>
+                    <th className="text-left py-3 px-4">Contribution</th>
+                    
                     <th className="text-left py-3 px-4">Payment Method</th>
                     <th className="text-left py-3 px-4">Status</th>
-                    <th className="text-left py-3 px-4">Date</th>
                     <th className="text-left py-3 px-4">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginatedTransactions?.map((transaction: any) => (
                     <tr key={transaction.id} className="border-b">
-                      <td className="py-3 px-4">{transaction?.donorId?.name}</td>
-                      <td className="py-3 px-4">R{transaction?.amount}</td>
+                      <td className="py-3 px-4">{dayjs(transaction?.date).format('DD-MM-YYYY')}</td>
+                      <td className="py-3 px-4">{transaction?.referenceId}</td>
+                      <td className="py-3 px-4">{transaction?.donor?.name}</td>
                       <td className="py-3 px-4">{transaction?.campaignId?.title || "Organization Donation"}</td>
+                      <td className="py-3 px-4">R{transaction?.totalAmount}</td>
+                      <td className="py-3 px-4">R{transaction?.platformFee}</td>
+                      <td className="py-3 px-4">R{transaction?.tip}</td>
                       <td className="py-3 px-4">{transaction?.paymentMethod}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction?.status)}`}>
                           {transaction?.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{dayjs(transaction?.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <Link to={`/donations/${transaction?._id}`} className="text-gray-600 hover:text-gray-800">
                             <EyeIcon className="h-5 w-5" />
                           </Link>
+
+                          {
+                            transaction.s18aRecord.length> 0 && (
+                              <button onClick={() => handlePrint(transaction.s18aRecord[0])} className="text-gray-600 hover:text-gray-800">
+                                <DocumentArrowDownIcon className="h-5 w-5" />
+                              </button>
+                            )
+                          }
                           
                         </div>
                       </td>
