@@ -75,7 +75,7 @@ const options: Record<string, string[]> = {
   "OTP Code Email": ["{{otp_code}}"],
   "Password Reset": ["{{name}}", "{{otp_code}}"],
   // "Campaign Creation Email": ["{{campaigner_name}}", "{{amount}}", "{{starting_date}}"],
-  "Donation Receipt (Donor)": ["{{donor_name}}", "{{amount}}", "{{campaign_name}}"],
+  "Donation Receipt (Donor)": ["{{donor_name}}", "{{receipt_ref}}", "{{organisation_name}}", "{{amount}}", "{{campaign_name}}"],
   "New Donation Alert (Campaign Owner)": ["{{campaigner_name}}", "{{amount}}", "{{campaign_name}}", "{{donor_name}}"],
   // "Campaign Status Update to Campaigner": ["{{campaigner_name}}", "{{campaign_title}}", "{{status}}"],
   "Campaign Completion": ["{{campaigner_name}}", "{{campaign_title}}", "{{amount}}", "{{total_donors}}", "{{start_date}}", "{{end_date}}"],
