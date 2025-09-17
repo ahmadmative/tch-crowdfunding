@@ -453,14 +453,21 @@ const DonationsManagement: React.FC = () => {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 px-4">Date</th>
-                    <th className="text-left py-3 px-4">Reference Id</th>
-                    <th className="text-left py-3 px-4">Donor</th>
-                    <th className="text-left py-3 px-4">Campaign</th>
-                    <th className="text-left py-3 px-4">Total Amount</th>
-                    <th className="text-left py-3 px-4">Platform Fee</th>
-                    <th className="text-left py-3 px-4">Contribution</th>
+                    <th className="text-left py-3 px-4">Txn Reference</th>
+                    <th className="text-left py-3 px-4 min-w-[200px]">Donor</th>
+                    <th className="text-left py-3 px-4 min-w-[200px]">Campaign</th>
+                    <th className="text-left py-3 px-4 min-w-[200px]">Organization</th>
+                    <th className="text-left py-3 px-4 min-w-[200px]">Campaign Id</th>
+                    <th className="text-left py-3 px-4 min-w-[130px]">Base</th>
                     
-                    <th className="text-left py-3 px-4">Payment Method</th>
+                    
+                    <th className="text-left py-3 px-4 min-w-[130px]">Contribution</th>
+                    <th className="text-left py-3 px-4 min-w-[130px]">Sub Total</th>
+                    <th className="text-left py-3 px-4 min-w-[130px]">Platform Fee</th>
+                    <th className="text-left py-3 px-4 min-w-[130px]">Txn Fee</th>
+                    <th className="text-left py-3 px-4 min-w-[130px]">Due</th>
+                    
+                    <th className="text-left py-3 px-4 min-w-[130px]">Payment Method</th>
                     <th className="text-left py-3 px-4">Status</th>
                     <th className="text-left py-3 px-4">Actions</th>
                   </tr>
@@ -471,10 +478,16 @@ const DonationsManagement: React.FC = () => {
                       <td className="py-3 px-4">{dayjs(transaction?.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">{transaction?.referenceId}</td>
                       <td className="py-3 px-4">{transaction?.donor?.name}</td>
-                      <td className="py-3 px-4">{transaction?.campaignId?.title || "Organization Donation"}</td>
-                      <td className="py-3 px-4">R{transaction?.totalAmount}</td>
-                      <td className="py-3 px-4">R{transaction?.platformFee}</td>
+                      <td className="py-3 px-4">{transaction?.campaign?.title || "N/A"} </td>
+                      <td className="py-3 px-4">{transaction?.organization?.name || "N/A"}</td>
+                      <td className="py-3 px-4">{transaction?.campaign?._id|| "N/A"}</td>
+                      <td className="py-3 px-4">R{transaction?.totalAmount - transaction?.tip}</td>
+
                       <td className="py-3 px-4">R{transaction?.tip}</td>
+                      <td className="py-3 px-4 ">R{transaction?.totalAmount}</td>
+                      <td className="py-3 px-4">R{transaction?.platformFee}</td>
+                      <td className="py-3 px-4">R{transaction?.transactionFee}</td>
+                      <td className="py-3 px-4">R{transaction?.amount}</td>
                       <td className="py-3 px-4">{transaction?.paymentMethod}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction?.status)}`}>
