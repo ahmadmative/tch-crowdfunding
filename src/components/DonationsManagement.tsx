@@ -11,6 +11,9 @@ import { toast } from 'react-toastify';
 
 
 
+
+
+
 const COLORS = ["#4CAF50", "#2196F3", "#FF5722", "#FFC107", "#9C27B0"];
 
 const DonationsManagement: React.FC = () => {
@@ -26,6 +29,8 @@ const DonationsManagement: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [originalTransactions, setOriginalTransactions] = useState<any>([]);
+  const [exportStartDate, setExportStartDate] = useState<string>("");
+  const [exportEndDate, setExportEndDate] = useState<string>("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -239,7 +244,78 @@ const DonationsManagement: React.FC = () => {
     }
   };
 
+  // CSV export utility (no external package)
+  const handleExportCSV = () => {
+    // Filter by date if set
+    let filtered = [...transactions];
+    if (exportStartDate) {
+      filtered = filtered.filter((t) =>
+        dayjs(t.date).isAfter(dayjs(exportStartDate).subtract(1, "day"))
+      );
+    }
+    if (exportEndDate) {
+      filtered = filtered.filter((t) =>
+        dayjs(t.date).isBefore(dayjs(exportEndDate).add(1, "day"))
+      );
+    }
 
+    // Prepare CSV header and rows
+    const header = [
+      "Date",
+      "Reference",
+      "Donor",
+      "Campaign",
+      "Organization",
+      "CampaignId",
+      "Base",
+      "Contribution",
+      "SubTotal",
+      "PlatformFee",
+      "TxnFee",
+      "Due",
+      "PaymentMethod",
+      "Status"
+    ];
+    const rows = filtered.map((t: any) => [
+      dayjs(t.date).format("YYYY-MM-DD"),
+      t.referenceId,
+      t.donor?.name,
+      t.campaign?.title || "N/A",
+      t.organization?.name || "N/A",
+      t.campaign?._id || "N/A",
+      t.totalAmount - t.tip,
+      t.tip,
+      t.totalAmount,
+      t.platformFee,
+      t.transactionFee,
+      t.amount,
+      t.paymentMethod,
+      t.status,
+    ]);
+    const csvContent =
+      [header, ...rows]
+        .map((row) =>
+          row
+            .map((cell) =>
+              typeof cell === "string" && (cell.includes(",") || cell.includes('"'))
+                ? `"${cell.replace(/"/g, '""')}"`
+                : cell
+            )
+            .join(",")
+        )
+        .join("\r\n");
+
+    // Download CSV
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Donations Transactions.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   if (loading) {
     return (
@@ -424,6 +500,43 @@ const DonationsManagement: React.FC = () => {
       {/* Transactions Table */}
       {(selectedTab === 'transactions' || selectedTab === 'settings') && (
         <div className="bg-white rounded-lg shadow">
+          <div className="flex items-center gap-4 p-4">
+            <label className="text-sm">
+              From:{" "}
+              <input
+                type="date"
+                value={exportStartDate}
+                onChange={e => setExportStartDate(e.target.value)}
+                className="border border-gray-300 rounded px-2 py-1 text-sm ml-1"
+              />
+            </label>
+            <label className="text-sm">
+              To:{" "}
+              <input
+                type="date"
+                value={exportEndDate}
+                onChange={e => setExportEndDate(e.target.value)}
+                className="border border-gray-300 rounded px-2 py-1 text-sm ml-1"
+              />
+            </label>
+            
+            <button
+              onClick={() => {
+                setExportStartDate("");
+                setExportEndDate("");
+              }}
+              className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+            >
+              Reset
+            </button>
+
+            <button
+              onClick={handleExportCSV}
+              className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition-colors"
+            >
+              Export CSV
+            </button>
+          </div>
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Transaction List</h2>
@@ -699,4 +812,4 @@ const DonationsManagement: React.FC = () => {
   );
 };
 
-export default DonationsManagement; 
+export default DonationsManagement;
