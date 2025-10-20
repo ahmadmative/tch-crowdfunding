@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, ArrowPathIcon, DocumentArrowDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL, SOCKET_URL } from '../config/url';
@@ -31,6 +31,8 @@ const DonationsManagement: React.FC = () => {
   const [originalTransactions, setOriginalTransactions] = useState<any>([]);
   const [exportStartDate, setExportStartDate] = useState<string>("");
   const [exportEndDate, setExportEndDate] = useState<string>("");
+  const [resendingEmails, setResendingEmails] = useState<Set<string>>(new Set());
+  const [selectedTransactions, setSelectedTransactions] = useState<Set<string>>(new Set());
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -281,6 +283,124 @@ const DonationsManagement: React.FC = () => {
         autoClose: 3000,
       });
       console.error("Error generating S18A Certificate: ", error);
+    }
+  };
+
+  const handleResendEmail = async (transaction: any) => {
+    const transactionId = transaction._id;
+    const toastId = toast.loading("Resending donation receipt...");
+
+    try {
+      // Add to resending set to show loading state
+      setResendingEmails(prev => new Set(prev).add(transactionId));
+
+      const response = await axios.post(
+        `${BASE_URL}/donations/resend/${transactionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        }
+      );
+
+      toast.update(toastId, {
+        render: response.data.message || "Donation receipt resent successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+    } catch (error: any) {
+      console.error("Error resending email:", error);
+      toast.update(toastId, {
+        render: error.response?.data?.message || "Failed to resend donation receipt",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    } finally {
+      // Remove from resending set
+      setResendingEmails(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(transactionId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleBulkResend = async () => {
+    if (selectedTransactions.size === 0) {
+      toast.error("Please select transactions to resend");
+      return;
+    }
+
+    const toastId = toast.loading(`Resending emails for ${selectedTransactions.size} transactions...`);
+    let successCount = 0;
+    let errorCount = 0;
+
+    try {
+      const promises = Array.from(selectedTransactions).map(async (transactionId) => {
+        try {
+          await axios.post(
+            `${BASE_URL}/donations/resend/${transactionId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              }
+            }
+          );
+          successCount++;
+        } catch (error) {
+          console.error(`Error resending email for ${transactionId}:`, error);
+          errorCount++;
+        }
+      });
+
+      await Promise.all(promises);
+
+      toast.update(toastId, {
+        render: `Bulk resend completed! ${successCount} successful, ${errorCount} failed`,
+        type: errorCount > 0 ? "warning" : "success",
+        isLoading: false,
+        autoClose: 5000,
+      });
+
+      // Clear selection
+      setSelectedTransactions(new Set());
+
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Bulk resend failed",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleSelectTransaction = (transactionId: string) => {
+    setSelectedTransactions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(transactionId)) {
+        newSet.delete(transactionId);
+      } else {
+        newSet.add(transactionId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    const completedTransactions = paginatedTransactions
+      .filter((t: any) => t.status === 'completed')
+      .map((t: any) => t._id);
+    
+    if (selectedTransactions.size === completedTransactions.length) {
+      setSelectedTransactions(new Set());
+    } else {
+      setSelectedTransactions(new Set(completedTransactions));
     }
   };
 
@@ -601,10 +721,43 @@ const DonationsManagement: React.FC = () => {
                 </select>
               </div>
             </div>
+            
+            {/* Bulk Actions */}
+            {selectedTransactions.size > 0 && (
+              <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-blue-700">
+                    {selectedTransactions.size} transaction{selectedTransactions.size > 1 ? 's' : ''} selected
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={handleBulkResend}
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm"
+                    >
+                      Resend Selected Emails
+                    </button>
+                    <button
+                      onClick={() => setSelectedTransactions(new Set())}
+                      className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors text-sm"
+                    >
+                      Clear Selection
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
                   <tr className="border-b">
+                    <th className="text-left py-3 px-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedTransactions.size > 0 && selectedTransactions.size === paginatedTransactions.filter((t: any) => t.status === 'completed').length}
+                        onChange={handleSelectAll}
+                        className="rounded border-gray-300"
+                      />
+                    </th>
                     <th className="text-left py-3 px-4">Date</th>
                     <th className="text-left py-3 px-4">Txn Reference</th>
                     <th className="text-left py-3 px-4 min-w-[200px]">Donor</th>
@@ -628,19 +781,67 @@ const DonationsManagement: React.FC = () => {
                 <tbody>
                   {paginatedTransactions?.map((transaction: any) => (
                     <tr key={transaction.id} className="border-b">
+                      <td className="py-3 px-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedTransactions.has(transaction._id)}
+                          onChange={() => handleSelectTransaction(transaction._id)}
+                          disabled={transaction.status !== 'completed'}
+                          className="rounded border-gray-300 disabled:opacity-50"
+                        />
+                      </td>
                       <td className="py-3 px-4">{dayjs(transaction?.date).format('DD-MM-YYYY')}</td>
                       <td className="py-3 px-4">{transaction?.referenceId}</td>
                       <td className="py-3 px-4">{transaction?.donor?.name}</td>
                       <td className="py-3 px-4">{transaction?.campaign?.title || "N/A"} </td>
                       <td className="py-3 px-4">{transaction?.organization?.name || "N/A"}</td>
                       <td className="py-3 px-4">{transaction?.campaign?._id|| "N/A"}</td>
-                      <td className="py-3 px-4">R{transaction?.totalAmount - transaction?.tip}</td>
+                      <td className="py-3 px-4">
+  {transaction?.totalAmount && transaction?.tip !== undefined ? (
+    `R${(transaction.totalAmount - transaction.tip).toFixed(2)}`
+  ) : (
+    ""
+  )}
+</td>
+
 
                       <td className="py-3 px-4">R{transaction?.tip}</td>
-                      <td className="py-3 px-4 ">R{transaction?.totalAmount}</td>
-                      <td className="py-3 px-4">R{transaction?.platformFee}</td>
-                      <td className="py-3 px-4">R{transaction?.transactionFee}</td>
-                      <td className="py-3 px-4">R{transaction?.amount}</td>
+                      <td className="py-3 px-4">
+  {transaction?.totalAmount !== undefined
+    ? `R${Number(transaction.totalAmount).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    : ""}
+</td>
+
+                      <td className="py-3 px-4">
+  {transaction?.platformFee !== undefined && transaction?.platformFee !== null
+    ? `R${Number(transaction.platformFee).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    : ""}
+</td>
+
+                      <td className="py-3 px-4">
+  {transaction?.transactionFee !== undefined && transaction?.transactionFee !== null
+    ? `R${Number(transaction.transactionFee).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    : ""}
+</td>
+
+<td className="py-3 px-4">
+  {transaction?.amount !== undefined && transaction?.amount !== null
+    ? `R${Number(transaction.amount).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    : ""}
+</td>
+
                       <td className="py-3 px-4">{transaction?.paymentMethod}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(transaction?.status)}`}>
@@ -660,6 +861,17 @@ const DonationsManagement: React.FC = () => {
                               </button>
                             )
                           }
+
+                          <button 
+                            onClick={() => handleResendEmail(transaction)} 
+                            disabled={resendingEmails.has(transaction._id) || transaction.status !== 'completed'}
+                            className={`text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed ${
+                              resendingEmails.has(transaction._id) ? 'animate-pulse' : ''
+                            }`}
+                            title="Resend donation receipt and S18A certificate"
+                          >
+                            <EnvelopeIcon className="h-5 w-5" />
+                          </button>
                           
                         </div>
                       </td>
