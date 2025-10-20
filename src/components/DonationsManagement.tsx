@@ -211,7 +211,7 @@ const DonationsManagement: React.FC = () => {
 
 
 
-  const handlePrint = async (donation : any) => {
+  const handlePrint = async (donation: any) => {
     const toastId = toast.loading("Generating S18A Certificate...");
 
     try {
@@ -224,14 +224,54 @@ const DonationsManagement: React.FC = () => {
         autoClose: 3000,
       });
 
-      // Get the outputPath and convert to browser-accessible URL
-      const outputPath = res.data.outputPath;
-      if (outputPath) {
-        const fileName =
-          outputPath.split("certificates\\").pop() ||
-          outputPath.split("certificates/").pop();
-        const fileUrl = `${SOCKET_URL}/certificates/${fileName}`;
-        window.open(fileUrl, "_blank");
+      const outputPath = res.data?.outputPath;
+      if (!outputPath) {
+        console.warn("No outputPath returned from server");
+        return;
+      }
+
+      // extract basename from absolute path (works for linux/windows)
+      const fileName = (outputPath || "").split(/[\\/]/).pop() || `certificate-${Date.now()}.pdf`;
+
+      // build public URL using SOCKET_URL (remove trailing slash)
+      const base = SOCKET_URL.replace(/\/+$/, "");
+      const fileUrl = `${base}/certificates/${encodeURIComponent(fileName)}`;
+
+      // Try downloading as blob (preferred) so browser prompts save instead of navigating
+      try {
+        const token = localStorage.getItem("token");
+        const fileRes = await axios.get(fileUrl, {
+          responseType: "blob",
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
+
+        // infer filename from content-disposition if present
+        const disposition = fileRes.headers["content-disposition"];
+        let inferredName = fileName;
+        if (disposition) {
+          const match = /filename\*?=(?:UTF-8'')?["']?([^;"']+)["']?/i.exec(disposition);
+          if (match && match[1]) {
+            try {
+              inferredName = decodeURIComponent(match[1]);
+            } catch {
+              inferredName = match[1];
+            }
+          }
+        }
+
+        const blob = new Blob([fileRes.data], { type: fileRes.data.type || "application/pdf" });
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = inferredName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+      } catch (downloadErr) {
+        // fallback to opening in new tab (e.g. CORS/static serving issues)
+        console.warn("Blob download failed, falling back to open in new tab:", downloadErr);
+        window.open(fileUrl, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       toast.update(toastId, {
